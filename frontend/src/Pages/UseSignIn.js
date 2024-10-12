@@ -3,9 +3,9 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import * as yup from 'yup';
-import { useAuthContext } from '@/context/useAuthContext';
-import { useNotificationContext } from '@/context/useNotificationContext';
-import httpClient from '@/helpers/httpClient';
+import { useAuthContext } from '../Context/useAuthContext';
+import { useNotificationContext } from '../Context/useNotificationContext';
+import httpClient from '../Helpers/HttpClient';
 
 const UseSignIn = () => {
   const [loading, setLoading] = useState(false);
@@ -38,6 +38,7 @@ const UseSignIn = () => {
   const login = handleSubmit(async values => {
     try {
       const res = await httpClient.post('/login', values);
+      console.log(res);
       if (res.data.token) {
         saveSession({
           ...(res.data ?? {}),
@@ -49,11 +50,24 @@ const UseSignIn = () => {
           variant: 'success'
         });
       }
+      else{
+        showNotification({
+          message: 'Wrong e-mail or password. Please try again....',
+          variant: 'danger'
+        });
+      }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e) {
+      console.log("e : " + e)
       if (e.response?.data?.error) {
         showNotification({
           message: e.response?.data?.error,
+          variant: 'danger'
+        });
+      }
+      else{
+        showNotification({
+          message: '404 Error. Please try again....',
           variant: 'danger'
         });
       }
