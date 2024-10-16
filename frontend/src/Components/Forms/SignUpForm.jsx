@@ -51,11 +51,11 @@ const SignUpForm = () => {
         </Button>
       </div>
       <p className="mb-0 mt-3 text-center">
-        ©{currentYear}
+        {/* ©{currentYear} */}
         <Link target="_blank" to={developedByLink}>
           {developedBy}.
         </Link>
-        All rights reserved
+        {/* All rights reserved */}
       </p>
     </form>;
 };

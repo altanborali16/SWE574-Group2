@@ -6,9 +6,9 @@ const AuthAdvanceLayout = ({
   children
 }) => {
   return(
-        <div className="bg-secondary pt-5 pb-0 position-relative">
+        <div className="bg-secondary pb-0 position-relative">
           <Container>
-            <Row className="justify-content-center text-center">{children}</Row>
+            <Row className="justify-content-center  text-center vh-100 py-5">{children}</Row>
           </Container>
         </div>
       )

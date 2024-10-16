@@ -26,10 +26,6 @@ const UseSignIn = () => {
     handleSubmit
   } = useForm({
     resolver: yupResolver(loginFormSchema),
-    defaultValues: {
-      email: 'user@demo.com',
-      password: '123456'
-    }
   });
   const redirectUser = () => {
     const redirectLink = searchParams.get('redirectTo');
