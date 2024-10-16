@@ -12,7 +12,6 @@ const AuthAdvanceLayout = ({
             <Row className="justify-content-center text-center">{children}</Row>
           </Container>
         </div>
-      </main>
     </>;
 };
 export default AuthAdvanceLayout;
