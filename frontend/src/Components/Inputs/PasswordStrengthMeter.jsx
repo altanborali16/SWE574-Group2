@@ -4,16 +4,16 @@ import { ProgressBar } from 'react-bootstrap';
 const getProgress = progress => {
   if (progress > 75) return {
     variant: 'success',
-    message: 'Yeah! that password rocks ;)'
+    message: 'Very Strong'
   };else if (progress > 50) return {
     variant: 'info',
-    message: 'That is better'
+    message: 'Strong'
   };else if (progress > 25) return {
     variant: 'warning',
-    message: 'That is a simple one'
+    message: 'Medium'
   };else return {
     variant: 'danger',
-    message: 'Easy peasy!'
+    message: 'Very Weak'
   };
 };
 const calculatePasswordStrength = password => {

@@ -1,7 +1,7 @@
 import { Card, Col } from 'react-bootstrap';
-import LoginForm from './LoginForm';
+import LoginForm from '../Components/Forms/LoginForm';
 import { Link } from 'react-router-dom';
-import AuthAdvanceLayout from './AuthAdvanceLayout';
+import AuthAdvanceLayout from '../Components/Layouts/AuthAdvanceLayout';
 import PageMetaData from './PageMetaData'
 const SignIn = () => {
   return <>

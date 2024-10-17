@@ -3,9 +3,9 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import * as yup from 'yup';
-import { useAuthContext } from '../Context/useAuthContext';
-import { useNotificationContext } from '../Context/useNotificationContext';
-import httpClient from '../Helpers/HttpClient';
+import { useAuthContext } from '../../Context/useAuthContext';
+import { useNotificationContext } from '../../Context/useNotificationContext';
+import httpClient from '../../Helpers/HttpClient';
 
 const UseSignIn = () => {
   const [loading, setLoading] = useState(false);
@@ -33,6 +33,7 @@ const UseSignIn = () => {
   };
   const login = handleSubmit(async values => {
     try {
+      console.log("Values : " , values)
       const res = await httpClient.post('/login', values);
       console.log(res);
       if (res.data.token) {

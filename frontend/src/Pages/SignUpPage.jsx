@@ -1,7 +1,7 @@
 import { Card } from 'react-bootstrap';
 import SignUpForm from '../Components/Forms/SignUpForm.jsx';
 import { Link } from 'react-router-dom';
-import AuthLayout from './AuthLayout';
+import AuthLayout from '../Components/Layouts/AuthLayout';
 import PageMetaData from './PageMetaData'
 const SignUp = () => {
   return <>

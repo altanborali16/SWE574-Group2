@@ -1,8 +1,7 @@
-import PasswordFormInput from '../Forms/PasswordFormInput.jsx';
-import TextFormInput from '../Forms/TextFormInput.jsx';
-import PasswordStrengthMeter from './PasswordStrengthMeter.jsx';
+import PasswordFormInput from '../Inputs/PasswordFormInput.jsx';
+import TextFormInput from '../Inputs/TextFormInput.jsx';
+import PasswordStrengthMeter from '../Inputs/PasswordStrengthMeter.jsx';
 import {
-    currentYear,
     developedBy,
     developedByLink,
   } from "../../Context/constants.js";
@@ -27,10 +26,18 @@ const SignUpForm = () => {
   } = useForm({
     resolver: yupResolver(signUpSchema)
   });
+  const onSubmit = async (values) => {
+    try {
+      console.log("Values: ", values);
+    } catch (e) {
+      console.log("Error: ", e);
+    }
+  };
+  
   useEffect(() => {
     setFirstPassword(getValues().password);
   }, [watch('password')]);
-  return <form className="mt-4" onSubmit={handleSubmit(() => {})}>
+  return <form className="mt-4" onSubmit={handleSubmit(onSubmit)}>
       <div className="mb-3">
         <TextFormInput name="email" control={control} containerClassName="input-group-lg" placeholder="Enter your email" />
         <small>We&apos;ll never share your email with anyone else.</small>

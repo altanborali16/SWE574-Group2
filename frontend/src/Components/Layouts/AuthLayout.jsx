@@ -1,5 +1,5 @@
 import { Col, Container, Row } from "react-bootstrap";
-import "../Styles/SignIn.css"; 
+import "../../Styles/SignIn.css"; 
 const AuthLayout = ({ children }) => {
   return (
     <div className="bg-secondary pb-0 position-relative">

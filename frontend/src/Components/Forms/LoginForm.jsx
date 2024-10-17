@@ -1,13 +1,12 @@
 import {
-  currentYear,
   developedBy,
   developedByLink,
-} from "../Context/constants.js";
+} from "../../Context/constants.js";
 import { Link } from "react-router-dom";
-import TextFormInput from "../Components/Forms/TextFormInput.jsx";
-import PasswordFormInput from "../Components/Forms/PasswordFormInput.jsx";
+import TextFormInput from "../Inputs/TextFormInput.jsx";
+import PasswordFormInput from "../Inputs/PasswordFormInput.jsx";
 import { Button, FormCheck } from "react-bootstrap";
-import useSignIn from "./UseSignIn.js";
+import useSignIn from "../../Pages/Functions/UseSignIn.js";
 
 const LoginForm = () => {
   const { loading, login, control } = useSignIn();
