@@ -90,11 +90,23 @@ Status: sections VI.B and VI.C are work-in-progress, to be finalized after getti
 ## Software Design (UML diagrams) and use-case scenarios
 Link: https://github.com/altanborali16/SWE574-Group2/wiki/Designs,-diagrams,-and-use-case-scenarios#use-case-scenarios-and-activity-diagrams
 
+Status: to be updated by adding recommendation and gamification (badges) mechanisms
 ## UI mockups
 Link: https://github.com/altanborali16/SWE574-Group2/wiki/Designs,-diagrams,-and-use-case-scenarios#ui-mockup-designs
+
+Status: completed
 ## Project Plan, Communication Plan, Responsibility Assignment Matrix
 ### Project Plan
+External milestones and deadlines:
+
+Internal milestones and deadlines:
+
 ### Communication Plan
+Customer communication: Monday evenings.
+Weekly team meetings: on Monday evenings. Decision points are agreed upon and distributed to all team members.
+Iteration retrospectives: at the end of the iteration. 
+In-team communication: frontend and backend teams communicate on an ad hoc basis; meeting minutes are distributed to all team members.
+
 ###  Responsibility Assignment Matrix
 | Responsibility          | Efe | Feridun | Yana | Altan | Aliser | Enes |
 |-------------------------|-----|---------|------|-------|--------|------|
@@ -111,6 +123,10 @@ Link: https://github.com/altanborali16/SWE574-Group2/wiki/Designs,-diagrams,-and
 Link: https://github.com/altanborali16/SWE574-Group2/wiki/Meeting-notes
 ## Milestone Review 
 ### Summary of project status
+* % of requirements not completed from the previous semester: 50%
+* New features to be added are recommendation and gamification (badges) mechanisms. They require the introduction of several supporting features (such as interests and tags for communities and posts).
+* Frontend to be re-created to accommodate the use of desktop and mobile clients to run the app.
+
 ### Lessons learned (reflection)
 * Evaluation of tools and processes to manage the project:
 * Evaluation of deliverables status and impact on the project plan:
