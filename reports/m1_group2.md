@@ -3,6 +3,7 @@ This report is submitted by Group 2 of SWE574 course class of 2022, autumn 2024.
 ## Deliverables and status
 ## Software Requirements Specification
 Link: https://github.com/altanborali16/SWE574-Group2/wiki/Requirements-Specification
+
 Status: sections VI.B and VI.C are work-in-progress, to be finalized after getting feedback from the customer on October 21, 2024.
 ### Requirements addressed in Milestone 1
 | ID                 | Completed | Not Completed |
@@ -95,7 +96,19 @@ Link: https://github.com/altanborali16/SWE574-Group2/wiki/Designs,-diagrams,-and
 ### Project Plan
 ### Communication Plan
 ###  Responsibility Assignment Matrix
+| Responsibility          | Efe | Feridun | Yana | Altan | Aliser | Enes |
+|-------------------------|-----|---------|------|-------|--------|------|
+| Architecture            | X   |         |      |       |        |      |
+| Backend                 | X   | X       | X    | (X)   |        | (X)  |
+| Frontend                |     | (X)     | X    | X     |        | X    |
+| Deployment & DevOps     |     | X       |      | (X)   |        |      |
+| Code Reviewer           | X   | X       | X    |  X    | X      | X    |
+| Project Communicator    |     |         |      | X     |        |      |
+| Project Manager         |     |         |      | X     |        |      |
+| Design and documentation|     |         | X    |       |        |      |
+
 ## Weekly reports and meeting notes
+Link: https://github.com/altanborali16/SWE574-Group2/wiki/Meeting-notes
 ## Milestone Review 
 ### Summary of project status
 ### Lessons learned (reflection)
