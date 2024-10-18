@@ -140,4 +140,4 @@ Link: https://github.com/altanborali16/SWE574-Group2/wiki/Meeting-notes
 * **Additional information:** Mention any additional task you have performed that is not listed above.
 ### Customer feedback
 ### Work plan 
-## Software pre-release version notes (see section below)
+## Software pre-release version notes (WIP)
