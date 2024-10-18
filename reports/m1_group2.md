@@ -1,9 +1,96 @@
 # Milestone 1 Report
+This report is submitted by Group 2 of SWE574 course class of 2022, autumn 2024.
 ## Deliverables and status
 ## Software Requirements Specification
+Link: https://github.com/altanborali16/SWE574-Group2/wiki/Requirements-Specification
+Status: sections VI.B and VI.C are work-in-progress, to be finalized after getting feedback from the customer on October 21, 2024.
 ### Requirements addressed in Milestone 1
-## Software Design (UML diagrams)
-## Scenarios and Mockups
+| ID                 | Completed | Not Completed |
+|--------------------|-----------|---------------|
+| I.1                | X         |               |
+| I.2                |           | X             |
+| II.1               |           | X             |
+| II.2               | X         |               |
+| III.1              | X         |               |
+| III.2              |           | X             |
+| III.3              | X         |               |
+| IV.1               | X         |               |
+| IV.2               |           | X             |
+| V.1                | X         |               |
+| V.2                | X         |               |
+| V.3                | X         |               |
+| V.4                |           | X             |
+| V.5                | X         |               |
+| V.6                |           | X             |
+| V.7                |           | X             |
+| VI.A.1             | X         |               |
+| VI.A.2             |           | X             |
+| VI.B.1             | X         |               |
+| VI.B.2             |           | X             |
+| VI.B.3             |           | X             |
+| VI.B.4             |           | X             |
+| VI.C.1             |           | X             |
+| VI.C.2             |           | X             |
+| VI.C.3             |           | X             |
+| VI.C.4             |           | X             |
+| VII.1              | X         |               |
+| VII.2              | X         |               |
+| VII.A.1            | X         |               |
+| VII.A.2            | X         |               |
+| VII.A.3            | X         |               |
+| VII.A.4            |           | X             |
+| VII.A.5            | X         |               |
+| VII.A.6            | X         |               |
+| VII.A.7            | X         |               |
+| VII.A.8            | X         |               |
+| VII.B.1            |           | X             |
+| VII.C.1            | X         |               |
+| VII.C.2            | X         |               |
+| VII.C.3            |           | X             |
+| VII.C.4            | X         |               |
+| VII.C.5            |           | X             |
+| VII.C.6            |           | X             |
+| VII.D.1            |           | X             |
+| VII.E.1            | X         |               |
+| VII.E.2            |           | X             |
+| VII.E.3            |           | X             |
+| VII.E.4            |           | X             |
+| VII.E.5            |           | X             |
+| VII.E.6            |           | X             |
+| VII.F.1            | X         |               |
+| VII.F.2            | X         |               |
+| VII.F.3            | X         |               |
+| VII.F.4            | X         |               |
+| VII.F.5            | X         |               |
+| VIII.A.1           | X         |               |
+| VIII.A.2           |           | X             |
+| VIII.A.3           | X         |               |
+| VIII.A.4           | X         |               |
+| VIII.B.1           | X         |               |
+| VIII.B.2           |           | X             |
+| VIII.B.3           |           | X             |
+| VIII.C.1           | X         |               |
+| VIII.C.2           | X         |               |
+| VIII.C.3           |           | X             |
+| VIII.C.4           | X         |               |
+| VIII.C.5           |           | X             |
+| VIII.C.6           |           | X             |
+| IX.A.1             |           | X             |
+| IX.A.2             |           | X             |
+| IX.B.Basic.1       | X         |               |
+| IX.B.Basic.2       |           | X             |
+| IX.B.Basic.3       |           | X             |
+| IX.B.Advanced.1    |           | X             |
+| IX.B.Advanced.2    | X         |               |
+| IX.B.Advanced.3    |           | X             |
+| IX.B.Advanced.4    |           | X             |
+| IX.B.Advanced.5    |           | X             |
+
+## Software Design (UML diagrams) and use-case scenarios
+Link: https://github.com/altanborali16/SWE574-Group2/wiki/Designs,-diagrams,-and-use-case-scenarios#use-case-scenarios-and-activity-diagrams
+
+## UI mockups
+Link: https://github.com/altanborali16/SWE574-Group2/wiki/Designs,-diagrams,-and-use-case-scenarios#ui-mockup-designs
 ## Project Plan, Communication Plan, Responsibility Assignment Matrix
 ### Project Plan
 ### Communication Plan
