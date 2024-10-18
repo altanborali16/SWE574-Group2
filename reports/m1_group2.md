@@ -100,7 +100,7 @@ Link: https://github.com/altanborali16/SWE574-Group2/wiki/Designs,-diagrams,-and
 |-------------------------|-----|---------|------|-------|--------|------|
 | Architecture            | X   |         |      |       |        |      |
 | Backend                 | X   | X       | X    | (X)   |        | (X)  |
-| Frontend                |     | (X)     | X    | X     |        | X    |
+| Frontend                |     | (X)     |      | X     |   X    | X    |
 | Deployment & DevOps     |     | X       |      | (X)   |        |      |
 | Code Reviewer           | X   | X       | X    |  X    | X      | X    |
 | Project Communicator    |     |         |      | X     |        |      |
