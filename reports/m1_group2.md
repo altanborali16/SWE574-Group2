@@ -97,15 +97,20 @@ Link: https://github.com/altanborali16/SWE574-Group2/wiki/Designs,-diagrams,-and
 Status: completed
 ## Project Plan, Communication Plan, Responsibility Assignment Matrix
 ### Project Plan
-External milestones and deadlines:
+**External milestones and deadlines:**
+* October 21 - infrastructure
+* November 25 - MVP
+* December 16 - Product delivery 
 
-Internal milestones and deadlines:
+**Internal milestones and deadlines:**
+....
 
 ### Communication Plan
-Customer communication: Monday evenings.
-Weekly team meetings: on Monday evenings. Decision points are agreed upon and distributed to all team members.
-Iteration retrospectives: at the end of the iteration. 
-In-team communication: frontend and backend teams communicate on an ad hoc basis; meeting minutes are distributed to all team members.
+* Customer communication: Monday evenings.
+* Customer reports: released on external milestone deadlines (see above).
+* Weekly team meetings: Monday evenings. Decision points are agreed upon and distributed to all team members.
+* Iteration retrospectives: at the end of the iteration. 
+* In-team communication: frontend and backend teams communicate ad hoc; meeting minutes are kept & distributed to all team members.
 
 ###  Responsibility Assignment Matrix
 | Responsibility          | Efe | Feridun | Yana | Altan | Aliser | Enes |
@@ -119,25 +124,108 @@ In-team communication: frontend and backend teams communicate on an ad hoc basis
 | Project Manager         |     |         |      | X     |        |      |
 | Design and documentation|     |         | X    |       |        |      |
 
+The team member, whose name is marked with (X) in the table, can back up/help out the team members tasked with a different responsibility. 
+
 ## Weekly reports and meeting notes
 Link: https://github.com/altanborali16/SWE574-Group2/wiki/Meeting-notes
 ## Milestone Review 
 ### Summary of project status
 * % of requirements not completed from the previous semester: 50%
-* New features to be added are recommendation and gamification (badges) mechanisms. They require the introduction of several supporting features (such as interests and tags for communities and posts).
-* Frontend to be re-created to accommodate the use of desktop and mobile clients to run the app.
+* New features to be added to the existing product are recommendation and gamification (badges) mechanisms. They require the introduction of several supporting features (such as interests and tags for communities and posts).
+* Frontend remains to be re-created to accommodate the use of desktop and mobile clients to run the app.
 
 ### Lessons learned (reflection)
-* Evaluation of tools and processes to manage the project:
-* Evaluation of deliverables status and impact on the project plan:
+**Evaluation of deliverables status and impact on the project plan:**
+
+...
+
+**Evaluation of tools and processes to manage the project:**
+1. The project processes are managed exclusively using github tools (issues, Wiki, discussions, and [Github Project](https://github.com/users/altanborali16/projects/1/views/2)). All team members are responsible for grooming the backlog of issues assigned to them. This eliminates the need for additional "housekeeping" during meetings.
+2. The team works in iterations and uses the "Iterations" feature in the Github Project to define the iteration scope.
+3. Meetings are minuted, and minutes are shared on the Wiki page. This allows us to keep all team members up to date.
+4. Decisions taken at meetings are recorded on a separate page [Desicions and Policies](https://github.com/altanborali16/SWE574-Group2/wiki/Decisions-&-Policies) for easy reference.
+5. The team chose a project manager responsible for setting and assigning tasks and decomposing complex tasks into manageable steps. The project manager also controls deadlines and holds team members to account.
+  
 ### Individual Contributions (references to issues, PRs, comments, commits etc)
-1. **Group Member Name:** 
-* **Responsibilities:** A general description of the responsibilities assigned to you.
+
+1. **Group Member Name: Altan** 
+* **Responsibilities:** Frontend development, code revision, project communicator, project manager.
 * **Main contributions:** The overall description of your contributions to the project for Customer Milestone 1.
+* 
 * **Code-related significant issues:** The issues that you have personally resolved or reviewed that contribute to the code base demonstrated during the demo. You must provide the relevant PRs and commits.
 * **Non-code-related significant issues:** The issues that you have personally resolved or reviewed. With brief explanations.
 * **Pull requests that you have created, merged, and reviewed.** If you experienced any conflicts regarding the pull requests you have engaged in, briefly summarize the conflicts along with how they were resolved.
-* **Additional information:** Mention any additional task you have performed that is not listed above.
+* **Additional information:**
+* Mention any additional task you have performed that is not listed above.
+
+
+2. **Group Member Name: Aliser** 
+* **Responsibilities:** Frontend development, code revision
+* **Main contributions:** The overall description of your contributions to the project for Customer Milestone 1.
+* 
+* **Code-related significant issues:** The issues that you have personally resolved or reviewed that contribute to the code base demonstrated during the demo. You must provide the relevant PRs and commits.
+* **Non-code-related significant issues:** The issues that you have personally resolved or reviewed. With brief explanations.
+* **Pull requests that you have created, merged, and reviewed.** If you experienced any conflicts regarding the pull requests you have engaged in, briefly summarize the conflicts along with how they were resolved.
+* **Additional information:**
+* Mention any additional task you have performed that is not listed above.
+
+
+3. **Group Member Name: Efe** 
+* **Responsibilities:** Architecture, Backend development, code revision
+* **Main contributions:** The overall description of your contributions to the project for Customer Milestone 1.
+* 
+* **Code-related significant issues:** The issues that you have personally resolved or reviewed that contribute to the code base demonstrated during the demo. You must provide the relevant PRs and commits.
+* **Non-code-related significant issues:** The issues that you have personally resolved or reviewed. With brief explanations.
+* **Pull requests that you have created, merged, and reviewed.** If you experienced any conflicts regarding the pull requests you have engaged in, briefly summarize the conflicts along with how they were resolved.
+* **Additional information:**
+* Mention any additional task you have performed that is not listed above.
+
+
+4. **Group Member Name: Enes** 
+* **Responsibilities:** Frontend development, code revision, mockup design
+* **Main contributions:** The overall description of your contributions to the project for Customer Milestone 1.
+* 
+* **Code-related significant issues:** The issues that you have personally resolved or reviewed that contribute to the code base demonstrated during the demo. You must provide the relevant PRs and commits.
+* **Non-code-related significant issues:** The issues that you have personally resolved or reviewed. With brief explanations.
+* **Pull requests that you have created, merged, and reviewed.** If you experienced any conflicts regarding the pull requests you have engaged in, briefly summarize the conflicts along with how they were resolved.
+* **Additional information:**
+* Mention any additional task you have performed that is not listed above.
+
+
+5. **Group Member Name: Feridun** 
+* **Responsibilities:** Backend development, code revision, CI/CD
+* **Main contributions:** The overall description of your contributions to the project for Customer Milestone 1.
+* 
+* **Code-related significant issues:** The issues that you have personally resolved or reviewed that contribute to the code base demonstrated during the demo. You must provide the relevant PRs and commits.
+* **Non-code-related significant issues:** The issues that you have personally resolved or reviewed. With brief explanations.
+* **Pull requests that you have created, merged, and reviewed.** If you experienced any conflicts regarding the pull requests you have engaged in, briefly summarize the conflicts along with how they were resolved.
+* **Additional information:**
+* Mention any additional task you have performed that is not listed above.
+
+
+6. **Group Member Name: Yana** 
+* **Responsibilities:** Backend development, code revision, design and documentation
+* **Main contributions** for Customer Milestone 1:   
+[User scenarios and activity diagrams (together with Aliser)](https://github.com/altanborali16/SWE574-Group2/wiki/Designs,-diagrams,-and-use-case-scenarios#use-case-scenarios-and-activity-diagrams); [ideas for backend design of badge system](https://github.com/altanborali16/SWE574-Group2/issues/12#issuecomment-2407781192) and [content recommendations ](https://github.com/altanborali16/SWE574-Group2/issues/10#issuecomment-2407752346); project documentation.  
+* **Code-related significant issues:**   
+None. As of October 19, teamwork on the backend has not started yet. 
+* **Non-code-related significant issues:** The issues that you have personally resolved or reviewed.  
+* Please see Main Constributions.
+* **Pull requests that you have created, merged, and reviewed.**
+[Login/signup backend, closed as deemed not relevant by the project architect](https://github.com/altanborali16/SWE574-Group2/pull/18)
+* **Additional information:**  
+N/A
+
+
 ### Customer feedback
 ### Work plan 
 ## Software pre-release version notes (WIP)
+Release Name: 0.1.0-alpha (pre-release option)
+
+Release Description: Brief description of requirements that are covered
+
+Tag name: customer-milestone-1
+
+Android package file (.apk) included
+
+Instructions for building and running the software should be provided, including Docker build instructions and environment variables.
