@@ -1,9 +1,11 @@
 import { lazy, Suspense } from 'react';
 import { Navigate } from 'react-router-dom';
 
+
 // Lazy-loaded components
 const SignIn = lazy(() => import('../Pages/SignInPage'));
 const SignUp = lazy(() => import('../Pages/SignUpPage'));
+const ForgotPassWord = lazy(() => import('../Pages/ForgotPassWord'));
 
 // Loading fallback component
 const Loading = () => <div>Loading...</div>;
@@ -24,6 +26,15 @@ export const authRoutes = [
     element: (
       <Suspense fallback={<Loading />}>
         <SignUp />
+      </Suspense>
+    ),
+  },
+  {
+    path: '/auth/forgot-pass',
+    name: 'Forgot Password',
+    element: (
+      <Suspense fallback={<Loading />}>
+        <ForgotPassWord />
       </Suspense>
     ),
   },
