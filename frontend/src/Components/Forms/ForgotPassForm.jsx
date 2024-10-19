@@ -1,4 +1,5 @@
 import PasswordFormInput from '../Inputs/PasswordFormInput';
+import TextFormInput from '../Inputs/TextFormInput';
 import PasswordStrengthMeter from '../Inputs/PasswordStrengthMeter';
 import { currentYear, developedBy, developedByLink } from '../../Context/constants';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -25,6 +26,7 @@ const ForgotPassForm = () => {
   }, [watch('password')]);
   return <form className="mt-3" onSubmit={handleSubmit(() => {})}>
       <div className="mb-3">
+      <TextFormInput name="email" type="email" placeholder="Enter email" control={control} containerClassName="mb-3 input-group-lg" />
         <PasswordFormInput name="password" control={control} size="lg" placeholder="Enter new password" />
         <div className="mt-2">
           <PasswordStrengthMeter password={firstPassword} />
