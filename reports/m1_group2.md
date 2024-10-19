@@ -150,24 +150,28 @@ Link: https://github.com/altanborali16/SWE574-Group2/wiki/Meeting-notes
 
 1. **Group Member Name: Altan** 
 * **Responsibilities:** Frontend development, code revision, project communicator, project manager.
-* **Main contributions:** The overall description of your contributions to the project for Customer Milestone 1.
-* 
+* **Main contributions:** The overall description of your contributions to the project for Customer Milestone 1.  
+
 * **Code-related significant issues:** The issues that you have personally resolved or reviewed that contribute to the code base demonstrated during the demo. You must provide the relevant PRs and commits.
-* **Non-code-related significant issues:** The issues that you have personally resolved or reviewed. With brief explanations.
+
+* **Non-code-related significant issues:** The issues that you have personally resolved or reviewed, with brief explanations.
+
 * **Pull requests that you have created, merged, and reviewed.** If you experienced any conflicts regarding the pull requests you have engaged in, briefly summarize the conflicts along with how they were resolved.
-* **Additional information:**
-* Mention any additional task you have performed that is not listed above.
+
+* **Additional information:** Mention any additional task you have performed that is not listed above.
 
 
 2. **Group Member Name: Aliser** 
 * **Responsibilities:** Frontend development, code revision
-* **Main contributions:** The overall description of your contributions to the project for Customer Milestone 1.
-* 
+* **Main contributions:** The overall description of your contributions to the project for Customer Milestone 1.  
+
 * **Code-related significant issues:** The issues that you have personally resolved or reviewed that contribute to the code base demonstrated during the demo. You must provide the relevant PRs and commits.
+
 * **Non-code-related significant issues:** The issues that you have personally resolved or reviewed. With brief explanations.
+
 * **Pull requests that you have created, merged, and reviewed.** If you experienced any conflicts regarding the pull requests you have engaged in, briefly summarize the conflicts along with how they were resolved.
-* **Additional information:**
-* Mention any additional task you have performed that is not listed above.
+
+* **Additional information:** Mention any additional task you have performed that is not listed above.
 
 
 3. **Group Member Name: Efe** 
@@ -210,8 +214,8 @@ Link: https://github.com/altanborali16/SWE574-Group2/wiki/Meeting-notes
 * **Code-related significant issues:**   
 None. As of October 19, teamwork on the backend has not started yet. 
 * **Non-code-related significant issues:** The issues that you have personally resolved or reviewed.  
-* Please see Main Constributions.
-* **Pull requests that you have created, merged, and reviewed.**
+Please see Main Constributions.
+* **Pull requests that you have created, merged, and reviewed.**  
 [Login/signup backend, closed as deemed not relevant by the project architect](https://github.com/altanborali16/SWE574-Group2/pull/18)
 * **Additional information:**  
 N/A
