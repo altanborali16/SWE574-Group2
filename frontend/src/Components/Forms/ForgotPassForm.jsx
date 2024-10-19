@@ -11,6 +11,7 @@ import * as yup from 'yup';
 const ForgotPassForm = () => {
   const [firstPassword, setFirstPassword] = useState('');
   const forgotPassSchema = yup.object({
+    email: yup.string().email('Please enter a valid email').required('Please enter your email'),
     password: yup.string().required('Please enter your password')
   });
   const {
@@ -26,7 +27,7 @@ const ForgotPassForm = () => {
   }, [watch('password')]);
   return <form className="mt-3" onSubmit={handleSubmit(() => {})}>
       <div className="mb-3">
-      <TextFormInput name="email" type="email" placeholder="Enter email" control={control} containerClassName="mb-3 input-group-lg" />
+        <TextFormInput name="email" type="email" placeholder="Enter email" control={control} containerClassName="mb-3 input-group-lg" />
         <PasswordFormInput name="password" control={control} size="lg" placeholder="Enter new password" />
         <div className="mt-2">
           <PasswordStrengthMeter password={firstPassword} />
