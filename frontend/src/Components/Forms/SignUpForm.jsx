@@ -11,10 +11,12 @@ import { useEffect, useState } from 'react';
 import { Button, FormCheck } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
+import httpClient from '../../Helpers/HttpClient.js'
 const SignUpForm = () => {
   const [firstPassword, setFirstPassword] = useState('');
   const signUpSchema = yup.object({
     email: yup.string().email('Please enter a valid email').required('please enter your email'),
+    username: yup.string().required('please enter your username'),
     password: yup.string().required('Please enter your password'),
     confirmPassword: yup.string().oneOf([yup.ref('password')], 'Passwords must match')
   });
@@ -28,6 +30,7 @@ const SignUpForm = () => {
   });
   const onSubmit = async (values) => {
     try {
+      const res = await httpClient.post('http://localhost:8080/api/v1/auth/register', values);
       console.log("Values: ", values);
     } catch (e) {
       console.log("Error: ", e);
@@ -40,6 +43,10 @@ const SignUpForm = () => {
   return <form className="mt-4" onSubmit={handleSubmit(onSubmit)}>
       <div className="mb-3">
         <TextFormInput name="email" control={control} containerClassName="input-group-lg" placeholder="Enter your email" />
+        <small>We&apos;ll never share your email with anyone else.</small>
+      </div>
+      <div className="mb-3">
+        <TextFormInput name="username" control={control} containerClassName="input-group-lg" placeholder="Username" />
         <small>We&apos;ll never share your email with anyone else.</small>
       </div>
       <div className="mb-3 position-relative">
