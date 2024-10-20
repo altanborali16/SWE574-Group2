@@ -122,7 +122,7 @@ Status: completed
 | Code Reviewer           | X   | X       | X    |  X    | X      | X    |
 | Project Communicator    |     |         |      | X     |        |      |
 | Project Manager         |     |         |      | X     |        |      |
-| Design and documentation|     |         | X    |       |        |      |
+| Design and documentation|     |         | X    |       | X      | X    |
 
 The team member, whose name is marked with (X) in the table, can back up/help out the team members tasked with a different responsibility. 
 
