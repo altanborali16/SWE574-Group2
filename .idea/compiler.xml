@@ -11,12 +11,12 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="devcomReborn" target="17" />
+      <module name="devcomReborn" target="1.5" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="devcomReborn" options="-parameters" />
+      <module name="devcomReborn" options="" />
     </option>
   </component>
 </project>
