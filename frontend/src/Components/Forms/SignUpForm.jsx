@@ -6,6 +6,7 @@ import {
     developedByLink,
   } from "../../Context/constants.js";
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Button, FormCheck } from 'react-bootstrap';
@@ -14,6 +15,7 @@ import * as yup from 'yup';
 import httpClient from '../../Helpers/HttpClient.js'
 const SignUpForm = () => {
   const [firstPassword, setFirstPassword] = useState('');
+  const navigate = useNavigate();
   const signUpSchema = yup.object({
     email: yup.string().email('Please enter a valid email').required('please enter your email'),
     username: yup.string().required('please enter your username'),
@@ -31,6 +33,7 @@ const SignUpForm = () => {
   const onSubmit = async (values) => {
     try {
       const res = await httpClient.post('http://localhost:8080/api/v1/auth/register', values);
+      navigate('/')
       console.log("Values: ", values);
     } catch (e) {
       console.log("Error: ", e);

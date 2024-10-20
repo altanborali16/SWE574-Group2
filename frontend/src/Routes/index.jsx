@@ -6,6 +6,7 @@ import { Navigate } from 'react-router-dom';
 const SignIn = lazy(() => import('../Pages/SignInPage'));
 const SignUp = lazy(() => import('../Pages/SignUpPage'));
 const ForgotPassWord = lazy(() => import('../Pages/ForgotPassWord'));
+const Home = lazy(() => import('../Pages/HomePage'));
 
 // Loading fallback component
 const Loading = () => <div>Loading...</div>;
@@ -17,6 +18,15 @@ export const authRoutes = [
     element: (
       <Suspense fallback={<Loading />}>
         <SignIn />
+      </Suspense>
+    ),
+  },
+  {
+    path: '/home',
+    name: 'Home',
+    element: (
+      <Suspense fallback={<Loading />}>
+        <Home />
       </Suspense>
     ),
   },

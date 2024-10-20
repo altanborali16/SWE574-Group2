@@ -29,20 +29,20 @@ const UseSignIn = () => {
   });
   const redirectUser = () => {
     const redirectLink = searchParams.get('redirectTo');
-    if (redirectLink) navigate(redirectLink);else navigate('/');
+    if (redirectLink) navigate(redirectLink);else navigate('/home');
   };
   const login = handleSubmit(async values => {
     try {
       console.log("Values : " , values)
       // console.log("request : " , 'localhost:8080/api/v1/auth/authenticate', values)
       const res = await httpClient.post('http://localhost:8080/api/v1/auth/authenticate', values);
-      console.log(res);
+      console.log("Res : ", res);
       if (res.data.token) {
         saveSession({
           ...(res.data ?? {}),
           token: res.data.token
         });
-        // redirectUser();
+        redirectUser();
         showNotification({
           message: 'Successfully logged in. Redirecting....',
           variant: 'success'
