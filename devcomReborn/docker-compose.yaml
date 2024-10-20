@@ -26,4 +26,13 @@ services:
       - db
     restart: always
 
- 
+  frontend:
+    container_name: frontend
+    build:
+      dockerfile: ./../frontend/Frontend.Dockerfile
+      context: ./../frontend
+    ports:
+      - 3000:3000
+    depends_on:
+      - backend
+    restart: always
