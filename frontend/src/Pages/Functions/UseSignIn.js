@@ -35,7 +35,7 @@ const UseSignIn = () => {
     try {
       console.log("Values : " , values)
       // console.log("request : " , 'localhost:8080/api/v1/auth/authenticate', values)
-      const res = await httpClient.post('http://localhost:8080/api/v1/auth/authenticate', values);
+      const res = await httpClient.post('http://3.88.237.67:8080/api/v1/auth/authenticate', values);
       console.log("Res : ", res);
       if (res.data.token) {
         saveSession({

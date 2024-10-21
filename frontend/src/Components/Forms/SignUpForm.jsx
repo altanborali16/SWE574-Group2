@@ -32,7 +32,7 @@ const SignUpForm = () => {
   });
   const onSubmit = async (values) => {
     try {
-      const res = await httpClient.post('http://localhost:8080/api/v1/auth/register', values);
+      const res = await httpClient.post('http://3.88.237.67:8080/api/v1/auth/register', values);
       navigate('/')
       console.log("Values: ", values);
     } catch (e) {
