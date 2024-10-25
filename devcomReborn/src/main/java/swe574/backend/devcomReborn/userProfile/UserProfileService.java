@@ -17,12 +17,10 @@ public class UserProfileService {
     public UserProfile getCurrentProfile(){
         User profileOwner = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long id= profileOwner.getId();
-//        return repository.findById(id).orElseThrow();
         return repository.findByUserId(id).orElseThrow(() -> new NoSuchElementException("Profile not found for user ID: " + id));
     }
     @Transactional
     public UserProfile createProfile(UserProfile profile) {
-
         User profileOwner = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long profileOwnerId = profileOwner.getId();
         boolean profileExists = repository.existsByUserId(profileOwnerId);
