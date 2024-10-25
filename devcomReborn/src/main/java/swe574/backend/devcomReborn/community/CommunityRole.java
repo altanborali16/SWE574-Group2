@@ -1,7 +1,9 @@
-package swe574.backend.devcomReborn.user;
+package swe574.backend.devcomReborn.community;
 
-public enum Role {
+public enum CommunityRole {
     VISITOR,
+    MEMBER,
+    CREATOR,
     OWNER,
     ADMIN,
     MODERATOR

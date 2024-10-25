@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @CrossOrigin
 @RequestMapping("/community")
@@ -17,8 +19,23 @@ public class CommunityController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<Community> getCommunityList (@PathVariable Long id){
-        return ResponseEntity.ok(communityService.getCommunity(id));
+    public ResponseEntity<List<Community>> getCommunityList (){
+        return ResponseEntity.ok(communityService.getCommunityList());
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<Community> createCommunity(@RequestBody Community community){
+
+        return ResponseEntity.ok(communityService.createCommunity(community));
+    }
+
+    @PostMapping("/join/{id}")
+    public ResponseEntity<Membership> joinCommunity(@PathVariable Long id){
+        return ResponseEntity.ok(communityService.joinCommunity(id));
+    }
+    @DeleteMapping("/leave/{id}")
+    public ResponseEntity<String> leaveCommunity(@PathVariable Long id){
+        return ResponseEntity.ok(communityService.leaveCommunity(id));
     }
 
 }

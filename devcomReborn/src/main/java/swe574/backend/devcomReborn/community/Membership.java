@@ -17,8 +17,6 @@ public class Membership {
     @EmbeddedId
     private MembershipCode id;
 
-    private String communityRole;
-
     @ManyToOne
     @MapsId("userId")
     @JoinColumn(name = "user_id")
@@ -32,4 +30,6 @@ public class Membership {
     @JsonBackReference("community-members")
     @EqualsAndHashCode.Exclude
     private Community community;
+
+    private CommunityRole role;
 }
