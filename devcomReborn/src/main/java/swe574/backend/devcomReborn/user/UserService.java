@@ -10,7 +10,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
-    public User getUser(Long id){
-        return userRepository.findById(id).orElseThrow();
+    public User getUser(Long id){return userRepository.findById(id).orElseThrow();
     }
 }
