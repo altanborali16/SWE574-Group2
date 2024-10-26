@@ -26,17 +26,15 @@ public class Post {
     @JsonIgnoreProperties({"memberships"})
     private User author;
 
-//TODO: JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "community_id",nullable = false)
     @JsonBackReference("community-posts")
-    @JsonIgnoreProperties({"subscriptions","templates","posts"})
+    @JsonIgnoreProperties({"memberships","templates","posts"})
     private Community community;
 
-    //TODO: JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "template_id",nullable = false)
-    @JsonIgnoreProperties({"dataFields","community"})
+    @JsonIgnoreProperties({"fields","community"})
     private Template template;
 
 
