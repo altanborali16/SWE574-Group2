@@ -3,8 +3,7 @@ package swe574.backend.devcomReborn.template;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-
+import swe574.backend.devcomReborn.community.CommunityService;
 import java.util.List;
 
 @CrossOrigin
@@ -13,7 +12,7 @@ import java.util.List;
 @RequestMapping("/templates")
 public class TemplateController {
     private final TemplateService templateService;
-
+    private final CommunityService communityService;
     private final FieldRepository fieldRepository;
 
     @GetMapping("fields")
@@ -21,8 +20,14 @@ public class TemplateController {
         return ResponseEntity.ok(templateService.getFields());
     }
 
-    @GetMapping("template-list/{communityId}")
+    @GetMapping("list/{communityId}")
     public ResponseEntity<List<Template>> getTemplateList(@PathVariable Long communityId) {
         return ResponseEntity.ok(templateService.getTemplateList(communityId));
     }
+
+    @PostMapping("/create/{communityId}")
+    public ResponseEntity<Template> create(@PathVariable Long communityId, @RequestBody Template template) {
+        return ResponseEntity.ok(templateService.createTemplate(communityId, template));
+    }
+
 }
