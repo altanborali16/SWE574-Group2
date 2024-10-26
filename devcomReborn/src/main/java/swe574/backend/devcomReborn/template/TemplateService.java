@@ -22,6 +22,8 @@ public class TemplateService {
         template.setCommunity(community);
         return templateRepository.save(template);
     }
+
+    //name and dataType will be given in JSON payload !
     @Transactional
     public Field addFieldToTemplate(Long templateId, Field field) {
         Template template = templateRepository.findById(templateId)

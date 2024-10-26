@@ -30,4 +30,8 @@ public class TemplateController {
         return ResponseEntity.ok(templateService.createTemplate(communityId, template));
     }
 
+    @PostMapping("/addField/{templateId}")
+    public ResponseEntity<Field> addFieldToTemplate(@PathVariable Long templateId, @RequestBody Field field) {
+        return ResponseEntity.ok(templateService.addFieldToTemplate(templateId, field));
+    }
 }
