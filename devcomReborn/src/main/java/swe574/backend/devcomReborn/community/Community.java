@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
+import swe574.backend.devcomReborn.post.Post;
+import swe574.backend.devcomReborn.template.Template;
 import swe574.backend.devcomReborn.user.User;
 
 import java.util.Set;
@@ -39,5 +41,20 @@ public class Community {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<Membership> memberships;
+
+    @OneToMany(mappedBy = "community",fetch = FetchType.EAGER)
+    @Cascade(org.hibernate.annotations.CascadeType.REMOVE)
+    @JsonManagedReference("community-templates")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<Template> templates;
+
+    @OneToMany(mappedBy = "community",fetch = FetchType.EAGER)
+    @Cascade(org.hibernate.annotations.CascadeType.REMOVE)
+    @JsonManagedReference("community-posts")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @JsonIgnoreProperties({"community"})
+    private Set<Post> posts;
 
 }
