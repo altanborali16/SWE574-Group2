@@ -2,14 +2,56 @@ import { lazy, Suspense } from 'react';
 import { Navigate } from 'react-router-dom';
 
 
+const HomePage = lazy(() => import('../Pages/HomePage'));
+const ProfilePage = lazy(() => import('../Pages/ProfilePage'));
+const CommunitiesPage = lazy(() => import('../Pages/CommunitiesPage'));
+const MyCommunitiesPage = lazy(() => import('../Pages/MyCommunitiesPage'));
+
 // Lazy-loaded components
 const SignIn = lazy(() => import('../Pages/SignInPage'));
 const SignUp = lazy(() => import('../Pages/SignUpPage'));
 const ForgotPassWord = lazy(() => import('../Pages/ForgotPassWord'));
-const Home = lazy(() => import('../Pages/HomePage'));
 
 // Loading fallback component
 const Loading = () => <div>Loading...</div>;
+
+const generalRoutes = [{
+  path: '/home',
+  name: 'Home Page',
+  element: (
+    <Suspense fallback={<Loading />}>
+      <HomePage />
+    </Suspense>
+  ),
+}, 
+{
+  path: '/profile',
+  name: 'Profile Page',
+  element: (
+    <Suspense fallback={<Loading />}>
+      <ProfilePage />
+    </Suspense>
+  ),
+},
+{
+  path: '/communities',
+  name: 'Communities Page',
+  element: (
+    <Suspense fallback={<Loading />}>
+      <CommunitiesPage />
+    </Suspense>
+  ),
+},
+{
+  path: '/mycommunities',
+  name: 'My Communities Page',
+  element: (
+    <Suspense fallback={<Loading />}>
+      <MyCommunitiesPage />
+    </Suspense>
+  ),
+},
+];
 
 export const authRoutes = [
   {
@@ -18,15 +60,6 @@ export const authRoutes = [
     element: (
       <Suspense fallback={<Loading />}>
         <SignIn />
-      </Suspense>
-    ),
-  },
-  {
-    path: '/home',
-    name: 'Home',
-    element: (
-      <Suspense fallback={<Loading />}>
-        <Home />
       </Suspense>
     ),
   },
@@ -53,3 +86,5 @@ export const authRoutes = [
     element: <Navigate to="/auth/sign-in" replace />,
   },
 ];
+
+export const feedRoutes = [...generalRoutes];

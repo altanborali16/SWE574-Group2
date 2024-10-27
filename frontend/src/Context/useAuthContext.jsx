@@ -10,31 +10,44 @@ export function useAuthContext() {
   }
   return context;
 }
-const authSessionKey = 'AUTH_KEY';
-export function AuthProvider({
-  children
-}) {
+
+
+const authTokenKey = 'COMMUNITY_AUTH_TOKEN'; 
+
+export function AuthProvider({ children }) {
   const navigate = useNavigate();
+
+  // Function to retrieve the token from the cookie
   const getSession = () => {
-    const fetchedCookie = getCookie(authSessionKey)?.toString();
-    if (!fetchedCookie) return;else return JSON.parse(fetchedCookie);
+    const fetchedCookie = getCookie(authTokenKey)?.toString();
+    if (!fetchedCookie) return null; // Return null if no cookie
+    return fetchedCookie; // Return the token as a string
   };
-  const [user, setUser] = useState(getSession());
-  const saveSession = user => {
-    setCookie(authSessionKey, JSON.stringify(user));
-    setUser(user);
+
+  const [token, setToken] = useState(getSession()); // State now holds the token
+
+  // Function to save the token
+  const saveSession = (token) => {
+    setCookie(authTokenKey, token); // Set the token directly
+    setToken(token); // Save the token in state
   };
+
+  // Function to remove the token and redirect
   const removeSession = () => {
-    deleteCookie(authSessionKey);
-    setUser(undefined);
-    navigate('/auth/sign-in');
+    deleteCookie(authTokenKey); // Delete the token from cookies
+    setToken(null); // Clear the token from state
+    navigate('/auth/sign-in'); // Redirect to sign-in page
   };
-  return <AuthContext.Provider value={{
-    user,
-    isAuthenticated: hasCookie(authSessionKey),
-    saveSession,
-    removeSession
-  }}>
+
+  return (
+    <AuthContext.Provider value={{
+      //user
+      token, // Provide token instead of user data
+      isAuthenticated: hasCookie(authTokenKey), // Check if token exists
+      saveSession,
+      removeSession,
+    }}>
       {children}
-    </AuthContext.Provider>;
+    </AuthContext.Provider>
+  );
 }
