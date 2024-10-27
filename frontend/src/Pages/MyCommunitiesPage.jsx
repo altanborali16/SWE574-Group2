@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import PageMetaData from "./PageMetaData";
 import Navbar from "./NavBar";
 import CommunityList from "./SharedComponents/CommunityList";
+import { Link } from "react-router-dom";
+import "../Styles/MyCommunitiesPage.css"
 
 const MyCommunitiesPage = () => {
-  // Sample data for community list
   const communityList = [
     {
       id: 1,
@@ -37,7 +38,6 @@ const MyCommunitiesPage = () => {
       postCount: 85,
       subscriberCount: 1500,
     },
-    // Add more communities as needed
   ];
   const subscribedCommunityList = [
     {
@@ -57,7 +57,7 @@ const MyCommunitiesPage = () => {
       subscriberCount: 3400,
     },
     {
-      id : 4,
+      id: 4,
       name: "Stocks Market",
       description: "Discussion Community For Stocks",
       picture:
@@ -73,7 +73,7 @@ const MyCommunitiesPage = () => {
       subscriberCount: 2200,
     },
     {
-      id : 5,
+      id: 5,
       name: "DevOps Club",
       description: "Join us to discuss devops technologies.",
       picture:
@@ -82,7 +82,8 @@ const MyCommunitiesPage = () => {
       categories: ["DevOps", "Software"],
       creator: {
         name: "Feridun Akyol",
-        profilePic: "https://media.licdn.com/dms/image/v2/C4D03AQGMH3IQRxCZZQ/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1554068079271?e=2147483647&v=beta&t=5cR4EaD4DYG2bMdHsh3R9VtEA9d3mQCVqcrm878yghQ",
+        profilePic:
+          "https://media.licdn.com/dms/image/v2/C4D03AQGMH3IQRxCZZQ/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1554068079271?e=2147483647&v=beta&t=5cR4EaD4DYG2bMdHsh3R9VtEA9d3mQCVqcrm878yghQ",
       },
       postCount: 60,
       subscriberCount: 980,
@@ -93,6 +94,11 @@ const MyCommunitiesPage = () => {
     <>
       <PageMetaData title="Communities" />
       <Navbar />
+      <div className="create-community-button" style={{ textAlign: "center", margin: "20px 0" }}>
+        <Link to="/createcommunity">
+          <button>Create New Community</button>
+        </Link>
+      </div>
       <CommunityList communityList={communityList} title="Owned Communities" />
       <CommunityList
         communityList={subscribedCommunityList}

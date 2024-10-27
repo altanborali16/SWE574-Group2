@@ -6,6 +6,7 @@ const HomePage = lazy(() => import('../Pages/HomePage'));
 const ProfilePage = lazy(() => import('../Pages/ProfilePage'));
 const CommunitiesPage = lazy(() => import('../Pages/CommunitiesPage'));
 const MyCommunitiesPage = lazy(() => import('../Pages/MyCommunitiesPage'));
+const CreateCommunityPage = lazy(() => import('../Pages/CreateCommunityPage'));
 
 // Lazy-loaded components
 const SignIn = lazy(() => import('../Pages/SignInPage'));
@@ -48,6 +49,15 @@ const generalRoutes = [{
   element: (
     <Suspense fallback={<Loading />}>
       <MyCommunitiesPage />
+    </Suspense>
+  ),
+},
+{
+  path: '/createcommunity',
+  name: 'Create Community',
+  element: (
+    <Suspense fallback={<Loading />}>
+      <CreateCommunityPage />
     </Suspense>
   ),
 },
