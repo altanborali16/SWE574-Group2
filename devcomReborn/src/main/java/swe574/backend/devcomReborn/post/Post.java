@@ -1,6 +1,7 @@
 package swe574.backend.devcomReborn.post;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,6 +12,8 @@ import swe574.backend.devcomReborn.community.Community;
 import swe574.backend.devcomReborn.template.Template;
 import swe574.backend.devcomReborn.user.User;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -20,6 +23,13 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column
+    private String title;
+
+    @Column
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime time;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "author_id",nullable = false)

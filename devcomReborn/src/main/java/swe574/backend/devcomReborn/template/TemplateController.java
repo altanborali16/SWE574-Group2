@@ -15,7 +15,7 @@ public class TemplateController {
     private final CommunityService communityService;
     private final FieldRepository fieldRepository;
 
-    @GetMapping("fields")
+    @GetMapping("fields/{templateId}")
     public ResponseEntity<List<Field>> getFields(@PathVariable Long templateId) {
         return ResponseEntity.ok(templateService.getFields());
     }
