@@ -3,16 +3,16 @@ package swe574.backend.devcomReborn.post;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.Cascade;
 import swe574.backend.devcomReborn.community.Community;
 import swe574.backend.devcomReborn.template.Template;
 import swe574.backend.devcomReborn.user.User;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Data
 @Builder
@@ -27,8 +27,9 @@ public class Post {
     @Column
     private String title;
 
+    //TODO: test date add related endpoints
     @Column
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd''HH:mm:ss")
     private LocalDateTime time;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -46,6 +47,13 @@ public class Post {
     @JoinColumn(name = "template_id",nullable = false)
     @JsonIgnoreProperties({"fields","community"})
     private Template template;
+
+    @OneToMany(mappedBy = "post",fetch = FetchType.EAGER)
+    @Cascade(org.hibernate.annotations.CascadeType.REMOVE)
+    @JsonManagedReference("post-contents")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<PostContent> postContents;
 
 
 }
