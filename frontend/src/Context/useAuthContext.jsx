@@ -1,18 +1,17 @@
-import { deleteCookie, getCookie, hasCookie, setCookie } from 'cookies-next';
-import { createContext, useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { deleteCookie, getCookie, hasCookie, setCookie } from "cookies-next";
+import { createContext, useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext(undefined);
 export function useAuthContext() {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuthContext must be used within an AuthProvider');
+    throw new Error("useAuthContext must be used within an AuthProvider");
   }
   return context;
 }
 
-
-const authTokenKey = 'COMMUNITY_AUTH_TOKEN'; 
+const authTokenKey = "COMMUNITY_AUTH_TOKEN";
 
 export function AuthProvider({ children }) {
   const navigate = useNavigate();
@@ -28,7 +27,10 @@ export function AuthProvider({ children }) {
 
   // Function to save the token
   const saveSession = (token) => {
-    setCookie(authTokenKey, token); // Set the token directly
+    const expirationDate = new Date();
+    expirationDate.setDate(expirationDate.getDate() + 7); // Expires in 7 days
+    const options = { expires: expirationDate }; // Set the specific expiration date
+    setCookie(authTokenKey, token, options); // Set the token with expiry
     setToken(token); // Save the token in state
   };
 
@@ -36,17 +38,19 @@ export function AuthProvider({ children }) {
   const removeSession = () => {
     deleteCookie(authTokenKey); // Delete the token from cookies
     setToken(null); // Clear the token from state
-    navigate('/auth/sign-in'); // Redirect to sign-in page
+    navigate("/auth/sign-in"); // Redirect to sign-in page
   };
 
   return (
-    <AuthContext.Provider value={{
-      //user
-      token, // Provide token instead of user data
-      isAuthenticated: hasCookie(authTokenKey), // Check if token exists
-      saveSession,
-      removeSession,
-    }}>
+    <AuthContext.Provider
+      value={{
+        //user
+        token, // Provide token instead of user data
+        isAuthenticated: hasCookie(authTokenKey), // Check if token exists
+        saveSession,
+        removeSession,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

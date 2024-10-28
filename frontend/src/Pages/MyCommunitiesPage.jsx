@@ -92,7 +92,7 @@ const MyCommunitiesPage = () => {
 
   return (
     <>
-      <PageMetaData title="Communities" />
+      <PageMetaData title="My Communities" />
       <Navbar />
       <div className="create-community-button" style={{ textAlign: "center", margin: "20px 0" }}>
         <Link to="/createcommunity">
