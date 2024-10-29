@@ -6,7 +6,7 @@ import {
     developedByLink,
   } from "../../Context/constants.js";
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap'; //FormCheck

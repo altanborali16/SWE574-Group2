@@ -5,6 +5,7 @@ import { Navigate } from 'react-router-dom';
 const HomePage = lazy(() => import('../Pages/HomePage'));
 const ProfilePage = lazy(() => import('../Pages/ProfilePage'));
 const CommunitiesPage = lazy(() => import('../Pages/CommunitiesPage'));
+const CommunityPage = lazy(() => import('../Pages/CommunityPage'));
 const MyCommunitiesPage = lazy(() => import('../Pages/MyCommunitiesPage'));
 const CreateCommunityPage = lazy(() => import('../Pages/CreateCommunityPage'));
 
@@ -49,6 +50,15 @@ const generalRoutes = [{
   element: (
     <Suspense fallback={<Loading />}>
       <MyCommunitiesPage />
+    </Suspense>
+  ),
+},
+{
+  path: '/community/:id',
+  name: 'Communities Page',
+  element: (
+    <Suspense fallback={<Loading />}>
+      <CommunityPage />
     </Suspense>
   ),
 },

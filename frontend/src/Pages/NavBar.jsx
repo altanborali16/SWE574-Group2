@@ -1,12 +1,12 @@
 // Navbar.jsx
 import React, { useState } from "react";
-import { NavLink, useNavigate  } from "react-router-dom";
+import { NavLink  } from "react-router-dom";
 import "../Styles/Navbar.css"; // Make sure the path is correct
 import { useAuthContext } from "../Context/useAuthContext";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const navigate = useNavigate(); // Hook to programmatically navigate
+  // const navigate = useNavigate(); // Hook to programmatically navigate
   const { removeSession } = useAuthContext();
 
   const toggleMenu = () => {
