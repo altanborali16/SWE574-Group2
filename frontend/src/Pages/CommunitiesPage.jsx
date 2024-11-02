@@ -1,9 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PageMetaData from "./PageMetaData";
 import Navbar from "./NavBar";
 import CommunityList from "./SharedComponents/CommunityList";
 
 const CommunitiesPage = () => {
+  useEffect(() => {
+    const myCookie = getCookie('COMMUNITY_AUTH_TOKEN');
+    console.log('My Cookie:', myCookie);
+  }, []);
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  }
   // Sample data for community list
   const communityList = [
     {

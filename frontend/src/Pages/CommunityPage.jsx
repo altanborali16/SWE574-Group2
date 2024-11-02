@@ -91,6 +91,7 @@ const CommunityPage = () => {
   const [showCreateTemplateForm, setShowCreateTemplateForm] = useState(false);
   const [templates, setTemplates] = useState([
     {
+      "id": 1,
       "name": "Basic Template",
       "description": "Basic Templates",
       "fields": [
@@ -102,7 +103,10 @@ const CommunityPage = () => {
           "name": "Description",
           "dataType": "TEXT"
         }
-      ],
+      ]
+    },
+    {
+      "id": 2,
       "name": "Event Template",
       "description": "Event Templates",
       "fields": [
@@ -114,7 +118,7 @@ const CommunityPage = () => {
           "name": "Description",
           "dataType": "TEXT"
         }
-      ],
+      ]
     }
   ]); // State to hold list of templates
 

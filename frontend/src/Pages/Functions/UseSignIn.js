@@ -39,7 +39,7 @@ const UseSignIn = () => {
       const res = await httpClient.post( connection_string + 'auth/authenticate', values);
       console.log("Res : ", res);
       if (res.data.token) {
-        saveSession(res.data.token);
+        saveSession(res.data.token,res.data.id);
         redirectUser();
         showNotification({
           message: 'Successfully logged in. Redirecting....',

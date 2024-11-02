@@ -12,6 +12,7 @@ export function useAuthContext() {
 }
 
 const authTokenKey = "COMMUNITY_AUTH_TOKEN";
+const userId = "COMMUNITY_USER_ID";
 
 export function AuthProvider({ children }) {
   const navigate = useNavigate();
@@ -26,17 +27,19 @@ export function AuthProvider({ children }) {
   const [token, setToken] = useState(getSession()); // State now holds the token
 
   // Function to save the token
-  const saveSession = (token) => {
+  const saveSession = (token,user_id) => {
     const expirationDate = new Date();
     expirationDate.setDate(expirationDate.getDate() + 7); // Expires in 7 days
     const options = { expires: expirationDate }; // Set the specific expiration date
     setCookie(authTokenKey, token, options); // Set the token with expiry
+    setCookie(userId, user_id, options); // Set the token with expiry
     setToken(token); // Save the token in state
   };
 
   // Function to remove the token and redirect
   const removeSession = () => {
     deleteCookie(authTokenKey); // Delete the token from cookies
+    deleteCookie(userId)
     setToken(null); // Clear the token from state
     navigate("/auth/sign-in"); // Redirect to sign-in page
   };
