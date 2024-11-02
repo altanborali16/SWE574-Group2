@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import PageMetaData from "./PageMetaData";
 import Navbar from "./NavBar";
 import "../Styles/CommunityPage.css";
+import CreateTemplateForm from "../Components/Forms/CreateTemplateForm"
 
 const CommunityPage = () => {
   const { id } = useParams();
@@ -86,6 +87,49 @@ const CommunityPage = () => {
         ],
       },
   ]);
+  
+  const [showCreateTemplateForm, setShowCreateTemplateForm] = useState(false);
+  const [templates, setTemplates] = useState([
+    {
+      "name": "Basic Template",
+      "description": "Basic Templates",
+      "fields": [
+        {
+          "name": "Title",
+          "dataType": "TEXT"
+        },
+        {
+          "name": "Description",
+          "dataType": "TEXT"
+        }
+      ],
+      "name": "Event Template",
+      "description": "Event Templates",
+      "fields": [
+        {
+          "name": "Title",
+          "dataType": "TEXT"
+        },
+        {
+          "name": "Description",
+          "dataType": "TEXT"
+        }
+      ],
+    }
+  ]); // State to hold list of templates
+
+    // Function to add new template to the list
+    const addTemplate = (newTemplate) => {
+      setTemplates((prevTemplates) => [...prevTemplates, newTemplate]);
+    };
+
+  const handleOpenForm = () => {
+    setShowCreateTemplateForm(true);
+  };
+
+  const handleCloseForm = () => {
+    setShowCreateTemplateForm(false);
+  };
 
   const community = communityList.find((community) => community.id === parseInt(id));
   const [newComment, setNewComment] = useState({});
@@ -127,6 +171,16 @@ const CommunityPage = () => {
     <>
       <PageMetaData title="Communities" />
       <Navbar />
+
+      {/* Conditionally render the CreateTemplateForm as a modal */}
+      {showCreateTemplateForm && (
+        <div className="modal-overlay" onClick={handleCloseForm}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="close-button" onClick={handleCloseForm}>&times;</button>
+            <CreateTemplateForm onTemplateCreated={addTemplate} onClose={handleCloseForm} />
+          </div>
+        </div>
+      )}
       <div className="community-page">
         <div className="community-header-card">
           <img src={community.picture} alt={community.name} className="community-picture" />
@@ -143,6 +197,8 @@ const CommunityPage = () => {
               ))}
             </div>
           </div>
+                {/* Button to open the form */}
+          <button onClick={handleOpenForm}>Create Template</button>
         </div>
 
         <div className={`posts-section ${community.isPrivate && !community.isFollowing ? "blurred" : ""}`}>
