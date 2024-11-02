@@ -4,6 +4,7 @@ package swe574.backend.devcomReborn.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -33,6 +34,7 @@ public class FilterConfiguration {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry-> authorizationManagerRequestMatcherRegistry
                         .requestMatchers("/auth/**","/v1","/v1/**","/swagger-ui","/swagger-ui/**","/api/v1/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated());
         http.sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
@@ -44,21 +46,19 @@ public class FilterConfiguration {
 
     }
 
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-
-        // Allow requests from your frontend domain
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Allow methods as needed
-        configuration.setAllowedHeaders(Arrays.asList("*")); // Allow all headers
-        configuration.setAllowCredentials(true); // Allow credentials (e.g., cookies, authorization headers)
-
-        // Apply CORS configuration to all endpoints
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-
-        return source;
-    }
+//    @Bean
+//    CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration configuration = new CorsConfiguration();
+//
+//        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+//        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Allow methods as needed
+//        configuration.setAllowedHeaders(Arrays.asList("*")); // Allow all headers
+//        configuration.setAllowCredentials(true); // Allow credentials (e.g., cookies, authorization headers)
+//
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//
+//        return source;
+//    }
 }
 

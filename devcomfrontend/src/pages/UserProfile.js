@@ -24,7 +24,7 @@ const UserProfile = () => {
     };
 
     fetchCurrentProfile();
-  }, []);
+  }, [auth.token]); // Dependency on auth.token ensures that the effect runs when the token changes
 
   return (
     <>
