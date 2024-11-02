@@ -15,24 +15,28 @@ const UserProfile = () => {
   const [createError, setCreateError] = useState(''); // Stores creation errors
   const [createSuccess, setCreateSuccess] = useState(''); // Stores creation success message
 
-  useEffect(() => {
-    const getProfile = async () => {
-      try {
-        const data = await fetchCurrentProfile();
-        if (data) {
-          setProfile(data);
-        } else {
-          // Profile does not exist, prepare to create one
-          setProfile(null);
-        }
-      } catch (err) {
-        setError('Failed to fetch profile.');
-        console.error('Error fetching profile:', err);
-      } finally {
-        setLoading(false);
+  // Function to fetch the profile
+  const getProfile = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const data = await fetchCurrentProfile();
+      if (data) {
+        setProfile(data);
+      } else {
+        // Profile does not exist
+        setProfile(null);
       }
-    };
+    } catch (err) {
+      setError('You have no profile please create one!');
+      console.error('Error fetching profile:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  // Fetch profile on component mount or when auth.token changes
+  useEffect(() => {
     getProfile();
   }, [auth.token]);
 
@@ -58,9 +62,10 @@ const UserProfile = () => {
 
     try {
       const newProfile = await createProfile(values);
-      setProfile(newProfile);
       setCreateSuccess('Profile created successfully.');
       resetForm();
+      // After creating the profile, re-fetch it to update the state
+      await getProfile();
     } catch (err) {
       setCreateError(
         err.response?.data?.message || 'Failed to create profile.'
@@ -181,7 +186,18 @@ const UserProfile = () => {
                       className="btn btn-primary"
                       disabled={isSubmitting || creatingProfile}
                     >
-                      {creatingProfile ? 'Creating...' : 'Create Profile'}
+                      {creatingProfile ? (
+                        <>
+                          <span
+                            className="spinner-border spinner-border-sm"
+                            role="status"
+                            aria-hidden="true"
+                          ></span>{' '}
+                          Creating...
+                        </>
+                      ) : (
+                        'Create Profile'
+                      )}
                     </button>
                   </Form>
                 )}
