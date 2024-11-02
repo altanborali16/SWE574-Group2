@@ -1,9 +1,0 @@
-.create-community-button {
-    display: block;
-  }
-  
-  @media (max-width: 768px) { /* Adjust 600px to your preferred breakpoint */
-    .create-community-button {
-      display: none;
-    }
-  }
