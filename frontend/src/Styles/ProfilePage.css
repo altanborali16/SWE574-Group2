@@ -1,0 +1,94 @@
+/* ProfilePage.css */
+.profile-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px; /* Add some padding around the page */
+    background-color: #f8f9fa; /* Light background color */
+    height: 100vh; /* Full viewport height */
+  }
+  
+  .profile-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 400px; /* Adjust width for larger screens */
+    width: 100%; /* Take full width on smaller screens */
+    text-align: center; /* Center the text */
+    margin-top: 20px; /* Space above the card */
+    transition: max-width 0.3s; /* Smooth transition for width changes */
+  }
+  
+  .profile-card__image {
+    width: 100px; /* Adjust size as needed */
+    height: 100px; /* Keep it square */
+    border-radius: 50%; /* Make it circular */
+    object-fit: cover; /* Cover the image area */
+    margin-bottom: 15px; /* Space below the image */
+  }
+  
+  .profile-card__name {
+    font-size: 1.5rem; /* Adjust font size */
+    margin: 10px 0; /* Space around the name */
+  }
+  
+  .profile-card__info {
+    font-size: 1rem; /* Adjust font size */
+    color: #555; /* Slightly lighter color */
+    margin: 5px 0; /* Space between info lines */
+  }
+  
+  .profile-card__edit-button {
+    background-color: #bb3641; /* Bootstrap primary color */
+    color: white; /* Text color */
+    border: none; /* Remove default button border */
+    border-radius: 5px; /* Slightly rounded corners */
+    padding: 10px 15px; /* Space inside the button */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth background color change */
+  }
+  
+  .profile-card__edit-button:hover {
+    background-color: #e0091b; /* Darker shade on hover */
+  }
+  .badges-section {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .badges-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px; /* Space between badges */
+  }
+  
+  .badge {
+    background-color: #f0f0f0; /* Light background for badges */
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .badge__image {
+    width: 50px; /* Badge image size */
+    height: 50px;
+  }
+  
+  .badge__title {
+    margin-top: 5px; /* Space between image and title */
+    font-size: 0.9rem; /* Adjust font size */
+    color :black;
+  }
+  
+  /* Media Query for larger screens */
+  @media (min-width: 768px) {
+    .profile-card {
+      max-width: 600px; /* Wider card for desktop */
+    }
+  }
+  
