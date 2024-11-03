@@ -32,6 +32,7 @@ public class Post {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime time;
 
+    //TODO: create post returns user password lol
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "author_id",nullable = false)
     @JsonIgnoreProperties({"memberships"})
