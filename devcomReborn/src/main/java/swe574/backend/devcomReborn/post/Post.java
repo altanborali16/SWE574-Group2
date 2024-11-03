@@ -35,7 +35,7 @@ public class Post {
     //TODO: create post returns user password lol
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "author_id",nullable = false)
-    @JsonIgnoreProperties({"memberships"})
+    @JsonIgnoreProperties({"memberships","password"})
     private User author;
 
     @ManyToOne(fetch = FetchType.EAGER)

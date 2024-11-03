@@ -3,8 +3,8 @@ package swe574.backend.devcomReborn.post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import swe574.backend.devcomReborn.community.Community;
 import swe574.backend.devcomReborn.community.CommunityRepository;
+import swe574.backend.devcomReborn.template.Field;
 import swe574.backend.devcomReborn.template.Template;
 
 import java.util.List;
@@ -35,4 +35,16 @@ public class PostController {
     public ResponseEntity<List<Post>> getPostList(@PathVariable Long communityId) {
         return ResponseEntity.ok(postService.getPostList(communityId));
     }
+
+    //advanced search
+    @GetMapping("/list/{userId}")
+    public ResponseEntity<List<Post>> getPostListByUser(@PathVariable Long userId) {
+        return ResponseEntity.ok(postService.getPostListByUser(userId));
+    }
+
+    @GetMapping("/list/{templateId}")
+    public ResponseEntity<List<Post>> getPostListByTemplate(@PathVariable Long templateId) {
+        return ResponseEntity.ok(postService.getPostListByTemplate(templateId));
+    }
+
 }
