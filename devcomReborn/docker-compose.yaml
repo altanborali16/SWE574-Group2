@@ -1,9 +1,39 @@
+version: '3.8'
 services:
-  postgres:
-    image: 'postgres:latest'
-    environment:
-      - 'POSTGRES_DB=devcomReborn'
-      - 'POSTGRES_PASSWORD=123'
-      - 'POSTGRES_USER=postgres'
+  db:
+    container_name: postgres
+    image: postgres
     ports:
-      - '5432'
+      - 3001:5432
+    environment:
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: devcomReborn
+      POSTGRES_USER: postgres
+      #volumes:
+       # - ./pgdata:/var/lib/postgresql/data
+    restart: always
+
+  backend:
+    container_name: backend
+    build:
+      dockerfile: Backend.Dockerfile
+    ports:
+      - 8080:8080
+    environment:
+      db_url: jdbc:postgresql://db:5432/devcomReborn
+      db_username: postgres
+      db_password: 123
+    depends_on:
+      - db
+    restart: always
+
+  frontend:
+    container_name: frontend
+    build:
+      dockerfile: ./../frontend/Frontend.Dockerfile
+      context: ./../frontend
+    ports:
+      - 3000:80
+    depends_on:
+      - backend
+    restart: always
