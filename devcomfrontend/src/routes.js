@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard';
 import UserProfile from './pages/UserProfile';
 import Community from './pages/Community';
 import CreateCommunity from './pages/CreateCommunity';
+import CommunityDetail from './pages/CommunityDetail'; // Import the new component
 import { useAuth } from './context/AuthContext';
 
 const PrivateRoute = ({ children }) => {
@@ -46,12 +47,20 @@ const AppRoutes = () => (
           </PrivateRoute>
         }
       />
-      {/* Create Community Route */}
       <Route
         path="/create-community"
         element={
           <PrivateRoute>
             <CreateCommunity />
+          </PrivateRoute>
+        }
+      />
+      {/* Community Detail Route */}
+      <Route
+        path="/community/:id"
+        element={
+          <PrivateRoute>
+            <CommunityDetail />
           </PrivateRoute>
         }
       />
