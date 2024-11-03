@@ -70,6 +70,18 @@ const Navbar = () => {
                 </NavLink>
               </li>
 
+              {/* Create Community Link */}
+              <li className="nav-item">
+                <NavLink
+                  to="/create-community"
+                  className={({ isActive }) =>
+                    isActive ? 'nav-link active' : 'nav-link'
+                  }
+                >
+                  Create Community
+                </NavLink>
+              </li>
+
               {/* Dropdown Menu */}
               <li className="nav-item dropdown">
                 <a
