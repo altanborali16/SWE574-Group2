@@ -85,6 +85,8 @@ const CreateTemplateForm = ({ onTemplateCreated, onClose }) => {
               <option value="TEXT">Text</option>
               <option value="IMAGE">Image</option>
               <option value="GEOLOCATION">Geolocation</option>
+              <option value="DATE">Date</option>
+              <option value="TIME">Time</option>
             </select>
             <button type="button" style={{backgroundColor : "red", marginTop : "2vh"}} onClick={() => removeField(index)}>
               Remove Field

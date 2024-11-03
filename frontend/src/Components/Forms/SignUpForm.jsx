@@ -12,8 +12,8 @@ import { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap'; //FormCheck
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import httpClient from '../../Helpers/HttpClient.js'
-import { connection_string } from '../../Context/constants.js'
+// import httpClient from '../../Helpers/HttpClient.js'
+import { registerUser } from '../../Helpers/HttpClient';
 import { useNotificationContext } from '../../Context/useNotificationContext.jsx'
 
 const SignUpForm = () => {
@@ -38,7 +38,7 @@ const SignUpForm = () => {
   } = useNotificationContext();
   const onSubmit = async (values) => {
     try {
-      const res = await httpClient.post(connection_string + 'auth/register', values);
+      const res = await registerUser(values);
   
       if (res.status === 200) {
         console.log("Registration successful");

@@ -9,6 +9,7 @@ import { jwtDecode } from 'jwt-decode';
 const ProfilePage = () => {
   // Sample user data
   const [userDb, setUser] = useState([]);
+  const token = localStorage.getItem('token'); // replace 'token' with the key you used to store the token
   const [auth, setAuth] = useState({
     user: localStorage.getItem('token') ? jwtDecode(localStorage.getItem('token')) : null,
   });

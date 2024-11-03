@@ -29,4 +29,27 @@ axiosInstance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+async function registerUser(data) {
+  try {
+    const response = await axiosInstance.post('/auth/register', data);
+    console.log('Registration successful:', response.data);
+    return response;
+  } catch (error) {
+    console.error('Error registering user:', error);
+  }
+}
+
+// Authenticate function
+async function authenticateUser(credentials) {
+  try {
+    console.log("Burda")
+    const response = await axiosInstance.post('/auth/authenticate', credentials);
+    console.log('Authentication successful:', response.data);
+    return response;
+  } catch (error) {
+    console.error('Error authenticating user:', error);
+  }
+}
+
+export { registerUser, authenticateUser };
 export default axiosInstance;

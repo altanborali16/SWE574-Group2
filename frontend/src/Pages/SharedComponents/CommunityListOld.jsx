@@ -34,7 +34,17 @@ const CommunityListOld = ({ communityList, title = "Communities" }) => {
                   ) : (
                     <FaLockOpen className="community-card__icon public" />
                   )}
-                  <span>{community.isPrivate ? "Private" : "Public"}</span>
+                  <span>{community.private ? "Private" : "Public"}</span>
+                </div>
+                {/* Stats (Post count and Subscriber count) */}
+                <div className="community-card__stats">
+                  <div className="community-card__stat">
+                    <FaClipboardList /> <span>{community.posts.length} Posts</span>
+                  </div>
+                  <div className="community-card__stat">
+                    <FaUsers />{" "}
+                    <span>{community.memberships.length} Subscribers</span>
+                  </div>
                 </div>
               </div>
             </div>
