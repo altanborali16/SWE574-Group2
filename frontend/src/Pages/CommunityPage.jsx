@@ -1,16 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import PageMetaData from "./PageMetaData";
 import Navbar from "./NavBar";
 import "../Styles/CommunityPage.css";
 import CreateTemplateForm from "../Components/Forms/CreateTemplateForm"
+import httpClient from "../Helpers/HttpClient"
 
 const CommunityPage = () => {
   const { id } = useParams();
 
   const [communityList, setCommunityList] = useState([
     {
-      id: 1,
+      id: "a",
       name: "BJJ Club",
       description: "A community for BJJ athletes",
       picture: "https://hooshmand.net/wp-content/uploads/2024/02/bjj-black-belt-on-tatami-mat.jpg",
@@ -47,7 +48,7 @@ const CommunityPage = () => {
       ],
     },
     {
-        id : 7,
+        id : "g",
         name: "Art Lovers",
         description: "Explore the world of art.",
         picture: "https://img.freepik.com/free-photo/fantasy-eye-illustration_23-2151675421.jpg",
@@ -87,6 +88,25 @@ const CommunityPage = () => {
         ],
       },
   ]);
+  const [communityDb, setcommunityDb] = useState([]);
+  const [loading, setLoading] = useState(true); // Initialize loading state
+  const [dataFromDb, setDataOnDb] = useState(false); // Initialize loading state
+  useEffect(() => {
+    const fetchCommunity = async () => {
+      setLoading(true); // Set loading to true when starting the fetch
+      try {
+        const response = await httpClient.get('/community/' + id);
+        setcommunityDb(response.data);
+        setDataOnDb(true)
+        console.log('Community:', response.data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false); // Set loading to false once fetch completes or fails
+      }
+    };
+    fetchCommunity();
+  }, [id]);
   
   const [showCreateTemplateForm, setShowCreateTemplateForm] = useState(false);
   const [templates, setTemplates] = useState([
@@ -122,8 +142,32 @@ const CommunityPage = () => {
     }
   ]); // State to hold list of templates
 
+  const createFields = async (templateId, fields) => {
+    for (const field of fields) {
+        try {
+            const responseCreateField = await httpClient.post(`/templates/addField/${templateId}`, field);
+            console.log("Field created: ", responseCreateField.data);
+        } catch (error) {
+            console.error("Error creating field: ", error);
+        }
+    }
+};
     // Function to add new template to the list
-    const addTemplate = (newTemplate) => {
+    const addTemplate = async (newTemplate) => {
+      try {
+        const responseCreateTemplate = await httpClient.post('/templates/create/' + id, {
+          name : newTemplate.name,
+          description : newTemplate.description,
+        });
+        console.log('Template created successfully:', responseCreateTemplate.data);
+        await createFields(responseCreateTemplate.data.id, newTemplate.fields);
+        // const responseCreateFields = await httpClient.post('/templates/create/' + responseCreateTemplate.data.id, {
+        //   fields : newTemplate.fields,
+        // });
+        // console.log('Fields created successfully:', responseCreateFields.data);
+      } catch (error) {
+        console.error('Error creating template:', error);
+      }
       setTemplates((prevTemplates) => [...prevTemplates, newTemplate]);
     };
 
@@ -135,7 +179,7 @@ const CommunityPage = () => {
     setShowCreateTemplateForm(false);
   };
 
-  const community = communityList.find((community) => community.id === parseInt(id));
+   const community = communityDb || communityList.find((community) => community.id === id);
   const [newComment, setNewComment] = useState({});
 
   const handleLike = (postIndex) => {
@@ -167,8 +211,48 @@ const CommunityPage = () => {
     setNewComment({ ...newComment, [postIndex]: "" }); // Clear the comment input
   };
 
+  if (loading) {
+    // Display loading message or spinner
+    return <div>Loading...</div>;
+  }
   if (!community) {
     return <div>Community not found</div>;
+  }
+  if(dataFromDb){
+    return(   
+    <>
+      <PageMetaData title="Communities" />
+      <Navbar />
+      {showCreateTemplateForm && (
+        <div className="modal-overlay" onClick={handleCloseForm}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="close-button" onClick={handleCloseForm}>&times;</button>
+            <CreateTemplateForm onTemplateCreated={addTemplate} onClose={handleCloseForm} />
+          </div>
+        </div>
+      )}
+            <div className="community-page">
+        <div className="community-header-card">
+          <img src={community.picture} alt={community.name} className="community-picture" />
+          <div className="community-header-content">
+            <h1>{community.name}</h1>
+            <p>{community.description}</p>
+            <div className="community-stats">
+              <span>{community.postCount} Posts</span> |
+              <span>{community.subscriberCount} Subscribers</span>
+            </div>
+            {/* <div className="community-categories">
+              {community.categories.map((category, index) => (
+                <span key={index} className="category-tag">{category}</span>
+              ))}
+            </div> */}
+          </div>
+                {/* Button to open the form */}
+          <button onClick={handleOpenForm}>Create Template</button>
+        </div>
+        </div>
+    </>
+    ) 
   }
 
   return (

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import "../../Styles/CreateTemplateForm.css"
 
 const CreateTemplateForm = ({ onTemplateCreated, onClose }) => {
@@ -29,16 +28,6 @@ const CreateTemplateForm = ({ onTemplateCreated, onClose }) => {
     // Submit handler
     const  handleSubmit = (e) => {
       e.preventDefault();
-    //   try {
-    //     const response = await axios.post('/api/templates', {
-    //       name: templateName,
-    //       description: templateDescription,
-    //       fields
-    //     });
-    //     console.log('Template created successfully:', response.data);
-    //   } catch (error) {
-    //     console.error('Error creating template:', error);
-    //   }
       // Handle form submission logic here
       const templateData = {
         name: templateName,

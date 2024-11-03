@@ -8,7 +8,7 @@ import "../Styles/MyCommunitiesPage.css"
 const MyCommunitiesPage = () => {
   const communityList = [
     {
-      id: 1,
+      id: "a",
       name: "BJJ Club",
       description: "A community for bjj athelthes",
       picture:
@@ -24,7 +24,7 @@ const MyCommunitiesPage = () => {
       subscriberCount: 2400,
     },
     {
-      id: 2,
+      id: "b",
       name: "Kurtlar Vadisi Fanları",
       description: "Kurtlar Vadisi hakkında her şey",
       picture: "https://cdn.wmaraci.com/blog/kurtlar-vadisi.jpg",
@@ -41,7 +41,7 @@ const MyCommunitiesPage = () => {
   ];
   const subscribedCommunityList = [
     {
-      id: 3,
+      id: "c",
       name: "European side basketball",
       description:
         "Community for basketball organizations at European side of Istanbul",
@@ -57,7 +57,7 @@ const MyCommunitiesPage = () => {
       subscriberCount: 3400,
     },
     {
-      id: 4,
+      id: "d",
       name: "Stocks Market",
       description: "Discussion Community For Stocks",
       picture:
@@ -73,7 +73,7 @@ const MyCommunitiesPage = () => {
       subscriberCount: 2200,
     },
     {
-      id: 5,
+      id: "e",
       name: "DevOps Club",
       description: "Join us to discuss devops technologies.",
       picture:

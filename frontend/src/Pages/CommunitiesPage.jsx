@@ -1,12 +1,27 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import PageMetaData from "./PageMetaData";
 import Navbar from "./NavBar";
 import CommunityList from "./SharedComponents/CommunityList";
+import CommunityListOld from "./SharedComponents/CommunityListOld";
+import httpClient from '../Helpers/HttpClient'; 
 
 const CommunitiesPage = () => {
+  // useEffect(() => {
+  //   const myCookie = getCookie('COMMUNITY_AUTH_TOKEN');
+  //   console.log('My Cookie:', myCookie);
+  // }, []);
+  const [communityListDb, setcommunityListDb] = useState([]);
   useEffect(() => {
-    const myCookie = getCookie('COMMUNITY_AUTH_TOKEN');
-    console.log('My Cookie:', myCookie);
+    const fetchCommunityList = async () => {
+      try {
+        const response = await httpClient.get('/community/list');
+        setcommunityListDb(response.data);
+        console.log('Communities:', response.data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchCommunityList();
   }, []);
   function getCookie(name) {
     const value = `; ${document.cookie}`;
@@ -16,7 +31,7 @@ const CommunitiesPage = () => {
   // Sample data for community list
   const communityList = [
     {
-      id : 6,
+      id : "f",
       name: "Tech Enthusiasts",
       description: "A community for technology lovers.",
       picture: "https://www.globalts.com/images/easyblog_shared/October_2023/10-25-23/modernTechnology_620977929_400.jpg",
@@ -30,9 +45,9 @@ const CommunitiesPage = () => {
       subscriberCount: 2400,
     },
     {
-      id : 7,
+      id : "g",
       name: "Art Lovers",
-      description: "Explore the world of art.",
+      communityDescription: "Explore the world of art.",
       picture: "https://img.freepik.com/free-photo/fantasy-eye-illustration_23-2151675421.jpg",
       isPrivate: true,
       categories: ["Art", "Creativity","Painting","Patates"],
@@ -44,9 +59,9 @@ const CommunitiesPage = () => {
       subscriberCount: 1500,
     },
     {
-      id : 8,
+      id : "h",
       name: "Travelers",
-      description: "For those who love to explore.",
+      communityDescription: "For those who love to explore.",
       picture: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2HY0QhzCuKiWHSsHVUPsK4g4VDfWH4QpPFQ&s",
       isPrivate: false,
       categories: ["Travel", "Adventure"],
@@ -58,7 +73,7 @@ const CommunitiesPage = () => {
       subscriberCount: 3400,
     },
     {
-      id : 9,
+      id : "j",
       name: "Fitness Fanatics",
       description: "A group for health and fitness enthusiasts.",
       picture: "https://minio.yalispor.com.tr/sneakscloud/blog/yeni-baslayanlar-icin-fitness-nedir_5e560dd58b34f.jpg",
@@ -72,7 +87,7 @@ const CommunitiesPage = () => {
       subscriberCount: 2200,
     },
     {
-      id : 10,
+      id : "k",
       name: "Book Club",
       description: "Join us to discuss and recommend books.",
       picture: "https://images-cdn.reedsy.com/discovery/post/109/featured_image/large_aa7b8fcc4ee3a86626aca3157bbd8d697c38429a.jpg",
@@ -93,6 +108,7 @@ const CommunitiesPage = () => {
       <PageMetaData title="Communities" />
       <Navbar />
       <CommunityList communityList={communityList} title="Explore Communities" />
+      <CommunityListOld communityList={communityListDb.length > 0 ? communityListDb : communityList} title="Backend Communities" />
     </>
   );
 };

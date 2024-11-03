@@ -1,10 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../Styles/CreateCommunityPage.css";
 import PageMetaData from "./PageMetaData";
 import Navbar from "./NavBar";
 import { useNavigate } from "react-router-dom";
+import { connection_string } from '../Context/constants';
+import httpClient from '../Helpers/HttpClient';  
 
 const CreateCommunityPage = () => {
+  // useEffect(() => {
+  //   const myCookie = getCookie('COMMUNITY_AUTH_TOKEN');
+  //   setToken(myCookie);  // Store the cookie in state
+  //   console.log('My Cookie:', myCookie);
+  // }, []);
+  useEffect(() => {
+    const fetchCommunityList = async () => {
+      try {
+        const response = await httpClient.get('/profile/currentProfile');
+        console.log('profile:', response.data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+      }
+    };
+
+    fetchCommunityList();
+  }, []);
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  }
+  const [token, setToken] = useState('');
   const [communityData, setCommunityData] = useState({
     name: "",
     description: "",
@@ -34,8 +60,62 @@ const CreateCommunityPage = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
+    console.log("Token : ", token)
+    try {
+      const response = await httpClient.get(
+        '/profile/currentProfile', // relative URL since we set baseURL in axiosInstance
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Bearer token header
+          },
+        }
+      );
+    console.log('Community created successfully:', response.data);
+  } catch (error) {
+    // Check if error response is present
+    if (error.response) {
+        // The request was made and the server responded with a status code
+        console.log('Error response:', error.response.data);
+        console.log('Error status:', error.response.status);
+    } else if (error.request) {
+        // The request was made but no response was received
+        console.log('Error request:', error.request);
+    } else {
+        // Something happened in setting up the request that triggered an error
+        console.log('Error message:', error.message);
+    }
+}
+  try {
+    const response = await httpClient.get(
+      '/community/list', // relative URL since we set baseURL in axiosInstance
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Bearer token header
+        },
+      }
+    );
+  console.log('Community created successfully:', response.data);
+} catch (error) {
+  // Check if error response is present
+}
+    try {
+      const response = await httpClient.post(
+        '/community/create', // relative URL since we set baseURL in axiosInstance
+        {
+          name: communityData.name,
+          communityDescription: communityData.description,
+          isPrivate: communityData.isPrivate,
+          isArchived: false,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Bearer token header
+          },
+        }
+      );
+    console.log('Community created successfully:', response.data);
     navigate("/mycommunities");
     // onCreateCommunity(communityData);
     // setCommunityData({
@@ -45,6 +125,18 @@ const CreateCommunityPage = () => {
     //   isPrivate: false,
     //   categories: [],
     // });
+  } catch (error) {
+    // Check if error response is present
+    if (error.response) {
+      console.error('Error creating community:', error.response.data);
+      console.error('Status code:', error.response.status);
+      console.error('Headers:', error.response.headers);
+    } else if (error.request) {
+      console.error('No response received:', error.request);
+    } else {
+      console.error('Request setup error:', error.message);
+    }
+  }
   };
 
   return (
