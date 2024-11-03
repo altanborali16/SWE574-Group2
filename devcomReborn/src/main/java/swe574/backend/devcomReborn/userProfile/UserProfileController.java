@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/profile")
 @RequiredArgsConstructor
-
+@CrossOrigin
 public class UserProfileController {
 
     private final UserProfileService service;
