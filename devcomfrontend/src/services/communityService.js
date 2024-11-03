@@ -73,3 +73,84 @@ export const leaveCommunity = async (id) => {
     throw error;
   }
 };
+
+
+/**
+ * Fetch members of a specific community by its ID.
+ * @param {number} communityId - The ID of the community.
+ * @returns {Promise<Array>} - An array of MemberDTO objects.
+ */
+export const getCommunityMembers = async (communityId) => {
+    try {
+      const response = await api.get(`/community/members/${communityId}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+
+
+// // 2222222222222222222222222222
+
+// /**
+//  * Fetch all templates for a community.
+//  * @param {number} communityId - The ID of the community.
+//  * @returns {Promise<Array>} - An array of templates.
+//  */
+// export const getTemplatesByCommunity = async (communityId) => {
+//     try {
+//       const response = await api.get(`/templates/list/${communityId}`);
+//       return response.data;
+//     } catch (error) {
+//       throw error;
+//     }
+//   };
+  
+//   /**
+//    * Create a new template for a community.
+//    * @param {number} communityId - The ID of the community.
+//    * @param {Object} templateData - The data for the new template.
+//    * @param {string} templateData.name - The name of the template.
+//    * @param {string} templateData.description - The description of the template.
+//    * @returns {Promise<Object>} - The created template data.
+//    */
+//   export const createTemplate = async (communityId, templateData) => {
+//     try {
+//       const response = await api.post(`/templates/create/${communityId}`, templateData);
+//       return response.data;
+//     } catch (error) {
+//       throw error;
+//     }
+//   };
+  
+//   /**
+//    * Add a new field to a template.
+//    * @param {number} templateId - The ID of the template.
+//    * @param {Object} fieldData - The data for the new field.
+//    * @param {string} fieldData.name - The name of the field.
+//    * @param {string} fieldData.dataType - The data type of the field (e.g., TEXT, IMAGE, GEOLOCATION).
+//    * @returns {Promise<Object>} - The created field data.
+//    */
+//   export const addFieldToTemplate = async (templateId, fieldData) => {
+//     try {
+//       const response = await api.post(`/templates/addField/${templateId}`, fieldData);
+//       return response.data;
+//     } catch (error) {
+//       throw error;
+//     }
+//   };
+  
+//   /**
+//    * Fetch all fields for a template.
+//    * @param {number} templateId - The ID of the template.
+//    * @returns {Promise<Array>} - An array of fields.
+//    */
+//   export const getFieldsByTemplate = async (templateId) => {
+//     try {
+//       const response = await api.get(`/templates/fields/${templateId}`);
+//       return response.data;
+//     } catch (error) {
+//       throw error;
+//     }
+//   };

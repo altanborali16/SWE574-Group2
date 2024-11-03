@@ -3,6 +3,7 @@ package swe574.backend.devcomReborn.community;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import swe574.backend.devcomReborn.community.dto.MemberDTO;
 
 import java.util.List;
 
@@ -36,6 +37,12 @@ public class CommunityController {
     @DeleteMapping("/leave/{id}")
     public ResponseEntity<String> leaveCommunity(@PathVariable Long id){
         return ResponseEntity.ok(communityService.leaveCommunity(id));
+    }
+
+    @GetMapping("/members/{communityId}")
+    public ResponseEntity<List<MemberDTO>> getCommunityMembers(@PathVariable Long communityId){
+        List<MemberDTO> members = communityService.getCommunityMembers(communityId);
+        return ResponseEntity.ok(members);
     }
 
 }

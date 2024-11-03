@@ -4,11 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import swe574.backend.devcomReborn.community.dto.MemberDTO;
 import swe574.backend.devcomReborn.user.User;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -53,5 +55,18 @@ public class CommunityService {
         if(currentMembership.getRole().equals(CommunityRole.CREATOR)) throw new RuntimeException("As the community creator you can not leave the community!");
         membershipRepository.delete(currentMembership);
         return "The user:"+ leaver.getUsername() + "have left the community";
+    }
+
+    public List<MemberDTO> getCommunityMembers(Long communityId){
+        Community community = communityRepository.findById(communityId)
+                .orElseThrow(() -> new RuntimeException("Community not found with ID: " + communityId));
+
+        List<Membership> memberships = membershipRepository.findByCommunity(community);
+        return memberships.stream()
+                .map(membership -> {
+                    User user = membership.getUser();
+                    return new MemberDTO(user.getId(), user.getUsername(), user.getEmail());
+                })
+                .collect(Collectors.toList());
     }
 }
