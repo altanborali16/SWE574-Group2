@@ -5,7 +5,7 @@ import httpClient from "../Helpers/HttpClient";
 import { jwtDecode } from "jwt-decode";
 import PostsView from "./SharedComponents/PostList";
 
-const Home = () => {
+const Feed = () => {
   // Inline styles for the component
   const [filteredCommunities, setFilteredCommunityListDb] = useState([]);
   useEffect(() => {
@@ -18,7 +18,7 @@ const Home = () => {
         const response = await httpClient.get("/community/list");
         const filteredCommunities = response.data.filter((community) =>
           community.memberships.some(
-            (membership) => membership.id.userId === user.userId
+            (membership) => membership.id.userId !== user.userId
           )
         );
         setFilteredCommunityListDb(filteredCommunities);
@@ -77,4 +77,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Feed;

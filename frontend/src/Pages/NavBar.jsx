@@ -36,6 +36,11 @@ const Navbar = () => {
           </NavLink>
         </li>
         <li className="navbar__item">
+          <NavLink to="/feed" className="navbar__link" onClick={() => setIsOpen(false)}>
+            Feed
+          </NavLink>
+        </li>
+        <li className="navbar__item">
           <NavLink to="/mycommunities" className="navbar__link" onClick={() => setIsOpen(false)}>
             My Communities
           </NavLink>

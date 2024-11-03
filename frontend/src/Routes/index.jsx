@@ -3,6 +3,7 @@ import { Navigate } from 'react-router-dom';
 
 
 const HomePage = lazy(() => import('../Pages/HomePage'));
+const FeedPage = lazy(() => import('../Pages/FeedPage'));
 const ProfilePage = lazy(() => import('../Pages/ProfilePage'));
 const CommunitiesPage = lazy(() => import('../Pages/CommunitiesPage'));
 const CommunityPage = lazy(() => import('../Pages/CommunityPage'));
@@ -23,6 +24,15 @@ const generalRoutes = [{
   element: (
     <Suspense fallback={<Loading />}>
       <HomePage />
+    </Suspense>
+  ),
+}, 
+{
+  path: '/feed',
+  name: 'Feed Page',
+  element: (
+    <Suspense fallback={<Loading />}>
+      <FeedPage />
     </Suspense>
   ),
 }, 
