@@ -6,11 +6,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import swe574.backend.devcomReborn.community.Community;
 import swe574.backend.devcomReborn.community.CommunityRepository;
-import swe574.backend.devcomReborn.template.FieldRepository;
 import swe574.backend.devcomReborn.template.Template;
 import swe574.backend.devcomReborn.template.TemplateRepository;
 import swe574.backend.devcomReborn.user.User;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -43,5 +43,10 @@ public class PostService {
         Post post = postRepository.findById(communityId).orElseThrow(()->new NoSuchElementException("There is no such post!"));
         postRepository.delete(post);
         return "Post deleted";
+    }
+
+    public List<Post> getPostList(Long communityId) {
+        Community community = communityRepository.findById(communityId).orElseThrow();
+        return postRepository.findByCommunity(community);
     }
 }
