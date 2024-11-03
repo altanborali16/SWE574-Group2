@@ -28,11 +28,12 @@ public class PostService {
         User creator = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Community community = communityRepository.findById(communityId).orElseThrow(() -> new RuntimeException("Community not found"));
         Template postTemplate = templateRepository.findById(post.getTemplate().getId()).orElseThrow(() -> new RuntimeException("Template not found"));
+        if(!postTemplate.getCommunity().getId().equals(community.getId())) throw new RuntimeException("Community does not support this template");
         post.setCommunity(community);
         post.setAuthor(creator);
         Post createdPost = postRepository.save(post);
-        for(PostContent postField: post.getPostContents()){
-            postField.setPost(createdPost);
+        for(PostContent postContent: post.getPostContents()){
+            postContent.setPost(createdPost);
         }
         postContentRepository.saveAll(post.getPostContents());
         return  createdPost;
