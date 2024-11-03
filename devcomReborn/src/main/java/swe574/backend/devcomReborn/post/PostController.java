@@ -2,9 +2,12 @@ package swe574.backend.devcomReborn.post;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
+import swe574.backend.devcomReborn.community.CommunityRepository;
+import swe574.backend.devcomReborn.template.Field;
+import swe574.backend.devcomReborn.template.Template;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin
@@ -13,6 +16,10 @@ import org.springframework.web.bind.annotation.*;
 public class PostController {
 
     private final PostService postService;
+
+    private final CommunityRepository communityRepository;
+
+    private final PostRepository postRepository;
 
     @PostMapping("/create/{communityId}")
     public ResponseEntity<Post> createPost(@PathVariable Long communityId, @RequestBody Post post){
@@ -23,4 +30,21 @@ public class PostController {
     public ResponseEntity<String> deletePost(@PathVariable Long communityId){
         return ResponseEntity.ok(postService.deletePost(communityId));
     }
+
+    @GetMapping("/list/{communityId}")
+    public ResponseEntity<List<Post>> getPostList(@PathVariable Long communityId) {
+        return ResponseEntity.ok(postService.getPostList(communityId));
+    }
+
+    //advanced search
+    @GetMapping("/list/{userId}")
+    public ResponseEntity<List<Post>> getPostListByUser(@PathVariable Long userId) {
+        return ResponseEntity.ok(postService.getPostListByUser(userId));
+    }
+
+    @GetMapping("/list/{templateId}")
+    public ResponseEntity<List<Post>> getPostListByTemplate(@PathVariable Long templateId) {
+        return ResponseEntity.ok(postService.getPostListByTemplate(templateId));
+    }
+
 }

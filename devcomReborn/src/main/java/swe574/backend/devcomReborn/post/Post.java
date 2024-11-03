@@ -29,12 +29,13 @@ public class Post {
 
     //TODO: test date add related endpoints
     @Column
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd''HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime time;
 
+    //TODO: create post returns user password lol
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "author_id",nullable = false)
-    @JsonIgnoreProperties({"memberships"})
+    @JsonIgnoreProperties({"memberships","password"})
     private User author;
 
     @ManyToOne(fetch = FetchType.EAGER)
