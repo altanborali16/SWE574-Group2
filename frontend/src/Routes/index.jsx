@@ -1,7 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { Navigate } from 'react-router-dom';
 
-
 const HomePage = lazy(() => import('../Pages/HomePage'));
 const FeedPage = lazy(() => import('../Pages/FeedPage'));
 const ProfilePage = lazy(() => import('../Pages/ProfilePage'));

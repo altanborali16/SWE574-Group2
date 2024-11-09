@@ -33,6 +33,7 @@ const SignUpForm = () => {
   } = useForm({
     resolver: yupResolver(signUpSchema)
   });
+
   const {
     showNotification
   } = useNotificationContext();

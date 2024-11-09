@@ -21,7 +21,9 @@ public class JwtService {
 //    @Value("${application.security.jwt.secret-key}")
 //    private String secretKey;
     public Logger logger = LoggerFactory.getLogger(JwtService.class);
+
     private final String secretKey="bXlzZWNyZXRrZXlteXNlY3JldGtleW15c2VjcmV0a2V5";
+
     public String extractEmail(String token) {
         String email= extractClaim(token,Claims::getSubject);
         logger.info("tokenized email: "+email);
