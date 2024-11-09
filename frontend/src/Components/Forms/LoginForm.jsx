@@ -5,7 +5,7 @@ import {
 import { Link } from "react-router-dom";
 import TextFormInput from "../Inputs/TextFormInput.jsx";
 import PasswordFormInput from "../Inputs/PasswordFormInput.jsx";
-import { Button, FormCheck } from "react-bootstrap";
+import { Button } from "react-bootstrap"; //FormCheck
 import useSignIn from "../../Pages/Functions/UseSignIn.js";
 
 const LoginForm = () => {
@@ -29,9 +29,9 @@ const LoginForm = () => {
         />
       </div>
       <div className="mb-3 d-sm-flex justify-content-between">
-        <div>
+        {/* <div>
           <FormCheck type="checkbox" label="Remember me?" id="rememberCheck" />
-        </div>
+        </div> */}
         <Link to="/auth/forgot-pass">Forgot password?</Link>
       </div>
       <div className="d-grid">

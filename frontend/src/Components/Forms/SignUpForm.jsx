@@ -6,13 +6,16 @@ import {
     developedByLink,
   } from "../../Context/constants.js";
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { Button, FormCheck } from 'react-bootstrap';
+import { Button } from 'react-bootstrap'; //FormCheck
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import httpClient from '../../Helpers/HttpClient.js'
+// import httpClient from '../../Helpers/HttpClient.js'
+import { registerUser } from '../../Helpers/HttpClient';
+import { useNotificationContext } from '../../Context/useNotificationContext.jsx'
+
 const SignUpForm = () => {
   const [firstPassword, setFirstPassword] = useState('');
   const navigate = useNavigate();
@@ -30,13 +33,35 @@ const SignUpForm = () => {
   } = useForm({
     resolver: yupResolver(signUpSchema)
   });
+
+  const {
+    showNotification
+  } = useNotificationContext();
   const onSubmit = async (values) => {
     try {
-      const res = await httpClient.post('http://3.88.237.67:8080/api/v1/auth/register', values);
-      navigate('/')
-      console.log("Values: ", values);
+      const res = await registerUser(values);
+  
+      if (res.status === 200) {
+        console.log("Registration successful");
+        showNotification({
+          message: 'Successfully registered. Redirecting....',
+          variant: 'success'
+        });
+        navigate('/'); 
+      } else {
+        showNotification({
+          message: 'Please try again....',
+          variant: 'danger'
+        });
+        console.error("Unexpected response status:", res.status);
+      }
     } catch (e) {
-      console.log("Error: ", e);
+      showNotification({
+        message: 'Please try again....',
+        variant: 'danger'
+      });
+      console.error("Error during registration:", e);
+      // Optionally, display an error message to the user
     }
   };
   
@@ -59,9 +84,9 @@ const SignUpForm = () => {
         </div>
       </div>
       <PasswordFormInput name="confirmPassword" control={control} size="lg" containerClassName="mb-3" placeholder="Confirm password" />
-      <div className="mb-3 text-start">
+      {/* <div className="mb-3 text-start">
         <FormCheck label="Keep me signed in" id="termAndCondition" />
-      </div>
+      </div> */}
       <div className="d-grid">
         <Button variant="primary" type="submit" size="lg">
           Sign me up

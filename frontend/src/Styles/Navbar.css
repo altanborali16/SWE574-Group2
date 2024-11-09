@@ -1,0 +1,76 @@
+/* Navbar.css */
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #333; /* Background color of the navbar */
+    position: relative;
+    z-index: 1000;
+}
+
+.navbar__logo {
+    color: #fff; /* Logo text color */
+    font-size: 1.5rem;
+    text-decoration: none;
+}
+
+.navbar__toggle {
+    display: none; /* Hidden by default */
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.bar {
+    height: 3px;
+    width: 25px;
+    background-color: #fff; /* Color of the hamburger menu */
+    margin: 4px 0;
+    transition: all 0.3s ease;
+}
+
+.navbar__menu {
+    display: flex; /* Default for desktop */
+    list-style: none;
+}
+
+.navbar__item {
+    margin-left: 2rem; /* Space between items */
+}
+
+.navbar__link {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.navbar__link:hover {
+    color: #ff6347; /* Hover color */
+}
+
+/* Responsive styles */
+@media screen and (max-width: 768px) {
+    .navbar__toggle {
+        display: flex; /* Show toggle button on mobile */
+    }
+
+    .navbar__menu {
+        display: none; /* Hide menu by default */
+        flex-direction: column;
+        position: absolute;
+        top: 60px; /* Position below navbar */
+        left: 0;
+        width: 100%;
+        background-color: #333;
+    }
+
+    .navbar__menu.active {
+        display: flex; /* Show menu when active */
+    }
+
+    .navbar__item {
+        margin: 1rem 0; /* Space between items in mobile view */
+        text-align: center; /* Center items */
+    }
+}

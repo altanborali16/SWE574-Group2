@@ -1,15 +1,86 @@
 import { lazy, Suspense } from 'react';
 import { Navigate } from 'react-router-dom';
 
+const HomePage = lazy(() => import('../Pages/HomePage'));
+const FeedPage = lazy(() => import('../Pages/FeedPage'));
+const ProfilePage = lazy(() => import('../Pages/ProfilePage'));
+const CommunitiesPage = lazy(() => import('../Pages/CommunitiesPage'));
+const CommunityPage = lazy(() => import('../Pages/CommunityPage'));
+const MyCommunitiesPage = lazy(() => import('../Pages/MyCommunitiesPage'));
+const CreateCommunityPage = lazy(() => import('../Pages/CreateCommunityPage'));
 
 // Lazy-loaded components
 const SignIn = lazy(() => import('../Pages/SignInPage'));
 const SignUp = lazy(() => import('../Pages/SignUpPage'));
 const ForgotPassWord = lazy(() => import('../Pages/ForgotPassWord'));
-const Home = lazy(() => import('../Pages/HomePage'));
 
 // Loading fallback component
 const Loading = () => <div>Loading...</div>;
+
+const generalRoutes = [{
+  path: '/home',
+  name: 'Home Page',
+  element: (
+    <Suspense fallback={<Loading />}>
+      <HomePage />
+    </Suspense>
+  ),
+}, 
+{
+  path: '/feed',
+  name: 'Feed Page',
+  element: (
+    <Suspense fallback={<Loading />}>
+      <FeedPage />
+    </Suspense>
+  ),
+}, 
+{
+  path: '/profile',
+  name: 'Profile Page',
+  element: (
+    <Suspense fallback={<Loading />}>
+      <ProfilePage />
+    </Suspense>
+  ),
+},
+{
+  path: '/communities',
+  name: 'Communities Page',
+  element: (
+    <Suspense fallback={<Loading />}>
+      <CommunitiesPage />
+    </Suspense>
+  ),
+},
+{
+  path: '/mycommunities',
+  name: 'My Communities Page',
+  element: (
+    <Suspense fallback={<Loading />}>
+      <MyCommunitiesPage />
+    </Suspense>
+  ),
+},
+{
+  path: '/community/:id',
+  name: 'Communities Page',
+  element: (
+    <Suspense fallback={<Loading />}>
+      <CommunityPage />
+    </Suspense>
+  ),
+},
+{
+  path: '/createcommunity',
+  name: 'Create Community',
+  element: (
+    <Suspense fallback={<Loading />}>
+      <CreateCommunityPage />
+    </Suspense>
+  ),
+},
+];
 
 export const authRoutes = [
   {
@@ -18,15 +89,6 @@ export const authRoutes = [
     element: (
       <Suspense fallback={<Loading />}>
         <SignIn />
-      </Suspense>
-    ),
-  },
-  {
-    path: '/home',
-    name: 'Home',
-    element: (
-      <Suspense fallback={<Loading />}>
-        <Home />
       </Suspense>
     ),
   },
@@ -53,3 +115,5 @@ export const authRoutes = [
     element: <Navigate to="/auth/sign-in" replace />,
   },
 ];
+
+export const feedRoutes = [...generalRoutes];

@@ -1,0 +1,57 @@
+/* Styles for the CreateTemplateForm */
+.create-template-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+  }
+  
+  .create-template-form h2 {
+    margin: 0;
+    padding-bottom: 10px;
+    font-size: 1.5rem;
+    color: #333;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .create-template-form label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #555;
+    margin-bottom: 5px;
+  }
+  
+  .create-template-form input,
+  .create-template-form select,
+  .create-template-form textarea {
+    width: 100%;
+    padding: 8px 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    box-sizing: border-box;
+  }
+  
+  .create-template-form input:focus,
+  .create-template-form select:focus,
+  .create-template-form textarea:focus {
+    border-color: #007bff; /* Change color to suit your theme */
+    box-shadow: 0 0 3px rgba(0, 123, 255, 0.25);
+  }
+  
+  .create-template-form button {
+    padding: 10px 15px;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .create-template-form button:hover {
+    background-color: #0056b3;
+  }
+  

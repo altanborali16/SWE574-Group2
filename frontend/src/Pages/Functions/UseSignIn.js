@@ -5,7 +5,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import * as yup from 'yup';
 import { useAuthContext } from '../../Context/useAuthContext';
 import { useNotificationContext } from '../../Context/useNotificationContext';
-import httpClient from '../../Helpers/HttpClient';
+import { authenticateUser } from '../../Helpers/HttpClient';
 
 const UseSignIn = () => {
   const [loading, setLoading] = useState(false);
@@ -31,17 +31,12 @@ const UseSignIn = () => {
     const redirectLink = searchParams.get('redirectTo');
     if (redirectLink) navigate(redirectLink);else navigate('/home');
   };
-  const login = handleSubmit(async values => {
+  const login = handleSubmit(async (values) => {
     try {
-      console.log("Values : " , values)
-      // console.log("request : " , 'localhost:8080/api/v1/auth/authenticate', values)
-      const res = await httpClient.post('http://3.88.237.67:8080/api/v1/auth/authenticate', values);
+      const res = await authenticateUser(values);
       console.log("Res : ", res);
       if (res.data.token) {
-        saveSession({
-          ...(res.data ?? {}),
-          token: res.data.token
-        });
+        saveSession(res.data.token,res.data.id);
         redirectUser();
         showNotification({
           message: 'Successfully logged in. Redirecting....',
@@ -65,7 +60,7 @@ const UseSignIn = () => {
       }
       else{
         showNotification({
-          message: '404 Error. Please try again....',
+          message: 'Wrong e-mail or password. Please try again....',
           variant: 'danger'
         });
       }

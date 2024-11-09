@@ -1,0 +1,59 @@
+/* CreatePostForm.css */
+.create-post-form {
+  max-width: 800px; /* Maximum width for the form */
+  /*margin: 20px auto;  Center the form horizontally */
+  padding: 20px;  /*Add some padding inside the form */
+  border: 1px solid #ddd; /* Light border for the form */
+  border-radius: 8px; /* Rounded corners */
+  background-color: #f9f9f9; /* Light background color */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.create-post-form h1 {
+  text-align: center; /* Center the heading */
+  margin-bottom: 20px; /* Space below the heading */
+  color: #333; /* Darker color for better readability */
+}
+
+.create-post-form label {
+  display: block; /* Stack labels and inputs */
+  margin-bottom: 5px; /* Space below labels */
+  font-weight: bold; /* Bold labels for emphasis */
+}
+
+.create-post-form input[type="text"],
+.create-post-form input[type="datetime-local"],
+.create-post-form select {
+  width: 100%; /* Full width inputs */
+  padding: 5px; /* Padding inside inputs */
+  margin-bottom: 15px; /* Space below inputs */
+  border: 1px solid #ccc; /* Border for inputs */
+  border-radius: 4px; /* Rounded corners for inputs */
+  font-size: 16px; /* Larger font size */
+}
+.create-post-form input[type="text"]:focus,
+.create-post-form input[type="datetime-local"]:focus,
+.create-post-form select:focus {
+  border-color: #007bff; /* Blue border on focus */
+  outline: none; /* Remove default outline */
+}
+
+.create-post-form button {
+  width: 100%; /* Full width button */
+  padding: 5px; /* Padding inside button */
+  background-color: #007bff; /* Bootstrap primary color */
+  color: white; /* Text color for button */
+  border: none; /* No border */
+  border-radius: 4px; /* Rounded corners for button */
+  font-size: 16px; /* Larger font size */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s; /* Smooth transition for hover */
+}
+
+.create-post-form button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+.create-post-form .field-error {
+  color: red; /* Red color for error messages */
+  font-size: 14px; /* Font size for error messages */
+}
