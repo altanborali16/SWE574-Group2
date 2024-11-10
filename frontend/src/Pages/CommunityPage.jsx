@@ -4,10 +4,12 @@ import PageMetaData from "./PageMetaData";
 import Navbar from "./NavBar";
 import "../Styles/CommunityPage.css";
 import CreateTemplateForm from "../Components/Forms/CreateTemplateForm";
+import AdvancedSearchForm from "../Components/Forms/AdvancedSearchForm";
 import CreatePostForm from "../Components/Forms/CreatePostForm";
 import httpClient from "../Helpers/HttpClient";
 import { jwtDecode } from "jwt-decode";
 import PostsView from "./SharedComponents/PostList";
+import NavbarCommunity from "./NavBarCommunity";
 
 const CommunityPage = () => {
   const { id } = useParams();
@@ -143,6 +145,9 @@ const CommunityPage = () => {
   const [loading, setLoading] = useState(true); // Initialize loading state
   const [dataFromDb, setDataOnDb] = useState(false); // Initialize loading state
   const [isUserMember, setIsUserMember] = useState(false);
+  const [isSearchForm, setIsSearchForm] = useState(false);
+  const [searchObject, setSearchObject] = useState({});
+  console.log({ searchObject });
   const [isUserOwner, setIsUserOwner] = useState(false);
   const user = localStorage.getItem("token")
     ? jwtDecode(localStorage.getItem("token"))
@@ -258,6 +263,7 @@ const CommunityPage = () => {
         newPost
       );
       console.log("Post created successfully:", responseCreatePost.data);
+      window.location.href = window.location.href; // This will refresh the page
     } catch (error) {
       console.error("Error creating post:", error);
     }
@@ -275,6 +281,7 @@ const CommunityPage = () => {
   const handleCloseForm = () => {
     setShowCreateTemplateForm(false);
     setShowCreatePostForm(false);
+    setIsSearchForm(false);
   };
 
   const handleFollow = async () => {
@@ -296,9 +303,9 @@ const CommunityPage = () => {
     }
   };
 
-  const community = (dataFromDb)
-        ? communityDb
-        : communityList.find((community) => community.id === id);
+  const community = dataFromDb
+    ? communityDb
+    : communityList.find((community) => community.id === id);
   const [newComment, setNewComment] = useState({});
 
   const handleLike = (postIndex) => {
@@ -341,7 +348,23 @@ const CommunityPage = () => {
     return (
       <>
         <PageMetaData title="Communities" />
-        <Navbar />
+        <NavbarCommunity isSearchForm={setIsSearchForm} />
+        {isSearchForm && (
+          <div className="modal-overlay" onClick={handleCloseForm}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <button className="close-button" onClick={handleCloseForm}>
+                &times;
+              </button>
+              <AdvancedSearchForm
+                formPlace="community"
+                community={community}
+                setSearchObject={setSearchObject}
+                setIsSearchForm={setIsSearchForm}
+              />
+            </div>
+          </div>
+        )}
+
         {showCreateTemplateForm && (
           <div className="modal-overlay" onClick={handleCloseForm}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -414,7 +437,14 @@ const CommunityPage = () => {
             )}
           </div>
         </div>
-        <div style={{ maxWidth: "800px", margin: "0 auto", flexDirection: "column", alignItems: "center" }}>
+        <div
+          style={{
+            maxWidth: "800px",
+            margin: "0 auto",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
           {community.posts.length > 0 ? (
             <PostsView posts={community.posts} />
           ) : (
@@ -424,12 +454,12 @@ const CommunityPage = () => {
       </>
     );
   }
-  if(!dataFromDb){
+  if (!dataFromDb) {
     return (
       <>
         <PageMetaData title="Communities" />
         <Navbar />
-  
+
         {/* Conditionally render the CreateTemplateForm as a modal */}
         {showCreateTemplateForm && (
           <div className="modal-overlay" onClick={handleCloseForm}>
@@ -469,7 +499,7 @@ const CommunityPage = () => {
             {/* Button to open the form */}
             <button onClick={handleOpenForm}>Create Template</button>
           </div>
-  
+
           <div
             className={`posts-section ${
               community.isPrivate && !community.isFollowing ? "blurred" : ""
@@ -499,7 +529,7 @@ const CommunityPage = () => {
                     👎 {post.dislikes}
                   </button>
                 </div>
-  
+
                 <div className="comments-section">
                   <h4>Comments</h4>
                   {post.comments.map((comment) => (
@@ -534,7 +564,6 @@ const CommunityPage = () => {
       </>
     );
   }
-
 };
 
 export default CommunityPage;

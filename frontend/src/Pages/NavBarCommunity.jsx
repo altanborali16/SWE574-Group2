@@ -5,7 +5,7 @@ import "../Styles/Navbar.css"; // Make sure the path is correct
 import { useAuthContext } from "../Context/useAuthContext";
 import AdvancedSearch from "../Components/Inputs/AdvancedSearch";
 
-const Navbar = ({ isSearchForm }) => {
+const NavbarCommunity = ({ isSearchForm }) => {
   const [isOpen, setIsOpen] = useState(false);
   // const navigate = useNavigate(); // Hook to programmatically navigate
   const { removeSession } = useAuthContext();
@@ -34,6 +34,9 @@ const Navbar = ({ isSearchForm }) => {
         <span className="bar"></span>
       </div>
       <ul className={`navbar__menu ${isOpen ? "active" : ""}`}>
+        <li>
+          <AdvancedSearch onClick={isSearchForm} />
+        </li>
         <li className="navbar__item">
           <NavLink
             to="/home"
@@ -93,4 +96,4 @@ const Navbar = ({ isSearchForm }) => {
   );
 };
 
-export default Navbar;
+export default NavbarCommunity;
