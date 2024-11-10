@@ -160,7 +160,7 @@
 }
 
 /* Save button */
-.modal-content button {
+.modal-content .button-1 {
   width: 100%;
   padding: 12px;
   background-color: #4CAF50;
@@ -173,6 +173,6 @@
   transition: background-color 0.3s ease;
 }
 
-.modal-content button:hover {
+.modal-content .button-1:hover {
   background-color: #45a049;
 }

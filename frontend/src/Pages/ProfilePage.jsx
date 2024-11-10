@@ -130,7 +130,7 @@ const ProfilePage = () => {
                 value={avatarUrl}
                 onChange={(e) => setAvatarUrl(e.target.value)}
               />
-              <button type="button" onClick={handleSaveChanges}>Save Changes</button>
+              <button type="button" className="button-1" onClick={handleSaveChanges}>Save Changes</button>
             </form>
           </div>
         </div>
