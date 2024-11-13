@@ -48,12 +48,25 @@ const postInitialState = {
 };
 
 const dataTypeReducer = (state, action) => {
+  const { field: fieldName, value, intervalKey } = action.payload || {};
   switch (action.type) {
     case "UPDATE_TEMPLATE_FIELD":
-      return {
-        ...state,
-        [action.payload.field]: action.payload.value,
-      };
+      if (intervalKey) {
+        return {
+          ...state,
+          [fieldName]: {
+            ...state[fieldName],
+            [intervalKey]: value,
+          },
+        };
+      } else {
+        return {
+          ...state,
+          [fieldName]: value,
+        };
+      }
+    case "RESET":
+      return {};
     default:
       return state;
   }
@@ -68,6 +81,10 @@ function AdvancedSearchForm({
   //const [state, dispatch] = useReducer(reducer, initialState);
   const [postState, postDispatch] = useReducer(postReducer, postInitialState);
   const [dataTypeState, dataTypeDispatch] = useReducer(dataTypeReducer, {});
+
+  // useEffect(() => {
+  //   dataTypeDispatch({ type: "RESET" });
+  // }, [postState?.selectedTemplate]);
 
   const [basicSearch, setBasicSearch] = useState({});
   console.log({ postState });
@@ -169,6 +186,7 @@ function AdvancedSearchForm({
                   const selectedTemplate = community.templates.find(
                     (template) => template.name === e.target.value
                   );
+                  dataTypeDispatch({ type: "RESET" });
                   postDispatch({
                     type: "SET_TEMPLATE",
                     payload: selectedTemplate,
@@ -225,6 +243,43 @@ function AdvancedSearchForm({
                           />
                         </div>
                       )}
+                      {postState.templateFields[field] === "NUMBER" && (
+                        <div key={index}>
+                          <label>{"Number"}:</label>
+                          Minimum Value:
+                          <input
+                            type="text"
+                            value={
+                              dataTypeState?.[field]?.Min
+                                ? dataTypeState[field].Min
+                                : ""
+                            }
+                            onChange={(e) => {}}
+                            placeholder={`Enter Minimum Value`}
+                          />
+                          Maximum Value:
+                          <input
+                            type="text"
+                            value={
+                              dataTypeState?.[field]?.Max
+                                ? dataTypeState[field].Max
+                                : ""
+                            }
+                            onChange={(e) => {
+                              const intervalKey = "Max";
+                              dataTypeDispatch({
+                                type: "UPDATE_TEMPLATE_FIELD",
+                                payload: {
+                                  field,
+                                  value: e.target.value,
+                                  intervalKey,
+                                },
+                              });
+                            }}
+                            placeholder={`Enter Maximum Value`}
+                          />
+                        </div>
+                      )}
                       {postState.templateFields[field] === "GEOLOCATION" && (
                         <div key={index}>
                           <label>{field}:</label>
@@ -246,38 +301,99 @@ function AdvancedSearchForm({
                       {postState.templateFields[field] === "DATE" && (
                         <div key={index}>
                           <label>{field}:</label>
+                          Start Date:
                           <input
                             type="date"
                             value={
-                              dataTypeState?.[field] ? dataTypeState[field] : ""
+                              dataTypeState?.[field]?.Start
+                                ? dataTypeState[field].Start
+                                : ""
                             }
-                            onChange={(e) =>
+                            onChange={(e) => {
+                              const intervalKey = "Start";
                               dataTypeDispatch({
                                 type: "UPDATE_TEMPLATE_FIELD",
-                                payload: { field, value: e.target.value },
-                              })
+                                payload: {
+                                  field,
+                                  value: e.target.value,
+                                  intervalKey,
+                                },
+                              });
+                            }}
+                          />
+                          End Date:
+                          <input
+                            type="date"
+                            value={
+                              dataTypeState?.[field]?.End
+                                ? dataTypeState[field].End
+                                : ""
                             }
-                            placeholder={`Enter ${field}`}
+                            onChange={(e) => {
+                              const intervalKey = "End";
+                              dataTypeDispatch({
+                                type: "UPDATE_TEMPLATE_FIELD",
+                                payload: {
+                                  field,
+                                  value: e.target.value,
+                                  intervalKey,
+                                },
+                              });
+                            }}
                           />
                         </div>
                       )}
                       {postState.templateFields[field] === "TIME" && (
-                        <div key={index}>
-                          <label>{field}:</label>
-                          <input
-                            type="time"
-                            value={
-                              dataTypeState?.[field] ? dataTypeState[field] : ""
-                            }
-                            onChange={(e) =>
-                              dataTypeDispatch({
-                                type: "UPDATE_TEMPLATE_FIELD",
-                                payload: { field, value: e.target.value },
-                              })
-                            }
-                            placeholder={`Enter ${field}`}
-                          />
-                        </div>
+                        <>
+                          After:
+                          <div key={index}>
+                            <label>{field}:</label>
+                            <input
+                              type="time"
+                              value={
+                                dataTypeState?.[field]?.After
+                                  ? dataTypeState[field].After
+                                  : ""
+                              }
+                              onChange={(e) => {
+                                const intervalKey = "After";
+                                dataTypeDispatch({
+                                  type: "UPDATE_TEMPLATE_FIELD",
+                                  payload: {
+                                    field,
+                                    value: e.target.value,
+                                    intervalKey,
+                                  },
+                                });
+                              }}
+                              placeholder={`Enter ${field}`}
+                            />
+                          </div>
+                          Before:
+                          <div key={index}>
+                            <label>{field}:</label>
+                            <input
+                              type="time"
+                              value={
+                                dataTypeState?.[field]?.Before
+                                  ? dataTypeState[field].Before
+                                  : ""
+                              }
+                              onChange={(e) => {
+                                const intervalKey = "Before";
+                                dataTypeDispatch({
+                                  type: "UPDATE_TEMPLATE_FIELD",
+                                  payload: {
+                                    field,
+                                    value: e.target.value,
+                                    intervalKey,
+                                  },
+                                });
+                              }}
+                              placeholder={`Enter ${field}`}
+                            />
+                          </div>
+                        </>
                       )}
                     </>
                   ))}
