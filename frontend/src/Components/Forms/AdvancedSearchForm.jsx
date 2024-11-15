@@ -77,6 +77,7 @@ function AdvancedSearchForm({
   community,
   setSearchObject,
   setIsSearchForm,
+  setIsSearch,
 }) {
   //const [state, dispatch] = useReducer(reducer, initialState);
   const [postState, postDispatch] = useReducer(postReducer, postInitialState);
@@ -103,6 +104,7 @@ function AdvancedSearchForm({
       basicSearch: basicSearch,
     }));
     setIsSearchForm(false);
+    setIsSearch(true);
   };
 
   console.log({ basicSearch });

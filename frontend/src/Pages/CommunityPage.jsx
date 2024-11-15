@@ -10,6 +10,7 @@ import httpClient from "../Helpers/HttpClient";
 import { jwtDecode } from "jwt-decode";
 import PostsView from "./SharedComponents/PostList";
 import NavbarCommunity from "./NavBarCommunity";
+import { useSearchEngine } from "./Functions/SearchFunctions/SearchEngine";
 
 const CommunityPage = () => {
   const { id } = useParams();
@@ -145,9 +146,12 @@ const CommunityPage = () => {
   const [loading, setLoading] = useState(true); // Initialize loading state
   const [dataFromDb, setDataOnDb] = useState(false); // Initialize loading state
   const [isUserMember, setIsUserMember] = useState(false);
+
   const [isSearchForm, setIsSearchForm] = useState(false);
+  const [isSearchCommunity, setIsSearchCommunity] = useState(false);
+  const [resultCommunity, setResultCommunity] = useState([]);
   const [searchObject, setSearchObject] = useState({});
-  console.log({ searchObject });
+
   const [isUserOwner, setIsUserOwner] = useState(false);
   const user = localStorage.getItem("token")
     ? jwtDecode(localStorage.getItem("token"))
@@ -186,6 +190,15 @@ const CommunityPage = () => {
     console.log("Data from db:", dataFromDb);
     console.log("Community", community);
   }, [isUserMember, isUserOwner]);
+
+  // const searchResults = useSearchEngine(communityDb, searchObject);
+
+  // useEffect(() => {
+  //   if (isSearchCommunity) {
+  //     // Eğer arama aktifse, searchResults'i setResultCommunity ile kaydediyoruz
+  //     setResultCommunity(searchResults);
+  //   }
+  // }, [isSearchCommunity, searchResults]);
 
   const [showCreateTemplateForm, setShowCreateTemplateForm] = useState(false);
   const [showCreatePostForm, setShowCreatePostForm] = useState(false);
@@ -257,6 +270,7 @@ const CommunityPage = () => {
     // setTemplates((prevTemplates) => [...prevTemplates, newTemplate]);
   };
   const addPost = async (newPost) => {
+    console.log(newPost);
     try {
       const responseCreatePost = await httpClient.post(
         "/post/create/" + id,
@@ -360,6 +374,7 @@ const CommunityPage = () => {
                 community={community}
                 setSearchObject={setSearchObject}
                 setIsSearchForm={setIsSearchForm}
+                setIsSearch={setIsSearchCommunity}
               />
             </div>
           </div>
