@@ -31,4 +31,10 @@ public class PostSearchController {
         log.info(fields.toString());
         return ResponseEntity.ok(postService.searchPosts(communityId, templateId, fields));
     }
+
+    // example URL to call : /postsByTemplateId?templateId=123
+    @GetMapping("/postsByTemplateId")
+    public ResponseEntity<List<Post>> getPostListByTemplate(@RequestParam Long templateId) {
+        return ResponseEntity.ok(postService.getPostListByTemplate(templateId));
+    }
 }
