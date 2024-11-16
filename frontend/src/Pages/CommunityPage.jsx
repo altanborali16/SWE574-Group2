@@ -12,6 +12,7 @@ import PostsView from "./SharedComponents/PostList";
 import NavbarCommunity from "./NavBarCommunity";
 import { useSearchEngine } from "./Functions/SearchFunctions/SearchEngine";
 
+
 const CommunityPage = () => {
   const { id } = useParams();
 
@@ -452,14 +453,7 @@ const CommunityPage = () => {
             )}
           </div>
         </div>
-        <div
-          style={{
-            maxWidth: "800px",
-            margin: "0 auto",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
+        <div>
           {community.posts.length > 0 ? (
             <PostsView posts={community.posts} />
           ) : (
