@@ -52,7 +52,6 @@ const Home = () => {
       <Navbar />
       <div
         style={{
-          maxWidth: "800px",
           margin: "0 auto",
           flexDirection: "column",
           alignItems: "center",

@@ -158,6 +158,35 @@ const CommunityPage = () => {
     ? jwtDecode(localStorage.getItem("token"))
     : null;
 
+    const [showSubscribersList, setShowSubscribersList] = useState(false);
+
+    const handleShowSubscribers = () => {
+      fetchSubscribers();
+      setShowSubscribersList(true);
+    };
+    
+    const handleCloseSubscribers = () => {
+      setShowSubscribersList(false);
+    };
+
+    const [subscribers, setSubscribers] = useState([]);
+    const fetchSubscribers = async () => {
+      try {
+        const response = await httpClient.get("community/members/"+id);
+        console.log("Subscribers:", response.data);
+
+        setSubscribers(response.data);
+      } catch (err) {
+        console.error("Failed to fetch subscribers:", err);
+      }
+    };
+
+    useEffect(() => {
+      fetchSubscribers();
+    }, [id]);
+    
+
+
   useEffect(() => {
     const fetchCommunity = async () => {
       setLoading(true); // Set loading to true when starting the fetch
@@ -420,7 +449,12 @@ const CommunityPage = () => {
               <p>{community.description}</p>
               <div className="community-stats">
                 <span>{community.posts.length} Posts</span> |
-                <span>{community.memberships.length} Subscribers</span>
+                <span
+                    className="subscribers-link"
+                    onClick={handleShowSubscribers}
+                    style={{ cursor: "pointer", color: "blue" }}>
+                    {community.memberships.length} Subscribers </span>
+
               </div>
               {/* <div className="community-categories">
               {community.categories.map((category, index) => (
@@ -460,6 +494,30 @@ const CommunityPage = () => {
             <p>No posts available in this community.</p>
           )}
         </div>
+        {showSubscribersList && (
+  <div className="subscribers-modal">
+    <div className="modal-overlay" onClick={handleCloseSubscribers}>
+      <div
+        className="modal-content"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          className="close-button"
+          onClick={handleCloseSubscribers}
+        >
+          &times;
+        </button>
+        <h2>Subscribers</h2>
+        <ul className="subscribers-list">
+          {subscribers.map((subscriber, index) => (
+          <li key={index}>{subscriber.username || "Unknown Subscriber"}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+)}
+
       </>
     );
   }

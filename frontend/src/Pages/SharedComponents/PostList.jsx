@@ -176,11 +176,21 @@ const PostsView = ({ posts }) => {
                         {/* Display post contents dynamically */}
                         <div className="post-contents">
                             {post.postContents.map((content, index) => (
-                                <div key={index} className="post-content">
-                                    <p><strong>{content.field.name}:</strong> {content.value}</p>
-                                </div>
-                            ))}
-                        </div>
+                                    <div key={index} className="post-content">
+                                        {content.field.dataType === "IMAGE" ? (
+                                            <div>
+                                                <strong>{content.field.name}:</strong>
+                                                <img src={content.value} alt={content.field.name} style={{ width: '60vh',maxWidth: '1000px', height: '60vh' }} />
+                                            </div>
+                                        ) : (
+                                            <p>
+                                                <strong>{content.field.name}:</strong> {content.value}
+                                            </p>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+
 
                         {/* Comment Section */}
                         <div className="comment-section">
@@ -248,6 +258,8 @@ const PostsView = ({ posts }) => {
                                                             <div className="replies-list">
                                                                 {comment.replies.map((reply, replyIndex) => (
                                                                     <div key={replyIndex} className="reply-item">
+                                                                        <p><strong>Posted by:</strong> {auth.user.sub}</p>
+                                                                        <p><strong>Posted at:</strong> {new Date(post.time).toLocaleString()}</p>
                                                                         <p className="reply">{reply}</p>
                                                                     </div>
                                                                 ))}
