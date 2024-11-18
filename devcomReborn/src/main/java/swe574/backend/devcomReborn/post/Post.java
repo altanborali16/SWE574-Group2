@@ -55,6 +55,18 @@ public class Post {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<PostContent> postContents;
+    // New attribute for vote count
+    @Column
+    private int voteCounter;
 
+    // New attribute to track users who voted
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "post_user_votes",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    @JsonIgnoreProperties({"memberships", "password", "posts"})
+    private Set<User> voters;
 
 }

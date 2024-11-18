@@ -26,9 +26,9 @@ public class PostController {
         return ResponseEntity.ok(postService.createPost(communityId,post));
     }
 
-    @DeleteMapping("/delete/{communityId}")
-    public ResponseEntity<String> deletePost(@PathVariable Long communityId){
-        return ResponseEntity.ok(postService.deletePost(communityId));
+    @PostMapping("/delete/{postId}")
+    public ResponseEntity<String> deletePost(@PathVariable Long postId){
+        return ResponseEntity.ok(postService.deletePost(postId));
     }
 
     @GetMapping("/list/{communityId}")
@@ -47,4 +47,13 @@ public class PostController {
         return ResponseEntity.ok(postService.getPostListByTemplate(templateId));
     }
 
+    @PostMapping("/upvote/{postId}")
+    public ResponseEntity<String> upVotePost(@PathVariable Long postId) {
+        return ResponseEntity.ok(postService.upVotePost(postId));
+    }
+
+    @PostMapping("/downvote/{postId}")
+    public ResponseEntity<String> downVotePost(@PathVariable Long postId) {
+        return ResponseEntity.ok(postService.downVotePost(postId));
+    }
 }
