@@ -47,8 +47,8 @@ public class PostService {
     }
 
     @Transactional
-    public String deletePost(Long communityId){
-        Post post = postRepository.findById(communityId).orElseThrow(()->new NoSuchElementException("There is no such post!"));
+    public String deletePost(Long postId){
+        Post post = postRepository.findById(postId).orElseThrow(()->new NoSuchElementException("There is no such post!"));
         postRepository.delete(post);
         return "Post deleted";
     }
@@ -67,7 +67,35 @@ public class PostService {
         Template template = templateRepository.findById(templateId).orElseThrow();
         return postRepository.findByTemplate(template);
     }
-
+    // voting with toggle function
+//helper method "toggleVote"
+    private void toggleVote(Post post, User voter, int voteChange) {
+        if (!post.getVoters().contains(voter)) {
+            post.setVoteCounter(post.getVoteCounter() + voteChange);
+            post.getVoters().add(voter);
+        } else {
+            post.setVoteCounter(post.getVoteCounter() - voteChange);
+            post.getVoters().remove(voter);
+        }
+    }
+    //upvote
+    @Transactional
+    public String upVotePost(Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow(()->new NoSuchElementException("There is no such post!"));
+        User voter = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        toggleVote(post, voter, 1);
+        postRepository.save(post);
+        return "Post upvoted successfully.";
+    }
+    //downvote
+    @Transactional
+    public String downVotePost(Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow(()->new NoSuchElementException("There is no such post!"));
+        User voter = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        toggleVote(post, voter, -1);
+        postRepository.save(post);
+        return "Post downvoted successfully.";
+    }
 
 
 }
