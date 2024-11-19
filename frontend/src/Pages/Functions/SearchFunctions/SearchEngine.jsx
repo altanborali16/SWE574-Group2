@@ -1,17 +1,21 @@
 import { useState, useEffect } from "react";
 import { basicSearch } from "./BasicSearch";
+import PostSearch from "./PostSearch";
+import { TemplateSearch } from "./TemplateSearch";
 
 // Custom hook olarak searchEngine
 export const useSearchEngine = (data, search) => {
-  const [basicSearchResults, setBasicSearchResults] = useState([]);
+  const [basicSearchResults, setBasicSearchResults] = useState(["ali"]);
 
   useEffect(() => {
     if (search) {
-      // Arama yapıldığında basicSearch fonksiyonunu çağırıyoruz ve sonuçları state'e kaydediyoruz
-      const tempResults = basicSearch(data, search);
-      setBasicSearchResults(tempResults);
+      //const basicResults = basicSearch(data, search);
+      //const postResults = PostSearch(data, search);
+      //setBasicSearchResults(basicResults);
+      const templateResults = TemplateSearch(data, search);
     }
-  }, [data, search]); // data veya search değiştiğinde effect tetiklenecek
+  }, [data, search]);
 
-  return basicSearchResults; // Sonuçları döndürüyoruz
+  console.log();
+  return basicSearchResults;
 };

@@ -12,7 +12,6 @@ import PostsView from "./SharedComponents/PostList";
 import NavbarCommunity from "./NavBarCommunity";
 import { useSearchEngine } from "./Functions/SearchFunctions/SearchEngine";
 
-
 const CommunityPage = () => {
   const { id } = useParams();
 
@@ -158,34 +157,32 @@ const CommunityPage = () => {
     ? jwtDecode(localStorage.getItem("token"))
     : null;
 
-    const [showSubscribersList, setShowSubscribersList] = useState(false);
+  const [showSubscribersList, setShowSubscribersList] = useState(false);
 
-    const handleShowSubscribers = () => {
-      fetchSubscribers();
-      setShowSubscribersList(true);
-    };
-    
-    const handleCloseSubscribers = () => {
-      setShowSubscribersList(false);
-    };
+  const handleShowSubscribers = () => {
+    fetchSubscribers();
+    setShowSubscribersList(true);
+  };
 
-    const [subscribers, setSubscribers] = useState([]);
-    const fetchSubscribers = async () => {
-      try {
-        const response = await httpClient.get("community/members/"+id);
-        console.log("Subscribers:", response.data);
+  const handleCloseSubscribers = () => {
+    setShowSubscribersList(false);
+  };
 
-        setSubscribers(response.data);
-      } catch (err) {
-        console.error("Failed to fetch subscribers:", err);
-      }
-    };
+  const [subscribers, setSubscribers] = useState([]);
+  const fetchSubscribers = async () => {
+    try {
+      const response = await httpClient.get("community/members/" + id);
+      console.log("Subscribers:", response.data);
 
-    useEffect(() => {
-      fetchSubscribers();
-    }, [id]);
-    
+      setSubscribers(response.data);
+    } catch (err) {
+      console.error("Failed to fetch subscribers:", err);
+    }
+  };
 
+  useEffect(() => {
+    fetchSubscribers();
+  }, [id]);
 
   useEffect(() => {
     const fetchCommunity = async () => {
@@ -221,14 +218,14 @@ const CommunityPage = () => {
     console.log("Community", community);
   }, [isUserMember, isUserOwner]);
 
-  // const searchResults = useSearchEngine(communityDb, searchObject);
+  const searchResults = useSearchEngine(communityDb, searchObject);
 
-  // useEffect(() => {
-  //   if (isSearchCommunity) {
-  //     // Eğer arama aktifse, searchResults'i setResultCommunity ile kaydediyoruz
-  //     setResultCommunity(searchResults);
-  //   }
-  // }, [isSearchCommunity, searchResults]);
+  useEffect(() => {
+    if (isSearchCommunity) {
+      // Eğer arama aktifse, searchResults'i setResultCommunity ile kaydediyoruz
+      setResultCommunity(searchResults);
+    }
+  }, [isSearchCommunity, searchResults]);
 
   const [showCreateTemplateForm, setShowCreateTemplateForm] = useState(false);
   const [showCreatePostForm, setShowCreatePostForm] = useState(false);
@@ -450,11 +447,12 @@ const CommunityPage = () => {
               <div className="community-stats">
                 <span>{community.posts.length} Posts</span> |
                 <span
-                    className="subscribers-link"
-                    onClick={handleShowSubscribers}
-                    style={{ cursor: "pointer", color: "blue" }}>
-                    {community.memberships.length} Subscribers </span>
-
+                  className="subscribers-link"
+                  onClick={handleShowSubscribers}
+                  style={{ cursor: "pointer", color: "blue" }}
+                >
+                  {community.memberships.length} Subscribers{" "}
+                </span>
               </div>
               {/* <div className="community-categories">
               {community.categories.map((category, index) => (
@@ -495,29 +493,30 @@ const CommunityPage = () => {
           )}
         </div>
         {showSubscribersList && (
-  <div className="subscribers-modal">
-    <div className="modal-overlay" onClick={handleCloseSubscribers}>
-      <div
-        className="modal-content"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button
-          className="close-button"
-          onClick={handleCloseSubscribers}
-        >
-          &times;
-        </button>
-        <h2>Subscribers</h2>
-        <ul className="subscribers-list">
-          {subscribers.map((subscriber, index) => (
-          <li key={index}>{subscriber.username || "Unknown Subscriber"}</li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  </div>
-)}
-
+          <div className="subscribers-modal">
+            <div className="modal-overlay" onClick={handleCloseSubscribers}>
+              <div
+                className="modal-content"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button
+                  className="close-button"
+                  onClick={handleCloseSubscribers}
+                >
+                  &times;
+                </button>
+                <h2>Subscribers</h2>
+                <ul className="subscribers-list">
+                  {subscribers.map((subscriber, index) => (
+                    <li key={index}>
+                      {subscriber.username || "Unknown Subscriber"}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        )}
       </>
     );
   }
