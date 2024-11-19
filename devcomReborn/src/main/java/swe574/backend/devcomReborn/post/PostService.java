@@ -15,9 +15,8 @@ import swe574.backend.devcomReborn.template.TemplateRepository;
 import swe574.backend.devcomReborn.user.User;
 import swe574.backend.devcomReborn.user.UserRepository;
 
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -132,6 +131,31 @@ public class PostService {
             Predicate contentCriteriaPredicate = criteriaBuilder.or(predicates);
             return criteriaBuilder.and(communityPredicate, contentCriteriaPredicate);
         };
+    }
+
+    public List<Post> getRecommendedPosts(Long userId) {
+        Optional<User> foundUser = userRepository.findById(userId);
+        if (foundUser.isPresent()) {
+            User user = foundUser.get();
+            return findRecommendedPostsFor(user);
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    private List<Post> findRecommendedPostsFor(User user) {
+        List<Community> communities = communityRepository.findRecommendedCommunities(user);
+        List<Post> top10PostsFromAllCommunities = get10PostsFromAllCommunities(communities, Comparator.comparingInt(Post::getVoteCounter));
+        List<Post> newest10PostsFromAllCommunities = get10PostsFromAllCommunities(communities, Comparator.comparing(Post::getTime));
+        return Stream.concat(top10PostsFromAllCommunities.stream(), newest10PostsFromAllCommunities.stream()).toList();
+    }
+
+    private static List<Post> get10PostsFromAllCommunities(List<Community> communities, Comparator<Post> comparator) {
+        return communities.stream()
+                .flatMap(c -> c.getPosts().stream())
+                .sorted(comparator)
+                .limit(10)
+                .toList();
     }
 }
 
