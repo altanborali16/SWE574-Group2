@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
 import swe574.backend.devcomReborn.community.Community;
+import swe574.backend.devcomReborn.tag.Tag;
 import swe574.backend.devcomReborn.template.Template;
 import swe574.backend.devcomReborn.user.User;
 
@@ -68,5 +69,28 @@ public class Post {
     )
     @JsonIgnoreProperties({"memberships", "password", "posts"})
     private Set<User> voters;
+
+//    @ManyToMany(fetch = FetchType.EAGER)
+//    @JoinTable(
+//            name = "post_tags",
+//            joinColumns = @JoinColumn(name = "post_id"),
+//            inverseJoinColumns = @JoinColumn(name = "tag_id")
+//    )
+//    @JsonManagedReference("post-tags")
+//    @EqualsAndHashCode.Exclude
+//    @ToString.Exclude
+//    private Set<Tag> tags;
+
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "post_tags",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<Tag> tags;
+
 
 }
