@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
+import swe574.backend.devcomReborn.Comment.Comment;
 import swe574.backend.devcomReborn.community.Community;
 
 import java.util.Set;
@@ -39,5 +40,6 @@ public class Template {
     @ToString.Exclude
     @JsonManagedReference("template-fields")
     private Set<Field> fields;
+
 
 }

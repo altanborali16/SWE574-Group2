@@ -8,8 +8,8 @@ import java.util.Optional;
 
 
 public interface MembershipRepository  extends JpaRepository<Membership, MembershipCode> {
-    Optional<Membership> findByUser(User user);
-
+    List<Membership> findByUser(User user);
+    //Optional<Membership> findByUser(User user);
     List<Membership> findByCommunity(Community community);
 
 }

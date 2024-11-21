@@ -63,12 +63,15 @@ public class PostService {
         return postRepository.findByAuthor(author);
     }
 
+
+
     public List<Post> getPostListByTemplate(Long templateId) {
         Template template = templateRepository.findById(templateId).orElseThrow();
         return postRepository.findByTemplate(template);
     }
     // voting with toggle function
-//helper method "toggleVote"
+    //helper method "toggleVote"
+    //dont forget the important edge case!
     private void toggleVote(Post post, User voter, int voteChange) {
         if (!post.getVoters().contains(voter)) {
             post.setVoteCounter(post.getVoteCounter() + voteChange);

@@ -31,18 +31,20 @@ public class PostController {
         return ResponseEntity.ok(postService.deletePost(postId));
     }
 
-    @GetMapping("/list/{communityId}")
+    @GetMapping("/communitylist/{communityId}")
     public ResponseEntity<List<Post>> getPostList(@PathVariable Long communityId) {
         return ResponseEntity.ok(postService.getPostList(communityId));
     }
 
     //advanced search
-    @GetMapping("/list/{userId}")
+    @GetMapping("/userlist/{userId}")
     public ResponseEntity<List<Post>> getPostListByUser(@PathVariable Long userId) {
         return ResponseEntity.ok(postService.getPostListByUser(userId));
     }
 
-    @GetMapping("/list/{templateId}")
+
+
+    @GetMapping("/templatelist/{templateId}")
     public ResponseEntity<List<Post>> getPostListByTemplate(@PathVariable Long templateId) {
         return ResponseEntity.ok(postService.getPostListByTemplate(templateId));
     }

@@ -29,6 +29,7 @@ public class Community {
     private boolean isPrivate;
     private boolean isArchived;
 
+
     @ManyToOne
     @JoinColumn(name = "owner_id")
     @JsonBackReference("community-owner")
@@ -57,4 +58,6 @@ public class Community {
     @JsonIgnoreProperties({"community"})
     private Set<Post> posts;
 
+    @Column(name = "images",nullable = true)
+    private String imageString;
 }
