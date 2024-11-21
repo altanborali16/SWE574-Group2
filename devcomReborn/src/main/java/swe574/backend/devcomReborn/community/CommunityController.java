@@ -1,8 +1,10 @@
 package swe574.backend.devcomReborn.community;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import swe574.backend.devcomReborn.Comment.CommentRepository;
 import swe574.backend.devcomReborn.community.dto.MemberDTO;
 
 import java.util.List;
@@ -13,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommunityController {
     private final CommunityService communityService;
+    private final CommentRepository commentRepository;
 
     @GetMapping("/{id}")
     public ResponseEntity<Community> getCommunity (@PathVariable Long id){
@@ -45,4 +48,12 @@ public class CommunityController {
         return ResponseEntity.ok(members);
     }
 
+    @GetMapping("/userPostCount/{communityId}/{userId}")
+    public ResponseEntity<Long> getPostCountByUserInCommunity(@PathVariable Long userId, @PathVariable Long communityId) {
+        return ResponseEntity.ok(communityService.getPostCountByUserInCommunity(userId, communityId));
+    }
+    @GetMapping("/userCommentCount/{communityId}/{userId}")
+    public long countCommentsByUserAndCommunity(@PathVariable Long communityId, @PathVariable Long userId) {
+        return commentRepository.countCommentsByUserIdAndCommunityId(userId, communityId);
+    }
 }
