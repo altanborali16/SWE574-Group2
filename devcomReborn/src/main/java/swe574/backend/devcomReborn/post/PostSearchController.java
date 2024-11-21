@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import swe574.backend.devcomReborn.community.Community;
 import swe574.backend.devcomReborn.community.CommunityRepository;
 import swe574.backend.devcomReborn.user.User;
 
@@ -38,11 +39,5 @@ public class PostSearchController {
     @GetMapping("/postsByTemplateId")
     public ResponseEntity<List<Post>> getPostListByTemplate(@RequestParam Long templateId) {
         return ResponseEntity.ok(postService.getPostListByTemplate(templateId));
-    }
-
-    @GetMapping("/recommendedPosts")
-    public ResponseEntity<List<Post>> getRecommendedPosts() {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return ResponseEntity.ok(postService.getRecommendedPosts(user.getId()));
     }
 }

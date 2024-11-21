@@ -175,4 +175,8 @@ public class CommunityService {
         }
     }
 
+    public List<Community> getRecommendedCommunities(User user) {
+        return communityRepository.findRecommendedCommunities(user);
+    }
+
 }

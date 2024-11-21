@@ -133,17 +133,7 @@ public class PostService {
         };
     }
 
-    public List<Post> getRecommendedPosts(Long userId) {
-        Optional<User> foundUser = userRepository.findById(userId);
-        if (foundUser.isPresent()) {
-            User user = foundUser.get();
-            return findRecommendedPostsFor(user);
-        } else {
-            return Collections.emptyList();
-        }
-    }
-
-    private List<Post> findRecommendedPostsFor(User user) {
+    public List<Post> getRecommendedPosts(User user) {
         List<Community> communities = communityRepository.findRecommendedCommunities(user);
         List<Post> top10PostsFromAllCommunities = get10PostsFromAllCommunities(communities, Comparator.comparingInt(Post::getVoteCounter));
         List<Post> newest10PostsFromAllCommunities = get10PostsFromAllCommunities(communities, Comparator.comparing(Post::getTime));

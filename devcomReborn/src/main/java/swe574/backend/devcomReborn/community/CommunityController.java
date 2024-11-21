@@ -3,9 +3,11 @@ package swe574.backend.devcomReborn.community;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import swe574.backend.devcomReborn.community.dto.MemberDTO;
+import swe574.backend.devcomReborn.user.User;
 
 import java.util.List;
 import java.util.Map;
@@ -68,5 +70,10 @@ public class CommunityController {
         return ResponseEntity.ok("Image deleted successfully");
     }
 
+    @GetMapping("/recommendedCommunities")
+    public ResponseEntity<List<Community>> getRecommendedCommunities() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return ResponseEntity.ok(communityService.getRecommendedCommunities(user));
+    }
 
 }
