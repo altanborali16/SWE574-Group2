@@ -1,0 +1,1022 @@
+{
+	"info": {
+		"_postman_id": "81f2d73a-7fbe-4010-ab11-d0f13dccbc05",
+		"name": "DevComReborn API 2",
+		"description": "Collection of API endpoints for DevComReborn application",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33961065"
+	},
+	"item": [
+		{
+			"name": "Community",
+			"item": [
+				{
+					"name": "Get Community by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjUyLCJzdWIiOiJlbWFpbDNAZW1haWwuY29tIiwiaWF0IjoxNzMwNjQ2ODIxLCJleHAiOjE3MzA3MzMyMjF9.AteLpOnP-CVXZczTFsMEGORb5_Ud-lp7MJrfDVKYvZI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/community/{{id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"community",
+								"{{id}}"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Community List",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjUyLCJzdWIiOiJlbWFpbDNAZW1haWwuY29tIiwiaWF0IjoxNzMwNjQ2ODIxLCJleHAiOjE3MzA3MzMyMjF9.AteLpOnP-CVXZczTFsMEGORb5_Ud-lp7MJrfDVKYvZI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/community/list",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"community",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Community",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsInN1YiI6ImVtYWlsQGVtYWlsLmNvbSIsImlhdCI6MTczMTg2OTExMCwiZXhwIjoxNzMxOTU1NTEwfQ.Gih3ZrNbCBCxZEomyC7y42iEb_mFiCcHCr91VGiA2eI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Example Community POSTsdf\",\n    \"communityDescription\": \"This is an example community\",\n    \"isPrivate\": false,\n    \"isArchived\": false,\n    \"tags\": [\n        {\"name\": \"SPORT\"},\n        {\"name\": \"HIGHLIGHTS\"},\n        {\"name\": \"FUN\"}\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/community/create",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"community",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Join Community",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsInN1YiI6ImVtYWlsQGVtYWlsLmNvbSIsImlhdCI6MTcyOTg4NzE1MSwiZXhwIjoxNzI5OTczNTUxfQ.1oYlbKMdUbAN9eSng522mu1qOGh3ZtPnW_IgHpHWBX4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/community/join/{{id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"community",
+								"join",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Leave Community",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsInN1YiI6ImVtYWlsQGVtYWlsLmNvbSIsImlhdCI6MTcyOTg4NzE1MSwiZXhwIjoxNzI5OTczNTUxfQ.1oYlbKMdUbAN9eSng522mu1qOGh3ZtPnW_IgHpHWBX4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/community/leave/{{id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"community",
+								"leave",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Community Members",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjUyLCJzdWIiOiJlbWFpbDNAZW1haWwuY29tIiwiaWF0IjoxNzMwNjMzNTA1LCJleHAiOjE3MzA3MTk5MDV9.c2bahu1_LwLJ-rz3YJ5VDF_tIthy5TjDE5fUZYLzdX4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/community/members/{{communityId}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"community",
+								"members",
+								"{{communityId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload Image",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsInN1YiI6ImVtYWlsQGVtYWlsLmNvbSIsImlhdCI6MTczMjEwODM2MCwiZXhwIjoxNzMyMTk0NzYwfQ.MrXT_dps5e2JjJgSdhKIYsJADIPn5UUsRyKNsccEZX0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "postman-cloud:///1efa7471-9774-4c20-8394-f188a20edc11"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/community/{{communityId}}/image",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"community",
+								"{{communityId}}",
+								"image"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Image",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsInN1YiI6ImVtYWlsQGVtYWlsLmNvbSIsImlhdCI6MTczMjExMTE3MSwiZXhwIjoxNzMyMTk3NTcxfQ.xSTsXt1E-JeJUGqdaKPIUVidN_J6wj1EVehvfl3UodQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "image/*",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/community/{{communityId}}/image",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"community",
+								"{{communityId}}",
+								"image"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "UserProfile",
+			"item": [
+				{
+					"name": "Create User Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsInN1YiI6ImVtYWlsQGVtYWlsLmNvbSIsImlhdCI6MTcyOTg4NjQ5MywiZXhwIjoxNzI5OTcyODkzfQ.pDp4UkYOvn0Rx4N5E6GBi2BAEI5M4lzYWFsh5BlPsB4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"bio\": \"This is a bio\",\n    \"avatarUrl\": \"http://example.com/avatar.jpg\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/profile/create",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"profile",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsInN1YiI6ImVtYWlsQGVtYWlsLmNvbSIsImlhdCI6MTcyOTg4NjQ5MywiZXhwIjoxNzI5OTcyODkzfQ.pDp4UkYOvn0Rx4N5E6GBi2BAEI5M4lzYWFsh5BlPsB4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"bio\": \"Updated bio22\",\n    \"avatarUrl\": \"http://example.com/new_avatar.jpg22\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/profile/update",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"profile",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Current Profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/profile/currentProfile",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"profile",
+								"currentProfile"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "Authenticate(Login) Request",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"email@email.com\",\r\n    \"password\": \"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/authenticate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"authenticate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Authenticate(Login) Quick 2nd",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"email3@email.com\",\r\n    \"password\": \"password3\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/authenticate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"authenticate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register Request Quick 2nd User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstname\": \"firstname3\",\r\n    \"lastname\":\"lastname3\",\r\n    \"username\": \"username3\",\r\n    \"email\": \"email3@email.com\",\r\n    \"password\": \"password3\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register Request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstname\": \"firstname\",\r\n    \"lastname\":\"lastname\",\r\n    \"username\": \"username\",\r\n    \"email\": \"email@email.com\",\r\n    \"password\": \"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "auth"
+		},
+		{
+			"name": "Template",
+			"item": [
+				{
+					"name": "Get All Fields",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjUyLCJzdWIiOiJlbWFpbDNAZW1haWwuY29tIiwiaWF0IjoxNzMwNjQxODI5LCJleHAiOjE3MzA3MjgyMjl9.0uk6knwNHUKWOo7l_fB4cXRlHGUhf_BUPMoZdVDHPCU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/templates/fields/{{templateId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"templates",
+								"fields",
+								"{{templateId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Template List by Community ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsInN1YiI6ImVtYWlsMkBlbWFpbC5jb20iLCJpYXQiOjE3Mjk5NzY2NDgsImV4cCI6MTczMDA2MzA0OH0.HDxCDXPlb9Rtt0GFg38CRojZOHTA3XaUYAIhcHHVljY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/templates/list/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"templates",
+								"list",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Template",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsInN1YiI6ImVtYWlsM0BlbWFpbC5jb20iLCJpYXQiOjE3MzE3MzEzNTAsImV4cCI6MTczMTgxNzc1MH0.AtmZXeYPr7MQfXHVIW87EmJYt0cRbYQW6lCTV2V70fA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Example Template POST 2\",\n    \"description\": \"This is an example template 2\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/templates/create/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"templates",
+								"create",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Field to Template",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjUyLCJzdWIiOiJlbWFpbDNAZW1haWwuY29tIiwiaWF0IjoxNzMwNjU4MjY4LCJleHAiOjE3MzA3NDQ2Njh9.V-G1GrOlPxG1dc3TKm21AKEGtmvFd6u0agVkKpVw_AU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Example Field POST 2\",\n    \"dataType\": \"TEXT\" // ENUM zimbirtisi\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/templates/addField/{{templateId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"templates",
+								"addField",
+								"{{templateId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Posts",
+			"item": [
+				{
+					"name": "Get Posts by Community ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsInN1YiI6ImVtYWlsQGVtYWlsLmNvbSIsImlhdCI6MTczMTg2MDI5OCwiZXhwIjoxNzMxOTQ2Njk4fQ.gY7o2WFFBIZhSSd8TGw7KwZbeKVEmhzJ6eHHK5GVCOM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/post/list/{{communityId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"post",
+								"list",
+								"{{communityId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsInN1YiI6ImVtYWlsQGVtYWlsLmNvbSIsImlhdCI6MTczMTg2NTEyMywiZXhwIjoxNzMxOTUxNTIzfQ.GQQuLrrLcsDzlPLrNfpQukOHrVzceVERm959hA60oio",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"Sample Post Title EFEF\",\r\n  \"time\": \"2023-11-03T14:00:00\",\r\n  \"template\": {\r\n    \"id\": 1\r\n  },\r\n  \"postContents\": [\r\n    {\r\n      \"value\": \"First content value\",\r\n      \"field\": {\r\n        \"id\": 1,\r\n        \"name\": \"Field nameee\",\r\n        \"dataType\": \"TEXT\"\r\n      }\r\n    }\r\n  ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/post/create/{{communityId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"post",
+								"create",
+								"{{communityId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Post Copy",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjUyLCJzdWIiOiJlbWFpbDNAZW1haWwuY29tIiwiaWF0IjoxNzMwNjU4MjY4LCJleHAiOjE3MzA3NDQ2Njh9.V-G1GrOlPxG1dc3TKm21AKEGtmvFd6u0agVkKpVw_AU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"Sample Post Title EFEFaltan altan\",\r\n  \"time\": \"2023-11-03T14:00:00\",\r\n  \"template\": {\r\n    \"id\": 3\r\n  },\r\n  \"postContents\": [\r\n    {\r\n      \"value\": \"First content value altan \",\r\n      \"field\": {\r\n        \"id\": 2,\r\n        \"name\": \"Field nameee\",\r\n        \"dataType\": \"TEXT\"\r\n      }\r\n    },\r\n    {\r\n        \"value\": \"second  content value altan\",\r\n        \"field\": {\r\n            \"id\": 3,\r\n            \"name\": \"Field nameee\",\r\n            \"dataType\": \"TEXT\"\r\n      }   \r\n    }\r\n  ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/post/create/{{communityId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"post",
+								"create",
+								"{{communityId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Up Vote",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsInN1YiI6Im9zbWFuQGtvc2hhbi5jb20iLCJpYXQiOjE3MzIyMDIwMzUsImV4cCI6MTczMjI4ODQzNX0.WBWSjq1Rj0W7gRGdykPaYi_ZrfjRuoEMwRzcPzDpvuE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/post/upvote/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"post",
+								"upvote",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsInN1YiI6ImVtYWlsQGVtYWlsLmNvbSIsImlhdCI6MTczMTg2MzY2MiwiZXhwIjoxNzMxOTUwMDYyfQ.hjmB7VKqtgP4r39SWlHF5x8I5T2yx_M5QEqN4yF6UL8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/post/delete/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"post",
+								"delete",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Search (in community)",
+			"item": [
+				{
+					"name": "Find posts by User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/post/list/{{userId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"post",
+								"list",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find posts by Template",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/post/list/{{templateId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"post",
+								"list",
+								"{{templateId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Search by Template Combo Parameters",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/post/comboParams/{{templateId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"post",
+								"comboParams",
+								"{{templateId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Recommendations",
+			"item": [
+				{
+					"name": "Get recommended posts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsInN1YiI6Im9zbWFuQGtvc2hhbi5jb20iLCJpYXQiOjE3MzIyMDIyODYsImV4cCI6MTczMjI4ODY4Nn0.sI3Fi5w1KxeNc0toYO6fzL9GwPg8x4R_Vq_XXJTMg-k",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/post/recommendations",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"post",
+								"recommendations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get recommended communities",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsInN1YiI6Im9zbWFuQGtvc2hhbi5jb20iLCJpYXQiOjE3MzIyMDI4ODgsImV4cCI6MTczMjI4OTI4OH0.f1C0ZAHYopJOyDLloXNoxtJLvE530QhwtHj88Z1VLvI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/community/recommendations",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"community",
+								"recommendations"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080"
+		}
+	]
+}

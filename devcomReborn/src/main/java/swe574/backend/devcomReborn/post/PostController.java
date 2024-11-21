@@ -52,7 +52,7 @@ public class PostController {
         return ResponseEntity.ok(postService.downVotePost(postId));
     }
 
-    @GetMapping("/recommendedPosts")
+    @GetMapping("/recommendations")
     public ResponseEntity<List<Post>> getRecommendedPosts() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return ResponseEntity.ok(postService.getRecommendedPosts(user));

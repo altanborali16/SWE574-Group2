@@ -70,7 +70,7 @@ public class CommunityController {
         return ResponseEntity.ok("Image deleted successfully");
     }
 
-    @GetMapping("/recommendedCommunities")
+    @GetMapping("/recommendations")
     public ResponseEntity<List<Community>> getRecommendedCommunities() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return ResponseEntity.ok(communityService.getRecommendedCommunities(user));
