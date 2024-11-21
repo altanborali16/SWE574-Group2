@@ -1,11 +1,14 @@
 package swe574.backend.devcomReborn.community;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import swe574.backend.devcomReborn.community.dto.MemberDTO;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin
@@ -24,7 +27,8 @@ public class CommunityController {
         return ResponseEntity.ok(communityService.getCommunityList());
     }
 
-    @PostMapping("/create")
+//    @PostMapping("/create")
+    @PostMapping(value = "/create", consumes = {"application/json", "application/json;charset=UTF-8"})
     public ResponseEntity<Community> createCommunity(@RequestBody Community community){
 
         return ResponseEntity.ok(communityService.createCommunity(community));
@@ -44,5 +48,25 @@ public class CommunityController {
         List<MemberDTO> members = communityService.getCommunityMembers(communityId);
         return ResponseEntity.ok(members);
     }
+
+    @PostMapping(value = "/{communityId}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> uploadCommunityImage(
+            @PathVariable Long communityId,
+            @RequestParam("image") MultipartFile imageFile) {
+        communityService.uploadCommunityImage(communityId, imageFile);
+        return ResponseEntity.ok("Image uploaded successfully");
+    }
+
+    @GetMapping("/{communityId}/image")
+    public ResponseEntity<byte[]> getCommunityImage(@PathVariable Long communityId) {
+        return communityService.getCommunityImage(communityId);
+    }
+
+    @DeleteMapping("/{communityId}/image")
+    public ResponseEntity<String> deleteCommunityImage(@PathVariable Long communityId) {
+        communityService.deleteCommunityImage(communityId);
+        return ResponseEntity.ok("Image deleted successfully");
+    }
+
 
 }
