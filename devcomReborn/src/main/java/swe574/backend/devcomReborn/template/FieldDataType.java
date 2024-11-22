@@ -5,5 +5,6 @@ public enum FieldDataType {
     IMAGE,
     GEOLOCATION,
     DATE,
-    TIME
+    TIME,
+    NUMBER
 }

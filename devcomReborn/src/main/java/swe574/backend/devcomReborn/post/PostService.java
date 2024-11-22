@@ -1,22 +1,22 @@
 package swe574.backend.devcomReborn.post;
 
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import swe574.backend.devcomReborn.community.Community;
 import swe574.backend.devcomReborn.community.CommunityRepository;
-import swe574.backend.devcomReborn.template.Field;
 import swe574.backend.devcomReborn.template.Template;
 import swe574.backend.devcomReborn.template.TemplateRepository;
 import swe574.backend.devcomReborn.user.User;
 import swe574.backend.devcomReborn.user.UserRepository;
 
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -35,15 +35,16 @@ public class PostService {
         User creator = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Community community = communityRepository.findById(communityId).orElseThrow(() -> new RuntimeException("Community not found"));
         Template postTemplate = templateRepository.findById(post.getTemplate().getId()).orElseThrow(() -> new RuntimeException("Template not found"));
-        if(!postTemplate.getCommunity().getId().equals(community.getId())) throw new RuntimeException("Community does not support this template");
+        if (!postTemplate.getCommunity().getId().equals(community.getId()))
+            throw new RuntimeException("Community does not support this template");
         post.setCommunity(community);
         post.setAuthor(creator);
         Post createdPost = postRepository.save(post);
-        for(PostContent postContent: post.getPostContents()){
+        for (PostContent postContent : post.getPostContents()) {
             postContent.setPost(createdPost);
         }
         postContentRepository.saveAll(post.getPostContents());
-        return  createdPost;
+        return createdPost;
     }
 
     @Transactional
@@ -72,6 +73,7 @@ public class PostService {
     // voting with toggle function
     //helper method "toggleVote"
     //dont forget the important edge case!
+
     private void toggleVote(Post post, User voter, int voteChange) {
         if (!post.getVoters().contains(voter)) {
             post.setVoteCounter(post.getVoteCounter() + voteChange);
@@ -101,4 +103,53 @@ public class PostService {
     }
 
 
+    public List<Post> searchPosts(String communityId, String templateId, Map<Long, String> fields) {
+        Specification<Post> spec = buildSpec(communityId, templateId, fields);
+        return postRepository.findAll(spec);
+    }
+
+    private static Specification<Post> buildSpec(String communityId, String templateId, Map<Long, String> contentCriteria) {
+        return (root, query, criteriaBuilder) -> {
+            // Basic conjunction predicate to combine with other conditions
+            Predicate communityPredicate = criteriaBuilder.equal(root.get("community").get("id"), communityId);
+            if (contentCriteria == null || contentCriteria.isEmpty()) {
+                return communityPredicate; // Only filter by communityId if no other criteria are specified
+            }
+
+            // Join Post with PostContent
+            Join<Post, PostContent> postContentJoin = root.join("postContents", JoinType.INNER);
+
+            // Create Predicate for each contentCriteria entry
+            Predicate[] predicates = contentCriteria.entrySet().stream()
+                    .map(entry -> {
+                        Long id = entry.getKey();
+                        String value = entry.getValue();
+                        return criteriaBuilder.and(
+                                criteriaBuilder.equal(postContentJoin.get("field").get("id"), id),
+                                criteriaBuilder.like(postContentJoin.get("value"), "%" + value + "%") // Contains/like match
+                        );
+                    })
+                    .toArray(Predicate[]::new);
+
+            // Combine contentPredicates with OR, and then AND with the communityPredicate
+            Predicate contentCriteriaPredicate = criteriaBuilder.or(predicates);
+            return criteriaBuilder.and(communityPredicate, contentCriteriaPredicate);
+        };
+    }
+
+    public List<Post> getRecommendedPosts(User user) {
+        List<Community> communities = communityRepository.findRecommendedCommunities(user);
+        List<Post> top10PostsFromAllCommunities = get10PostsFromAllCommunities(communities, Comparator.comparingInt(Post::getVoteCounter));
+        List<Post> newest10PostsFromAllCommunities = get10PostsFromAllCommunities(communities, Comparator.comparing(Post::getTime));
+        return Stream.concat(top10PostsFromAllCommunities.stream(), newest10PostsFromAllCommunities.stream()).toList();
+    }
+
+    private static List<Post> get10PostsFromAllCommunities(List<Community> communities, Comparator<Post> comparator) {
+        return communities.stream()
+                .flatMap(c -> c.getPosts().stream())
+                .sorted(comparator)
+                .limit(10)
+                .toList();
+    }
 }
+

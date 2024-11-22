@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
 import swe574.backend.devcomReborn.post.Post;
+import swe574.backend.devcomReborn.tag.Tag;
 import swe574.backend.devcomReborn.template.Template;
 import swe574.backend.devcomReborn.user.User;
 
@@ -28,6 +29,12 @@ public class Community {
     @Column(name = "is_private",nullable = false)
     private boolean isPrivate;
     private boolean isArchived;
+    @Lob
+    @Column(name = "image_data")
+    private byte[] imageData;
+
+    @Column(name = "image_type")
+    private String imageType;
 
 
     @ManyToOne
@@ -57,6 +64,16 @@ public class Community {
     @ToString.Exclude
     @JsonIgnoreProperties({"community"})
     private Set<Post> posts;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "community_tags",
+            joinColumns = @JoinColumn(name = "community_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<Tag> tags;
+
 
     @Column(name = "images",nullable = true)
     private String imageString;
