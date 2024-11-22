@@ -256,7 +256,17 @@ function AdvancedSearchForm({
                                 ? dataTypeState[field].Min
                                 : ""
                             }
-                            onChange={(e) => {}}
+                            onChange={(e) => {
+                              const intervalKey = "Min";
+                              dataTypeDispatch({
+                                type: "UPDATE_TEMPLATE_FIELD",
+                                payload: {
+                                  field,
+                                  value: e.target.value,
+                                  intervalKey,
+                                },
+                              });
+                            }}
                             placeholder={`Enter Minimum Value`}
                           />
                           Maximum Value:
