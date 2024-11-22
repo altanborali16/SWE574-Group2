@@ -4,6 +4,7 @@ export const PostSearch = (data, search) => {
   console.log({ memberships, posts, templates });
 
   const { title, author, endDate, startDate } = search?.postSearch || "";
+  console.log({ title, author, endDate, startDate });
   //   const filteredResults = [];
   //   const authorResults = [];
   //   const endDateResults = [];
@@ -15,31 +16,37 @@ export const PostSearch = (data, search) => {
   if (!author && !endDate && !startDate) {
     return posts;
   }
-  return posts.filter((post) => {
+  const filteredPosts = posts.filter((post) => {
     const postDateString = post?.time.split("T")[0];
     const postDateObject = new Date(postDateString);
 
-    // Author filter
-    if (author && post.author.username !== author) {
+    console.log(post?.author?.username);
+
+    if (
+      author &&
+      !post?.author?.username.toLowerCase().includes(author.toLowerCase())
+    ) {
       return false;
     }
     // title filter
-    if (title && post.title !== title) {
+    if (title && !post.title.toLowerCase().includes(title.toLowerCase())) {
       return false;
     }
 
     // endDate filter
-    if (endDateObject && postDateObject < endDateObject) {
+    if (endDateObject && postDateObject > endDateObject) {
       return false; // endDate'den önceyse çıkar
     }
 
     // startDate filter
-    if (startDateObject && postDateObject > startDateObject) {
+    if (startDateObject && postDateObject < startDateObject) {
       return false;
     }
 
     return true;
   });
+  console.log({ filteredPosts });
+  return filteredPosts;
 
   //   if (posts.lenght > 0) {
   //     posts.forEach((post) => {

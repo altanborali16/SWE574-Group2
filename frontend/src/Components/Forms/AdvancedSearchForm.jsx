@@ -227,7 +227,7 @@ function AdvancedSearchForm({
                           />
                         </div>
                       )}
-                      {postState.templateFields[field] === "IMAGE" && (
+                      {/* {postState.templateFields[field] === "IMAGE" && (
                         <div key={index}>
                           <label>{field}:</label>
                           <input
@@ -244,9 +244,10 @@ function AdvancedSearchForm({
                             placeholder={`Enter ${field}`}
                           />
                         </div>
-                      )}
+                      )} */}
                       {postState.templateFields[field] === "NUMBER" && (
                         <div key={index}>
+                          <label>{field}:</label>
                           <label>{"Number"}:</label>
                           Minimum Value:
                           <input
@@ -292,7 +293,7 @@ function AdvancedSearchForm({
                           />
                         </div>
                       )}
-                      {postState.templateFields[field] === "GEOLOCATION" && (
+                      {/* {postState.templateFields[field] === "GEOLOCATION" && (
                         <div key={index}>
                           <label>{field}:</label>
                           <input
@@ -309,7 +310,7 @@ function AdvancedSearchForm({
                             placeholder={`Enter ${field}`}
                           />
                         </div>
-                      )}
+                      )} */}
                       {postState.templateFields[field] === "DATE" && (
                         <div key={index}>
                           <label>{field}:</label>
@@ -357,9 +358,9 @@ function AdvancedSearchForm({
                       )}
                       {postState.templateFields[field] === "TIME" && (
                         <>
-                          After:
                           <div key={index}>
                             <label>{field}:</label>
+                            After:
                             <input
                               type="time"
                               value={
@@ -381,9 +382,8 @@ function AdvancedSearchForm({
                               placeholder={`Enter ${field}`}
                             />
                           </div>
-                          Before:
                           <div key={index}>
-                            <label>{field}:</label>
+                            Before:
                             <input
                               type="time"
                               value={

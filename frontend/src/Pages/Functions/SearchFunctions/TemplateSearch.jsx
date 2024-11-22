@@ -4,15 +4,12 @@ export const TemplateSearch = (data, search) => {
   console.log({ posts });
 
   const templateInputs = search?.postSearch?.templateSearchInputs || "";
-  const templateFields = search?.postSearch?.templateFields || "";
   const template = search?.postSearch?.template || "";
+  const results = [];
 
   posts &&
     posts.forEach((post) => {
       const contentArray = [];
-      const contentKeys = [];
-      const searchArray = [];
-      const searchKeys = Object.keys(templateFields);
 
       if (template == post?.template?.name) {
         post?.postContents?.forEach((content) => {
@@ -22,10 +19,9 @@ export const TemplateSearch = (data, search) => {
             value: content?.value,
           };
           contentArray.push(objectCont);
-          contentKeys.push(content?.field?.name);
         });
 
-        post?.postContents?.filter((content) => {
+        const filteredContents = post?.postContents?.filter((content) => {
           const type = content?.field?.dataType;
           const name = content?.field?.name;
           const value = content?.value;
@@ -34,12 +30,12 @@ export const TemplateSearch = (data, search) => {
             if (templateInputs?.[name]?.Start) {
               const startDate = templateInputs?.[name]?.Start;
               const startDateObject = startDate ? new Date(startDate) : null;
-              if (contentDateObject > startDateObject) return false;
+              if (contentDateObject < startDateObject) return false;
             }
             if (templateInputs?.[name]?.End) {
               const endDate = templateInputs?.[name]?.End;
               const endDateObject = endDate ? new Date(endDate) : null;
-              if (contentDateObject < endDateObject) return false;
+              if (contentDateObject > endDateObject) return false;
             }
           }
           if (type === "TEXT") {
@@ -47,9 +43,70 @@ export const TemplateSearch = (data, search) => {
               return false;
             }
           }
-        });
+          if (type === "NUMBER") {
+            if (
+              templateInputs?.[name]?.Min &&
+              Number(templateInputs?.[name]?.Min) > Number(value)
+            ) {
+              return false;
+            }
+            if (
+              templateInputs?.[name]?.Max &&
+              Number(templateInputs?.[name]?.Max) < Number(value)
+            ) {
+              return false;
+            }
+          }
 
-        console.log({ contentArray, contentKeys, searchKeys });
+          if (type === "TIME") {
+            const tempTime = value;
+            const inputTimeAfter = templateInputs?.[name]?.After;
+            const inputTimeBefore = templateInputs?.[name]?.Before;
+
+            const dateTemp = new Date(`1970-01-01T${tempTime}:00`);
+            const dateAfter = new Date(`1970-01-01T${inputTimeAfter}:00`);
+            const dateBefore = new Date(`1970-01-01T${inputTimeBefore}:00`);
+
+            if (inputTimeAfter && dateTemp.getTime() < dateAfter.getTime()) {
+              console.log(`${tempTime} is later than ${inputTimeAfter}`);
+              return false;
+            }
+
+            if (inputTimeBefore && dateTemp.getTime() > dateBefore.getTime()) {
+              console.log(`${tempTime} is earlier than ${inputTimeBefore}`);
+              return false;
+            }
+          }
+
+          return true;
+        });
+        const contentArrayNames = contentArray.map((content) => content.name);
+        const filteredContentNames = filteredContents.map(
+          (content) => content?.field?.name
+        );
+
+        // Her iki dizideki `name` değerlerini karşılaştırıyoruz.
+        const allNamesSame =
+          contentArrayNames.every((name) =>
+            filteredContentNames.includes(name)
+          ) &&
+          filteredContentNames.every((name) =>
+            contentArrayNames.includes(name)
+          );
+
+        // Eğer tüm `name` değerleri aynıysa konsola yazdırıyoruz.
+        if (allNamesSame) {
+          results.push(post);
+          console.log("Hepsi aynı");
+        } else {
+          console.log("Aynı değil");
+        }
+
+        console.log({
+          contentArray,
+          filteredContents,
+          results,
+        });
       }
     });
 
