@@ -1,14 +1,15 @@
 package swe574.backend.devcomReborn.community;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import swe574.backend.devcomReborn.Comment.CommentRepository;
 import org.springframework.web.multipart.MultipartFile;
 import swe574.backend.devcomReborn.community.dto.MemberDTO;
 import swe574.backend.devcomReborn.user.User;
-
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +19,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CommunityController {
     private final CommunityService communityService;
+    private final CommentRepository commentRepository;
 
     @GetMapping("/{id}")
     public ResponseEntity<Community> getCommunity (@PathVariable Long id){
@@ -51,6 +53,14 @@ public class CommunityController {
         return ResponseEntity.ok(members);
     }
 
+    @GetMapping("/userPostCount/{communityId}/{userId}")
+    public ResponseEntity<Long> getPostCountByUserInCommunity(@PathVariable Long userId, @PathVariable Long communityId) {
+        return ResponseEntity.ok(communityService.getPostCountByUserInCommunity(userId, communityId));
+    }
+    @GetMapping("/userCommentCount/{communityId}/{userId}")
+    public long countCommentsByUserAndCommunity(@PathVariable Long communityId, @PathVariable Long userId) {
+        return commentRepository.countCommentsByUserIdAndCommunityId(userId, communityId);
+    }
     @PostMapping(value = "/{communityId}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadCommunityImage(
             @PathVariable Long communityId,
@@ -75,5 +85,4 @@ public class CommunityController {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return ResponseEntity.ok(communityService.getRecommendedCommunities(user));
     }
-
 }

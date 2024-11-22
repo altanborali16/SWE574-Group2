@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
+import swe574.backend.devcomReborn.Comment.Comment;
 import swe574.backend.devcomReborn.community.Community;
 import swe574.backend.devcomReborn.tag.Tag;
 import swe574.backend.devcomReborn.template.Template;
@@ -92,5 +93,12 @@ public class Post {
     @ToString.Exclude
     private Set<Tag> tags;
 
+    @OneToMany(mappedBy = "post",fetch = FetchType.EAGER)
+    @Cascade(org.hibernate.annotations.CascadeType.REMOVE)
+    @JsonManagedReference("post-comments")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @JsonIgnoreProperties({"post"})
+    private Set<Comment> comments;
 
 }

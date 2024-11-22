@@ -12,4 +12,5 @@ public interface PostRepository extends JpaRepository<Post,Long>, JpaSpecificati
     List<Post> findByCommunity(Community community);
     List<Post> findByAuthor(User author);
     List<Post> findByTemplate(Template template);
+    List<Post> findByAuthorAndCommunity(User author, Community community);
 }

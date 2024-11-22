@@ -32,12 +32,18 @@ public class PostController {
         return ResponseEntity.ok(postService.deletePost(postId));
     }
 
-    @GetMapping("/list/{communityId}")
+    @GetMapping("/communitylist/{communityId}")
     public ResponseEntity<List<Post>> getPostList(@PathVariable Long communityId) {
         return ResponseEntity.ok(postService.getPostList(communityId));
     }
 
-    @GetMapping("/list/{templateId}")
+    //advanced search
+    @GetMapping("/userlist/{userId}")
+    public ResponseEntity<List<Post>> getPostListByUser(@PathVariable Long userId) {
+        return ResponseEntity.ok(postService.getPostListByUser(userId));
+    }
+
+    @GetMapping("/templatelist/{templateId}")
     public ResponseEntity<List<Post>> getPostListByTemplate(@PathVariable Long templateId) {
         return ResponseEntity.ok(postService.getPostListByTemplate(templateId));
     }
@@ -51,6 +57,7 @@ public class PostController {
     public ResponseEntity<String> downVotePost(@PathVariable Long postId) {
         return ResponseEntity.ok(postService.downVotePost(postId));
     }
+
 
     @GetMapping("/recommendations")
     public ResponseEntity<List<Post>> getRecommendedPosts() {

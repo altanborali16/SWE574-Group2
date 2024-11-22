@@ -8,6 +8,7 @@ import org.hibernate.annotations.Cascade;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import swe574.backend.devcomReborn.Comment.Comment;
 import swe574.backend.devcomReborn.community.Membership;
 import swe574.backend.devcomReborn.post.Post;
 import java.util.Collection;
@@ -49,6 +50,14 @@ public class User implements UserDetails {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<Post> posts;
+
+    @OneToMany(mappedBy = "author",fetch = FetchType.LAZY)
+    @Cascade(org.hibernate.annotations.CascadeType.REMOVE)
+    @JsonManagedReference("user-comments")
+    @JsonIgnore
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<Comment> comments;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

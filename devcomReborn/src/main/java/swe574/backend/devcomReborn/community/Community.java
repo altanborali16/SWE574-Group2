@@ -36,6 +36,7 @@ public class Community {
     @Column(name = "image_type")
     private String imageType;
 
+
     @ManyToOne
     @JoinColumn(name = "owner_id")
     @JsonBackReference("community-owner")
@@ -74,4 +75,6 @@ public class Community {
     private Set<Tag> tags;
 
 
+    @Column(name = "images",nullable = true)
+    private String imageString;
 }
