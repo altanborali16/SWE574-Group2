@@ -2,12 +2,13 @@ package swe574.backend.devcomReborn.post;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import swe574.backend.devcomReborn.community.CommunityRepository;
-import swe574.backend.devcomReborn.template.Field;
-import swe574.backend.devcomReborn.template.Template;
+import swe574.backend.devcomReborn.user.User;
 
 import java.util.List;
+
 
 @RestController
 @CrossOrigin
@@ -36,12 +37,6 @@ public class PostController {
         return ResponseEntity.ok(postService.getPostList(communityId));
     }
 
-    //advanced search
-    @GetMapping("/list/{userId}")
-    public ResponseEntity<List<Post>> getPostListByUser(@PathVariable Long userId) {
-        return ResponseEntity.ok(postService.getPostListByUser(userId));
-    }
-
     @GetMapping("/list/{templateId}")
     public ResponseEntity<List<Post>> getPostListByTemplate(@PathVariable Long templateId) {
         return ResponseEntity.ok(postService.getPostListByTemplate(templateId));
@@ -56,4 +51,11 @@ public class PostController {
     public ResponseEntity<String> downVotePost(@PathVariable Long postId) {
         return ResponseEntity.ok(postService.downVotePost(postId));
     }
+
+    @GetMapping("/recommendations")
+    public ResponseEntity<List<Post>> getRecommendedPosts() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return ResponseEntity.ok(postService.getRecommendedPosts(user));
+    }
+
 }
