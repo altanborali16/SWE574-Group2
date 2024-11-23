@@ -4,9 +4,11 @@ import Navbar from "./NavBar";
 import CommunityListOld from "./SharedComponents/CommunityListOld";
 import httpClient from "../Helpers/HttpClient";
 import { jwtDecode } from 'jwt-decode';
+import LoadingScreen from "./SharedComponents/LoadingScreen";
 
 const CommunitiesPage = () => {
   const [communityListDb, setcommunityListDb] = useState([]);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const fetchCommunityList = async () => {
       try {
@@ -17,6 +19,7 @@ const CommunitiesPage = () => {
           !community.memberships.some(membership => membership.id.userId === user.userId)
         );
         setcommunityListDb(filteredCommunities);
+        setLoading(false);
         // setcommunityListDb(response.data);
         console.log("Communities:", response.data);
       } catch (err) {
@@ -30,11 +33,15 @@ const CommunitiesPage = () => {
     <>
       <PageMetaData title="Communities" />
       <Navbar />
-      {communityListDb.length > 0 && (
-        <CommunityListOld
-        communityList={communityListDb}
-          title="Explore Communities"
-        />
+      {loading ? (
+        <LoadingScreen />
+      ) : (
+        communityListDb.length > 0 && (
+          <CommunityListOld
+            communityList={communityListDb}
+            title="Explore Communities"
+          />
+        )
       )}
     </>
   );

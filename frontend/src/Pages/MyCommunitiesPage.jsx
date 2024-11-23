@@ -6,10 +6,12 @@ import { Link } from "react-router-dom";
 import "../Styles/MyCommunitiesPage.css"
 import httpClient from "../Helpers/HttpClient";
 import { jwtDecode } from 'jwt-decode';
+import LoadingScreen from "./SharedComponents/LoadingScreen";
 
 const MyCommunitiesPage = () => {
   const [ownedCommunityListDb, setOwnedCommunityListDb] = useState([]);
   const [subscribedCommunityListDb, setSubscribedOwnedCommunityListDb] = useState([]);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const fetchCommunityList = async () => {
       try {
@@ -25,6 +27,7 @@ const MyCommunitiesPage = () => {
         );
         setSubscribedOwnedCommunityListDb(filteredSubscribedCommunities);
         console.log("Communities:", response.data);
+        setLoading(false);
       } catch (err) {
         console.error(err);
       }
@@ -36,16 +39,33 @@ const MyCommunitiesPage = () => {
     <>
       <PageMetaData title="My Communities" />
       <Navbar />
-      <div className="create-community-button" style={{ textAlign: "center", margin: "20px 0" }}>
-        <Link to="/createcommunity">
-          <button>Create New Community</button>
-        </Link>
-      </div>
-      {ownedCommunityListDb.length > 0 && (
-        <CommunityListOld communityList={ownedCommunityListDb} title="Owned Communities"/>
-      )}
-      {subscribedCommunityListDb.length > 0 && (
-        <CommunityListOld communityList={subscribedCommunityListDb} title="Subscribed Communities"/>
+      {loading ? (
+        <LoadingScreen />
+      ) : (
+        <>
+          <div
+            className="create-community-button"
+            style={{ textAlign: "center", margin: "20px 0" }}
+          >
+            <Link to="/createcommunity">
+              <button>Create New Community</button>
+            </Link>
+          </div>
+  
+          {ownedCommunityListDb.length > 0 && (
+            <CommunityListOld
+              communityList={ownedCommunityListDb}
+              title="Owned Communities"
+            />
+          )}
+  
+          {subscribedCommunityListDb.length > 0 && (
+            <CommunityListOld
+              communityList={subscribedCommunityListDb}
+              title="Subscribed Communities"
+            />
+          )}
+        </>
       )}
     </>
   );
