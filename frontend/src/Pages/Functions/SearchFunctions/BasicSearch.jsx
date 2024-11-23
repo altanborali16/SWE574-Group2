@@ -47,6 +47,11 @@ export const basicSearch = (data, search) => {
       }
     });
 
+    // if (search?.basicSearch?.filters?.comments) {
+    //   posts?.comments.forEach((comment) => {
+    //     comment;
+    //   });
+    // }
     return results;
   }
 };

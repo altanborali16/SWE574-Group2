@@ -3,7 +3,7 @@ import "../../Styles/PostView.css";
 import { FaReply } from "react-icons/fa";
 import { jwtDecode } from "jwt-decode";
 
-const PostsView = ({ posts, header, onClickSearch }) => {
+const PostsView = ({ posts, header }) => {
   // State to hold comments for each post, each comment can have nested replies
   const [comments, setComments] = useState(
     posts.reduce((acc, post) => {
@@ -185,14 +185,6 @@ const PostsView = ({ posts, header, onClickSearch }) => {
 
   return (
     <div className="posts-view">
-      {onClickSearch && (
-        <button
-          className="comment-button save-button"
-          onClick={() => onClickSearch(false)}
-        >
-          Return to page
-        </button>
-      )}
       <h1>{header}</h1>
       <div className="posts-container">
         {posts.map((post) => (

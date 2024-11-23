@@ -2,19 +2,21 @@ import { useState, useEffect } from "react";
 import { basicSearch } from "./BasicSearch";
 import { PostSearch } from "./PostSearch";
 import { TemplateSearch } from "./TemplateSearch";
+import { MemberSearch } from "./MemberSearch";
 
 // Custom hook olarak searchEngine
-export const useSearchEngine = (data, search) => {
+export const useSearchEngine = (data, search, subscribers) => {
   let intersectionPostTemp = [];
   let intersectionBasic = [];
-  let uniqueResults = [];
   const [result, setResult] = useState([]);
+  const [memberResult, setMemberResult] = useState([]);
 
   useEffect(() => {
     if (Object.keys(search).length !== 0) {
       const basicResults = basicSearch(data, search);
       const postResults = PostSearch(data, search);
       const templateResults = TemplateSearch(data, search);
+      const subscriberResults = MemberSearch(data, search, subscribers);
 
       intersectionPostTemp = postResults?.filter((post) =>
         templateResults?.some((templatePost) => templatePost.id === post.id)
@@ -47,10 +49,13 @@ export const useSearchEngine = (data, search) => {
       console.log("intPostTemp", intersectionPostTemp);
       console.log("intersect", intersectionBasic);
       setResult(intersectionBasic);
+      if (search?.basicSearch?.filters.users) {
+        setMemberResult(subscriberResults);
+      }
     }
   }, [data, search]);
 
-  console.log("ouut", result);
+  console.log({ result, memberResult });
 
-  return result;
+  return { result, memberResult };
 };

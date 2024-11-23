@@ -11,6 +11,8 @@ import { jwtDecode } from "jwt-decode";
 import PostsView from "./SharedComponents/PostList";
 import NavbarCommunity from "./NavBarCommunity";
 import { useSearchEngine } from "./Functions/SearchFunctions/SearchEngine";
+import MemberList from "./SharedComponents/MemberList";
+import ShowResultPage from "./SharedComponents/ShowResultPage";
 
 const CommunityPage = () => {
   const { id } = useParams();
@@ -94,7 +96,11 @@ const CommunityPage = () => {
 
   const filter = searchObject?.basicSearch?.filters;
 
-  let searchResults = useSearchEngine(communityDb, searchObject);
+  let { result: searchResults, memberResult } = useSearchEngine(
+    communityDb,
+    searchObject,
+    subscribers
+  );
 
   if (
     !filter?.posts &&
@@ -104,7 +110,7 @@ const CommunityPage = () => {
     searchResults = [];
   }
 
-  console.log({ searchResults });
+  console.log({ searchResults, memberResult });
   console.log({ isSearchForm, isSearchCommunity });
 
   const [showCreateTemplateForm, setShowCreateTemplateForm] = useState(false);
@@ -192,7 +198,7 @@ const CommunityPage = () => {
       console.error("Error unfollow:", error);
     }
   };
-  const community = communityDb
+  const community = communityDb;
   if (loading) {
     // Display loading message or spinner
     return <div>Loading...</div>;
@@ -200,149 +206,134 @@ const CommunityPage = () => {
   if (!community) {
     return <div>Community not found</div>;
   }
-    return (
-      <>
-        <PageMetaData title="Communities" />
-        <NavbarCommunity isSearchForm={setIsSearchForm} />
-        {isSearchForm && (
-          <div className="modal-overlay" onClick={handleCloseForm}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-              <button className="close-button" onClick={handleCloseForm}>
-                &times;
-              </button>
-              <AdvancedSearchForm
-                formPlace="community"
-                community={community}
-                setSearchObject={setSearchObject}
-                setIsSearchForm={setIsSearchForm}
-                setIsSearch={setIsSearchCommunity}
-              />
-            </div>
-          </div>
-        )}
-
-        {showCreateTemplateForm && (
-          <div className="modal-overlay" onClick={handleCloseForm}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-              <button className="close-button" onClick={handleCloseForm}>
-                &times;
-              </button>
-              <CreateTemplateForm
-                onTemplateCreated={addTemplate}
-                onClose={handleCloseForm}
-              />
-            </div>
-          </div>
-        )}
-        {showCreatePostForm && (
-          <div className="modal-overlay" onClick={handleCloseForm}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-              <button className="close-button" onClick={handleCloseForm}>
-                &times;
-              </button>
-              <CreatePostForm
-                templates={community.templates}
-                onPostCreated={addPost}
-                onClose={handleCloseForm}
-              />
-            </div>
-          </div>
-        )}
-        <div className="community-page">
-          <div className="community-header-card">
-            <img
-              src={community.picture}
-              alt={community.name}
-              className="community-picture"
+  return (
+    <>
+      <PageMetaData title="Communities" />
+      <NavbarCommunity isSearchForm={setIsSearchForm} />
+      {isSearchForm && (
+        <div className="modal-overlay" onClick={handleCloseForm}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="close-button" onClick={handleCloseForm}>
+              &times;
+            </button>
+            <AdvancedSearchForm
+              formPlace="community"
+              community={community}
+              setSearchObject={setSearchObject}
+              setIsSearchForm={setIsSearchForm}
+              setIsSearch={setIsSearchCommunity}
             />
-            <div className="community-header-content">
-              <h1>{community.name}</h1>
-              <p>{community.description}</p>
-              <div className="community-stats">
-                <span>{community.posts.length} Posts</span> |
-                <span
-                  className="subscribers-link"
-                  onClick={handleShowSubscribers}
-                  style={{ cursor: "pointer", color: "blue" }}
-                >
-                  {community.memberships.length} Subscribers{" "}
-                </span>
-              </div>
-              {/* <div className="community-categories">
+          </div>
+        </div>
+      )}
+
+      {showCreateTemplateForm && (
+        <div className="modal-overlay" onClick={handleCloseForm}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="close-button" onClick={handleCloseForm}>
+              &times;
+            </button>
+            <CreateTemplateForm
+              onTemplateCreated={addTemplate}
+              onClose={handleCloseForm}
+            />
+          </div>
+        </div>
+      )}
+      {showCreatePostForm && (
+        <div className="modal-overlay" onClick={handleCloseForm}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="close-button" onClick={handleCloseForm}>
+              &times;
+            </button>
+            <CreatePostForm
+              templates={community.templates}
+              onPostCreated={addPost}
+              onClose={handleCloseForm}
+            />
+          </div>
+        </div>
+      )}
+      <div className="community-page">
+        <div className="community-header-card">
+          <img
+            src={community.picture}
+            alt={community.name}
+            className="community-picture"
+          />
+          <div className="community-header-content">
+            <h1>{community.name}</h1>
+            <p>{community.description}</p>
+            <div className="community-stats">
+              <span>{community.posts.length} Posts</span> |
+              <span
+                className="subscribers-link"
+                onClick={handleShowSubscribers}
+                style={{ cursor: "pointer", color: "blue" }}
+              >
+                {community.memberships.length} Subscribers{" "}
+              </span>
+            </div>
+            {/* <div className="community-categories">
               {community.categories.map((category, index) => (
                 <span key={index} className="category-tag">{category}</span>
               ))}
             </div> */}
-            </div>
-            {/* Button to open the form */}
-            {isUserOwner && (
-              <button onClick={handleOpenForm}>Create Template</button>
-            )}
-            {isUserMember && (
-              <button onClick={handleOpenPostForm}>Create Post</button>
-            )}
-            {!isUserMember && (
-              <button
-                style={{ backgroundColor: "green" }}
-                onClick={handleFollow}
-              >
-                Follow
-              </button>
-            )}
-            {isUserMember && !isUserOwner && (
-              <button
-                style={{ backgroundColor: "red" }}
-                onClick={handleUnFollow}
-              >
-                UnFollow
-              </button>
-            )}
           </div>
-        </div>
-        <div>
-          {isSearchCommunity ? (
-            searchResults.length > 0 ? (
-              <PostsView
-                posts={searchResults}
-                header={`${searchResults.length} Search Results`}
-                onClickSearch={setIsSearchCommunity}
-              />
-            ) : (
-              <p>No results found</p>
-            )
-          ) : community.posts.length > 0 ? (
-            <PostsView posts={community.posts} header={"Posts"} />
-          ) : (
-            <p>No posts available in this community.</p>
+          {/* Button to open the form */}
+          {isUserOwner && (
+            <button onClick={handleOpenForm}>Create Template</button>
+          )}
+          {isUserMember && (
+            <button onClick={handleOpenPostForm}>Create Post</button>
+          )}
+          {!isUserMember && (
+            <button style={{ backgroundColor: "green" }} onClick={handleFollow}>
+              Follow
+            </button>
+          )}
+          {isUserMember && !isUserOwner && (
+            <button style={{ backgroundColor: "red" }} onClick={handleUnFollow}>
+              UnFollow
+            </button>
           )}
         </div>
-        {showSubscribersList && (
-          <div className="subscribers-modal">
-            <div className="modal-overlay" onClick={handleCloseSubscribers}>
-              <div
-                className="modal-content"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <button
-                  className="close-button"
-                  onClick={handleCloseSubscribers}
-                >
-                  &times;
-                </button>
-                <h2>Subscribers</h2>
-                <ul className="subscribers-list">
-                  {subscribers.map((subscriber, index) => (
-                    <li key={index}>
-                      {subscriber.username || "Unknown Subscriber"}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+      </div>
+      <div>
+        {isSearchCommunity ? (
+          <ShowResultPage
+            onClickSearch={setIsSearchCommunity}
+            posts={searchResults}
+            header={`${searchResults.length} Post Results`}
+            memberResult={memberResult}
+          />
+        ) : community.posts.length > 0 ? (
+          <PostsView posts={community.posts} header={"Posts"} />
+        ) : (
+          <p>No posts available in this community.</p>
+        )}
+      </div>
+      {showSubscribersList && (
+        <div className="subscribers-modal">
+          <div className="modal-overlay" onClick={handleCloseSubscribers}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <button className="close-button" onClick={handleCloseSubscribers}>
+                &times;
+              </button>
+              <h2>Subscribers</h2>
+              <ul className="subscribers-list">
+                {subscribers.map((subscriber, index) => (
+                  <li key={index}>
+                    {subscriber.username || "Unknown Subscriber"}
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
-        )}
-      </>
-    );
+        </div>
+      )}
+    </>
+  );
 };
 
 export default CommunityPage;
