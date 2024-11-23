@@ -3,12 +3,14 @@ import "../../Styles/PostView.css";
 import { FaReply } from "react-icons/fa";
 import { jwtDecode } from "jwt-decode";
 import httpClient from "../../Helpers/HttpClient";
+import LoadingScreen from "../SharedComponents/LoadingScreen";
 
 const PostsView = ({ posts, header }) => {
+  const [loading, setLoading] = useState(false);
   // State to hold comments for each post, each comment can have nested replies
   const [comments, setComments] = useState(
     posts.reduce((acc, post) => {
-      acc[post.id] = [];
+      acc[post.id] = post.comments || []; // Use comments from posts if available
       return acc;
     }, {})
   );
@@ -33,19 +35,6 @@ const PostsView = ({ posts, header }) => {
   // State to handle reply form visibility
   const [replyFormVisible, setReplyFormVisible] = useState({});
 
-  // State to hold edit status and text for comments and replies
-  const [editComment, setEditComment] = useState({
-    postId: null,
-    commentIndex: null,
-    text: "",
-  });
-
-  // State to handle dropdown visibility for each comment
-  const [dropdownVisible, setDropdownVisible] = useState({
-    postId: null,
-    commentIndex: null,
-  });
-
   // Handle comment text change
   const handleCommentChange = (postId, value) => {
     setNewComment((prevState) => ({
@@ -56,15 +45,16 @@ const PostsView = ({ posts, header }) => {
 
   // Handle adding a comment
   const handleAddComment = async (postId) => {
+    setLoading(true);
     const content = newComment[postId]?.trim();
     if (content !== "") {
       try {
         console.log("Content: ", content);
         console.log("Post ID: ", postId);
-  
+
         const now = new Date();
         const currentTime = now.toISOString().slice(0, 19); // Format as "YYYY-MM-DDTHH:MM:SS"
-  
+
         // API call to add the comment
         const response = await httpClient.post(`/comment/create/${postId}`, {
           content: content,
@@ -72,27 +62,31 @@ const PostsView = ({ posts, header }) => {
           author: { id: auth.user.id },
           post: { id: postId },
         });
-  
+
         const newCommentData = response.data; // Assuming this is the new comment object
         console.log("New Comment Data: ", newCommentData);
-  
-        // Update the posts state in the parent via onUpdatePosts
+
         const updatedPost = posts.find((post) => post.id === postId);
         if (updatedPost) {
           const updatedPostWithComments = {
             ...updatedPost,
             comments: [...updatedPost.comments, newCommentData], // Add new comment
           };
-
         }
-  
+
+        // Update the comments state for the specific post
+        setComments((prevState) => ({
+          ...prevState,
+          [postId]: [...prevState[postId], newCommentData],
+        }));
+
         // Clear the comment input field
         setNewComment((prevState) => ({
           ...prevState,
           [postId]: "",
         }));
-  
         console.log("New Comment Added to Post ID:", postId);
+        setLoading(false);
       } catch (error) {
         console.error("Error adding comment:", error);
         alert("Failed to add comment. Please try again later.");
@@ -144,75 +138,9 @@ const PostsView = ({ posts, header }) => {
     }));
   };
 
-  // Handle deleting a comment
-  const handleDeleteComment = (postId, commentIndex) => {
-    setComments((prevState) => ({
-      ...prevState,
-      [postId]: prevState[postId].filter((_, index) => index !== commentIndex),
-    }));
-    setDropdownVisible({ postId: null, commentIndex: null });
-  };
-
-  // Handle starting the edit process for a comment
-  const handleEditComment = (postId, commentIndex, currentText) => {
-    setEditComment({
-      postId,
-      commentIndex,
-      text: currentText,
-    });
-    setDropdownVisible({ postId: null, commentIndex: null });
-  };
-
-  // Handle edit comment text change
-  const handleEditChange = (value) => {
-    setEditComment((prevState) => ({
-      ...prevState,
-      text: value,
-    }));
-  };
-
-  // Handle saving an edited comment
-  const handleSaveEdit = () => {
-    setComments((prevState) => ({
-      ...prevState,
-      [editComment.postId]: prevState[editComment.postId].map(
-        (comment, index) =>
-          index === editComment.commentIndex
-            ? { ...comment, text: editComment.text }
-            : comment
-      ),
-    }));
-    // Clear the edit state
-    setEditComment({
-      postId: null,
-      commentIndex: null,
-      text: "",
-    });
-  };
-
-  // Handle cancelling edit
-  const handleCancelEdit = () => {
-    setEditComment({
-      postId: null,
-      commentIndex: null,
-      text: "",
-    });
-  };
-
-  // Handle showing/hiding the dropdown menu
-  const handleDropdownToggle = (postId, commentIndex) => {
-    setDropdownVisible((prevState) => ({
-      postId:
-        prevState.postId === postId && prevState.commentIndex === commentIndex
-          ? null
-          : postId,
-      commentIndex:
-        prevState.commentIndex === commentIndex && prevState.postId === postId
-          ? null
-          : commentIndex,
-    }));
-  };
-
+  if (loading) {
+    return <LoadingScreen />;
+  }
   return (
     <div className="posts-view">
       <h1>{header}</h1>
@@ -265,127 +193,75 @@ const PostsView = ({ posts, header }) => {
             <div className="comment-section">
               <hr></hr>
               <h3>Comments</h3>
-              <div className="comments-list">
-                {post.comments.length > 0 ? (
-                  post.comments.map((comment, index) => (
-                    <div key={index} className="comment-item">
-                      {editComment.postId === post.id &&
-                      editComment.commentIndex === index ? (
-                        <div className="edit-comment">
-                          <textarea
-                            value={editComment.text}
-                            onChange={(e) => handleEditChange(e.target.value)}
-                            className="comment-input"
+              {(comments[post.id] || []).length > 0 ? (
+                (comments[post.id] || []).map((comment, index) => (
+                  <div key={index} className="comment-item">
+                    <>
+                      <div className="comment-content">
+                        <p>
+                          <strong>Posted by:</strong> {comment.author.username}
+                        </p>
+                        <p>
+                          <strong>Posted at:</strong>{" "}
+                          {new Date(comment.time).toLocaleString()}
+                        </p>
+                        <p className="comment">{comment.content}</p>
+                      </div>
+                      <div className="reply-section">
+                        {(comment.replies || []).length > 0 && (
+                          <div className="replies-list">
+                            {comment.replies.map((reply, replyIndex) => (
+                              <div key={replyIndex} className="reply-item">
+                                <p>
+                                  <strong>Posted by:</strong> {auth.user.sub}
+                                </p>
+                                <p>
+                                  <strong>Posted at:</strong>{" "}
+                                  {new Date(post.time).toLocaleString()}
+                                </p>
+                                <p className="reply">{reply}</p>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        <div className="reply-button-wrapper">
+                          <span>Reply</span>
+                          <FaReply
+                            className="reply-icon"
+                            onClick={() =>
+                              handleReplyButtonClick(post.id, index)
+                            }
                           />
-                          <button
-                            onClick={handleSaveEdit}
-                            className="comment-button save-button"
-                          >
-                            Save
-                          </button>
-                          <button
-                            onClick={handleCancelEdit}
-                            className="comment-button cancel-button"
-                          >
-                            Cancel
-                          </button>
                         </div>
-                      ) : (
-                        <>
-                          <div className="comment-content">
-                            <p>
-                              <strong>Posted by:</strong> {comment.author.username}
-                            </p>
-                            <p>
-                              <strong>Posted at:</strong>{" "}
-                              {new Date(comment.time).toLocaleString()}
-                            </p>
-                            <p className="comment">{comment.content}</p>
-                            {/* <div className="comment-options">
-                                                            <span
-                                                                className="three-dots"
-                                                                onClick={() => handleDropdownToggle(post.id, index)}
-                                                            >
-                                                                &#x22EE;
-                                                                
-                                                            </span>
-                                                            {dropdownVisible.postId === post.id && dropdownVisible.commentIndex === index && (
-                                                                <div className="dropdown-menu">
-                                                                    <button
-                                                                        onClick={() => handleEditComment(post.id, index, comment.text)}
-                                                                        className="dropdown-button"
-                                                                    >
-                                                                        Edit
-                                                                    </button>
-                                                                    <button
-                                                                        onClick={() => handleDeleteComment(post.id, index)}
-                                                                        className="dropdown-button"
-                                                                    >
-                                                                        Delete
-                                                                    </button>
-                                                                </div>
-                                                            )}
-                                                        </div> */}
+                        {replyFormVisible[`${post.id}-${index}`] && (
+                          <div className="add-reply">
+                            <textarea
+                              value={newReply[`${post.id}-${index}`] || ""}
+                              onChange={(e) =>
+                                handleReplyChange(
+                                  post.id,
+                                  index,
+                                  e.target.value
+                                )
+                              }
+                              placeholder="Write a reply..."
+                              className="reply-input"
+                            />
+                            <button
+                              onClick={() => handleAddReply(post.id, index)}
+                              className="reply-button"
+                            >
+                              Reply
+                            </button>
                           </div>
-                          {/* Reply Section */}
-                          <div className="reply-section">
-                            {comment.replies.length > 0 && (
-                              <div className="replies-list">
-                                {comment.replies.map((reply, replyIndex) => (
-                                  <div key={replyIndex} className="reply-item">
-                                    <p>
-                                      <strong>Posted by:</strong>{" "}
-                                      {auth.user.sub}
-                                    </p>
-                                    <p>
-                                      <strong>Posted at:</strong>{" "}
-                                      {new Date(post.time).toLocaleString()}
-                                    </p>
-                                    <p className="reply">{reply}</p>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                            <div className="reply-button-wrapper">
-                              <span>Reply</span>
-                              <FaReply
-                                className="reply-icon"
-                                onClick={() =>
-                                  handleReplyButtonClick(post.id, index)
-                                }
-                              />
-                            </div>
-                            {replyFormVisible[`${post.id}-${index}`] && (
-                              <div className="add-reply">
-                                <textarea
-                                  value={newReply[`${post.id}-${index}`] || ""}
-                                  onChange={(e) =>
-                                    handleReplyChange(
-                                      post.id,
-                                      index,
-                                      e.target.value
-                                    )
-                                  }
-                                  placeholder="Write a reply..."
-                                  className="reply-input"
-                                />
-                                <button
-                                  onClick={() => handleAddReply(post.id, index)}
-                                  className="reply-button"
-                                >
-                                  Reply
-                                </button>
-                              </div>
-                            )}
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  ))
-                ) : (
-                  <p className="no-comments">No comments yet.</p>
-                )}
-              </div>
+                        )}
+                      </div>
+                    </>
+                  </div>
+                ))
+              ) : (
+                <p className="no-comments">No comments yet.</p>
+              )}
 
               {/* Text area for adding comments */}
               <div className="add-comment">
