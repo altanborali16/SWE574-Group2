@@ -1,19 +1,31 @@
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import "../../Styles/PostView.css";
-import { FaReply } from "react-icons/fa";
+import { FaReply, FaThumbsUp,FaThumbsDown } from "react-icons/fa";
 import { jwtDecode } from "jwt-decode";
 import httpClient from "../../Helpers/HttpClient";
 import LoadingScreen from "../SharedComponents/LoadingScreen";
+import { useParams } from "react-router-dom";
 
 const PostsView = ({ posts, header }) => {
+  const { id } = useParams();
   const [loading, setLoading] = useState(false);
   // State to hold comments for each post, each comment can have nested replies
   const [comments, setComments] = useState(
     posts.reduce((acc, post) => {
-      acc[post.id] = post.comments || []; // Use comments from posts if available
+      acc[post.id] = post.comments || []; 
       return acc;
     }, {})
   );
+
+  const [localPosts, setLocalPosts] = useState(
+    posts.map((post) => ({
+      ...post,
+      upvotes: post.upvotes || 0, 
+      downvotes: post.downvotes || 0, 
+      voters: post.voters || [], 
+    }))
+  );
+  
 
   // State to hold new comment text for each post
   const [newComment, setNewComment] = useState(
@@ -94,6 +106,78 @@ const PostsView = ({ posts, header }) => {
     }
   };
 
+  
+// Handle Upvote
+const handleUpvote = async (postId) => {
+  if (!postId) {
+    console.error("Post ID is undefined");
+    return;
+  }
+  console.log("Post ID:", postId);
+  console.log("Local Posts:", localPosts);
+
+  // Find the index of the post in the localPosts array
+  const postIndex = localPosts.findIndex((post) => post.id === postId);
+
+  if (postIndex === -1) {
+    console.error("Post not found with ID:", postId);
+    return;
+  }
+
+  console.log("Post Index:", postIndex);
+
+  // Check if the user has already voted
+  if (localPosts[postIndex].voters.includes(auth.user.id)) {
+    alert("You have already voted on this post.");
+    return;
+  }
+
+  try {
+    // Perform the upvote API call
+    const response = await httpClient.post(`post/upvote/${postId}`);
+    console.log("Upvote Response:", response.data);
+
+    // Update local state
+    const updatedPosts = [...localPosts];
+    updatedPosts[postIndex].voteCounter += 1; // Increment vote counter
+    updatedPosts[postIndex].voters.push(auth.user.id); // Add the user to voters list
+    setLocalPosts(updatedPosts); // Update state
+    console.log("Updated Local Posts:", updatedPosts);
+
+
+    alert("Upvoted successfully!");
+  } catch (error) {
+    console.error("Error upvoting post:", error);
+    alert("Failed to upvote. Please try again later.");
+  }
+};
+
+  
+  const handleDownvote = async (postId) => {
+    const postIndex = localPosts.findIndex((post) => post.id === postId);
+    if (postIndex === -1) return;
+  
+    // Check if the user has already voted
+    if (localPosts[postIndex].voters.includes(auth.user.id)) {
+      alert("You have already voted on this post.");
+      return;
+    }
+  
+    try {
+      const response = await httpClient.post(`post/downvote/${postId}`);
+      console.log("Downvote Response:", response.data);
+  
+      // Update local state
+      const updatedPosts = [...localPosts];
+      updatedPosts[postIndex].voteCounter -= 1; // Decrement voteCounter
+      updatedPosts[postIndex].voters.push(auth.user.id); // Track voter
+      setLocalPosts(updatedPosts); // Update state
+    } catch (error) {
+      console.error("Error downvoting post:", error);
+      alert("Failed to downvote. Please try again later.");
+    }
+  };
+  
   // Handle reply text change
   const handleReplyChange = (postId, commentIndex, value) => {
     setNewReply((prevState) => ({
@@ -149,7 +233,7 @@ const PostsView = ({ posts, header }) => {
           <div key={post.id} className="post-card">
             <h2>
               {" "}
-              <span>Topic:</span> {post.title}
+              <span>Title:</span> {post.title}
             </h2>
             <hr></hr>
             <p>
@@ -162,7 +246,6 @@ const PostsView = ({ posts, header }) => {
               <strong>Template:</strong>{" "}
               {post.template ? post.template.name : "No Template"}
             </p>
-
             {/* Display post contents dynamically */}
             <div className="post-contents">
               {post.postContents.map((content, index) => (
@@ -185,6 +268,21 @@ const PostsView = ({ posts, header }) => {
                       <strong>{content.field.name}:</strong> {content.value}
                     </p>
                   )}
+                    <hr></hr>
+                     <div className="vote-buttons">
+                          <button
+                            className="upvote-button"
+                            onClick={() => handleUpvote(post.id)}
+                          >
+                            <FaThumbsUp /> Upvote ({post.upvotes || 0})
+                          </button>
+                          <button
+                            className="downvote-button"
+                            onClick={() => handleDownvote(post.id)}
+                          >
+                            <FaThumbsDown /> Downvote ({post.downvotes || 0})
+                          </button>
+                        </div>
                 </div>
               ))}
             </div>
