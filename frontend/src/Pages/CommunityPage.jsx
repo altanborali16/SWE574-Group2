@@ -220,6 +220,9 @@ const CommunityPage = () => {
 
   const searchResults = useSearchEngine(communityDb, searchObject);
 
+  console.log({ searchResults });
+  console.log({ isSearchForm, isSearchCommunity });
+
   useEffect(() => {
     if (isSearchCommunity) {
       // Eğer arama aktifse, searchResults'i setResultCommunity ile kaydediyoruz
@@ -486,8 +489,18 @@ const CommunityPage = () => {
           </div>
         </div>
         <div>
-          {community.posts.length > 0 ? (
-            <PostsView posts={community.posts} />
+          {isSearchCommunity ? (
+            searchResults.length > 0 ? (
+              <PostsView
+                posts={searchResults}
+                header={"Search Results"}
+                onClickSearch={setIsSearchCommunity}
+              />
+            ) : (
+              <p>No results found</p>
+            )
+          ) : community.posts.length > 0 ? (
+            <PostsView posts={community.posts} header={"Posts"} />
           ) : (
             <p>No posts available in this community.</p>
           )}

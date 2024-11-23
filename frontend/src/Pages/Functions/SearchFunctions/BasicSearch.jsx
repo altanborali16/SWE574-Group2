@@ -1,11 +1,12 @@
 export const basicSearch = (data, search) => {
-  console.log({ data, search });
   const { memberships, posts = [], templates } = data;
-  console.log({ memberships, posts, templates });
 
   const query = search?.basicSearch?.searchQuery?.toLowerCase().trim() || "";
-  console.log({ query });
   const results = [];
+
+  if (query === "") {
+    return posts;
+  }
 
   if (posts.length !== 0 && query) {
     posts.forEach((post) => {
@@ -13,11 +14,8 @@ export const basicSearch = (data, search) => {
         (value) =>
           typeof value === "string" && value.toLowerCase().includes(query)
       );
-      console.log({ hasMatch });
-      // console.log(Object.values(post));
 
       if (hasMatch && !results.includes(post)) {
-        console.log("Value match");
         results.push(post);
       }
 
@@ -29,14 +27,12 @@ export const basicSearch = (data, search) => {
         });
 
         if (hasMatchContentField && !results.includes(post)) {
-          console.log("Field match");
           results.push(post);
         }
       }
 
       if (post?.postContents.length > 0) {
         const hasMatchContent = post.postContents.some((content) => {
-          console.log(content);
           return (
             content.field &&
             content.field.dataType === "TEXT" &&
@@ -46,13 +42,11 @@ export const basicSearch = (data, search) => {
         });
 
         if (hasMatchContent && !results.includes(post)) {
-          console.log("field content match");
           results.push(post);
         }
       }
     });
-  }
-  console.log({ results });
 
-  return results;
+    return results;
+  }
 };

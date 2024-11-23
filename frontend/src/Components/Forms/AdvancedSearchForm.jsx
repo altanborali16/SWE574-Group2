@@ -88,12 +88,8 @@ function AdvancedSearchForm({
   // }, [postState?.selectedTemplate]);
 
   const [basicSearch, setBasicSearch] = useState({});
-  console.log({ postState });
-  console.log({ dataTypeState });
 
   const handleSave = () => {
-    console.log("Data Type State before saving:", dataTypeState);
-
     const updatedPostState = {
       ...postState,
       templateSearchInputs: dataTypeState,

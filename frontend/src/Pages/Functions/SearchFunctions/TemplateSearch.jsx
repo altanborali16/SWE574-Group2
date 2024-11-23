@@ -1,11 +1,14 @@
 export const TemplateSearch = (data, search) => {
-  console.log({ data, search });
   const { memberships, posts = [], templates } = data;
-  console.log({ posts });
 
   const templateInputs = search?.postSearch?.templateSearchInputs || "";
   const template = search?.postSearch?.template || "";
   const results = [];
+  console.log("len", Object.keys(templateInputs).length);
+
+  if (Object.keys(templateInputs).length === 0) {
+    return posts;
+  }
 
   posts &&
     posts.forEach((post) => {
@@ -39,7 +42,12 @@ export const TemplateSearch = (data, search) => {
             }
           }
           if (type === "TEXT") {
-            if (templateInputs?.[name] && templateInputs?.[name] !== value) {
+            if (
+              templateInputs?.[name] &&
+              !templateInputs?.[name]
+                ?.toLowerCase()
+                .includes(value.toLowerCase())
+            ) {
               return false;
             }
           }
@@ -68,12 +76,10 @@ export const TemplateSearch = (data, search) => {
             const dateBefore = new Date(`1970-01-01T${inputTimeBefore}:00`);
 
             if (inputTimeAfter && dateTemp.getTime() < dateAfter.getTime()) {
-              console.log(`${tempTime} is later than ${inputTimeAfter}`);
               return false;
             }
 
             if (inputTimeBefore && dateTemp.getTime() > dateBefore.getTime()) {
-              console.log(`${tempTime} is earlier than ${inputTimeBefore}`);
               return false;
             }
           }
@@ -97,18 +103,9 @@ export const TemplateSearch = (data, search) => {
         // Eğer tüm `name` değerleri aynıysa konsola yazdırıyoruz.
         if (allNamesSame) {
           results.push(post);
-          console.log("Hepsi aynı");
-        } else {
-          console.log("Aynı değil");
         }
-
-        console.log({
-          contentArray,
-          filteredContents,
-          results,
-        });
       }
     });
 
-  return <></>;
+  return results;
 };
