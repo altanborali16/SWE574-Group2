@@ -42,6 +42,7 @@ const Home = () => {
         setLoading(false);
       } catch (err) {
         console.error(err);
+        setLoading(false);
       }
     };
     fetchCommunityList();

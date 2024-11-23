@@ -73,6 +73,11 @@
     align-items: center;
     text-align: center;
   }
+  .badge--blurred {
+    opacity: 0.5; /* Reduced visibility */
+    filter: blur(2px); /* Add blur effect */
+    pointer-events: none; /* Prevent interaction */
+  }
   
   .badge__image {
     width: 50px; /* Badge image size */
