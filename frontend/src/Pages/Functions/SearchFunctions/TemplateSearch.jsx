@@ -6,8 +6,10 @@ export const TemplateSearch = (data, search) => {
   const results = [];
   console.log("len", Object.keys(templateInputs).length);
 
-  if (Object.keys(templateInputs).length === 0) {
+  if (Object.keys(templateInputs).length === 0 && template === "") {
     return posts;
+  } else if (Object.keys(templateInputs).length === 0) {
+    return posts.filter((post) => post?.template?.name === template);
   }
 
   posts &&
