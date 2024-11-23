@@ -8,8 +8,12 @@ const CreateTemplateForm = ({ onTemplateCreated, onClose }) => {
 
   // Handlers for input changes
   const handleTemplateNameChange = (e) => setTemplateName(e.target.value);
-  const handleTemplateDescriptionChange = (e) =>
-    setTemplateDescription(e.target.value);
+  const handleTemplateDescriptionChange = (e) => {
+    const value = e.target.value;
+    if (value.length <= 250) {
+      setTemplateDescription(value);
+    }
+  };
 
   const handleFieldChange = (index, key, value) => {
     const updatedFields = [...fields];
@@ -67,6 +71,9 @@ const CreateTemplateForm = ({ onTemplateCreated, onClose }) => {
         rows="4"
         required
       />
+      <div>
+        <small>{templateDescription.length}/250 characters</small>
+      </div>
 
       <h3>Fields</h3>
       {fields.map((field, index) => (
