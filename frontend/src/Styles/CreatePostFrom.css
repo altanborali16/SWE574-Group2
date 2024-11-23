@@ -23,6 +23,8 @@
 
 .create-post-form input[type="text"],
 .create-post-form input[type="datetime-local"],
+.create-post-form input[type="time"],
+.create-post-form input[type="date"],
 .create-post-form select {
   width: 100%; /* Full width inputs */
   padding: 5px; /* Padding inside inputs */

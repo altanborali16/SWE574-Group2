@@ -3,14 +3,14 @@ import "../Styles/CreateCommunityPage.css";
 import PageMetaData from "./PageMetaData";
 import Navbar from "./NavBar";
 import { useNavigate } from "react-router-dom";
-import httpClient from '../Helpers/HttpClient';  
+import httpClient from "../Helpers/HttpClient";
 
 const CreateCommunityPage = () => {
   useEffect(() => {
     const fetchCommunityList = async () => {
       try {
-        const response = await httpClient.get('/profile/currentProfile');
-        console.log('profile:', response.data);
+        const response = await httpClient.get("/profile/currentProfile");
+        console.log("profile:", response.data);
       } catch (err) {
         console.error(err);
       } finally {
@@ -24,56 +24,60 @@ const CreateCommunityPage = () => {
     description: "",
     picture: "",
     isPrivate: false,
-    categories: [],
+    tags: [],
   });
   const navigate = useNavigate();
 
-  const [categoryInput, setCategoryInput] = useState("");
+  const [tagInput, setTagInput] = useState("");
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+    // Enforce character limit for description
+    if (name === "description" && value.length > 250) {
+      return; // Prevent updates if length exceeds 250
+    }
     setCommunityData((prevData) => ({
       ...prevData,
       [name]: type === "checkbox" ? checked : value,
     }));
   };
 
-  const handleCategoryAdd = () => {
-    if (categoryInput.trim()) {
+  const handleTagAdd = () => {
+    if (tagInput.trim()) {
       setCommunityData((prevData) => ({
         ...prevData,
-        categories: [...prevData.categories, categoryInput.trim()],
+        tags: [...prevData.tags, { name: tagInput.trim() }],
       }));
-      setCategoryInput("");
+      setTagInput("");
     }
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await httpClient.post(
-        '/community/create', // relative URL since we set baseURL in axiosInstance
+        "/community/create", // relative URL since we set baseURL in axiosInstance
         {
           name: communityData.name,
           communityDescription: communityData.description,
-          private: communityData.isPrivate,
+          isPrivate: communityData.isPrivate,
           isArchived: false,
-        },
+          tags: communityData.tags,
+        }
       );
-    console.log('Community created successfully:', response.data);
-    navigate("/mycommunities");
-  } catch (error) {
-    // Check if error response is present
-    if (error.response) {
-      console.error('Error creating community:', error.response.data);
-      console.error('Status code:', error.response.status);
-      console.error('Headers:', error.response.headers);
-    } else if (error.request) {
-      console.error('No response received:', error.request);
-    } else {
-      console.error('Request setup error:', error.message);
+      console.log("Community created successfully:", response.data);
+      navigate("/mycommunities");
+    } catch (error) {
+      if (error.response) {
+        console.error("Error creating community:", error.response.data);
+        console.error("Status code:", error.response.status);
+        console.error("Headers:", error.response.headers);
+      } else if (error.request) {
+        console.error("No response received:", error.request);
+      } else {
+        console.error("Request setup error:", error.message);
+      }
     }
-  }
   };
 
   return (
@@ -101,7 +105,11 @@ const CreateCommunityPage = () => {
               value={communityData.description}
               onChange={handleChange}
               required
+              style={{height : "14vh"}}
             />
+            <div>
+              <small>{communityData.description.length}/250 characters</small>
+            </div>
           </div>
 
           <div className="form-group">
@@ -126,23 +134,23 @@ const CreateCommunityPage = () => {
           </div>
 
           <div className="form-group">
-            <label>Categories</label>
+            <label>Tags</label>
             <input
               type="text"
-              value={categoryInput}
-              onChange={(e) => setCategoryInput(e.target.value)}
+              value={tagInput}
+              onChange={(e) => setTagInput(e.target.value)}
             />
             <button
               type="button"
               style={{ marginTop: "2vh" }}
-              onClick={handleCategoryAdd}
+              onClick={handleTagAdd}
             >
-              Add Category
+              Add Tag
             </button>
             <div className="categories-list">
-              {communityData.categories.map((cat, idx) => (
+              {communityData.tags.map((tag, idx) => (
                 <span key={idx} className="category-item">
-                  {cat}
+                  {tag.name}
                 </span>
               ))}
             </div>
