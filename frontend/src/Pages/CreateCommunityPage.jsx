@@ -24,11 +24,11 @@ const CreateCommunityPage = () => {
     description: "",
     picture: "",
     isPrivate: false,
-    categories: [],
+    tags: [],
   });
   const navigate = useNavigate();
 
-  const [categoryInput, setCategoryInput] = useState("");
+  const [tagInput, setTagInput] = useState("");
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -38,17 +38,17 @@ const CreateCommunityPage = () => {
     }));
   };
 
-  const handleCategoryAdd = () => {
-    if (categoryInput.trim()) {
+  const handleTagAdd = () => {
+    if (tagInput.trim()) {
       setCommunityData((prevData) => ({
         ...prevData,
-        categories: [...prevData.categories, categoryInput.trim()],
+        tags: [...prevData.tags, { name: tagInput.trim() }],
       }));
-      setCategoryInput("");
+      setTagInput("");
     }
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await httpClient.post(
@@ -56,24 +56,24 @@ const CreateCommunityPage = () => {
         {
           name: communityData.name,
           communityDescription: communityData.description,
-          private: communityData.isPrivate,
+          isPrivate: communityData.isPrivate,
           isArchived: false,
-        },
+          tags: communityData.tags,
+        }
       );
-    console.log('Community created successfully:', response.data);
-    navigate("/mycommunities");
-  } catch (error) {
-    // Check if error response is present
-    if (error.response) {
-      console.error('Error creating community:', error.response.data);
-      console.error('Status code:', error.response.status);
-      console.error('Headers:', error.response.headers);
-    } else if (error.request) {
-      console.error('No response received:', error.request);
-    } else {
-      console.error('Request setup error:', error.message);
+      console.log('Community created successfully:', response.data);
+      navigate("/mycommunities");
+    } catch (error) {
+      if (error.response) {
+        console.error('Error creating community:', error.response.data);
+        console.error('Status code:', error.response.status);
+        console.error('Headers:', error.response.headers);
+      } else if (error.request) {
+        console.error('No response received:', error.request);
+      } else {
+        console.error('Request setup error:', error.message);
+      }
     }
-  }
   };
 
   return (
@@ -126,23 +126,23 @@ const CreateCommunityPage = () => {
           </div>
 
           <div className="form-group">
-            <label>Categories</label>
+            <label>Tags</label>
             <input
               type="text"
-              value={categoryInput}
-              onChange={(e) => setCategoryInput(e.target.value)}
+              value={tagInput}
+              onChange={(e) => setTagInput(e.target.value)}
             />
             <button
               type="button"
               style={{ marginTop: "2vh" }}
-              onClick={handleCategoryAdd}
+              onClick={handleTagAdd}
             >
-              Add Category
+              Add Tag
             </button>
             <div className="categories-list">
-              {communityData.categories.map((cat, idx) => (
+              {communityData.tags.map((tag, idx) => (
                 <span key={idx} className="category-item">
-                  {cat}
+                  {tag.name}
                 </span>
               ))}
             </div>
