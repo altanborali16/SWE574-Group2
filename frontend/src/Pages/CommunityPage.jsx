@@ -149,7 +149,6 @@ const CommunityPage = () => {
 
   const [isSearchForm, setIsSearchForm] = useState(false);
   const [isSearchCommunity, setIsSearchCommunity] = useState(false);
-  const [resultCommunity, setResultCommunity] = useState([]);
   const [searchObject, setSearchObject] = useState({});
 
   const [isUserOwner, setIsUserOwner] = useState(false);
@@ -218,17 +217,22 @@ const CommunityPage = () => {
     console.log("Community", community);
   }, [isUserMember, isUserOwner]);
 
-  const searchResults = useSearchEngine(communityDb, searchObject);
+  console.log({ searchObject });
+
+  const filter = searchObject?.basicSearch?.filters;
+
+  let searchResults = useSearchEngine(communityDb, searchObject);
+
+  if (
+    !filter?.posts &&
+    !filter?.comments &&
+    searchObject?.basicSearch?.searchQuery === ""
+  ) {
+    searchResults = [];
+  }
 
   console.log({ searchResults });
   console.log({ isSearchForm, isSearchCommunity });
-
-  useEffect(() => {
-    if (isSearchCommunity) {
-      // Eğer arama aktifse, searchResults'i setResultCommunity ile kaydediyoruz
-      setResultCommunity(searchResults);
-    }
-  }, [isSearchCommunity, searchResults]);
 
   const [showCreateTemplateForm, setShowCreateTemplateForm] = useState(false);
   const [showCreatePostForm, setShowCreatePostForm] = useState(false);
@@ -493,7 +497,7 @@ const CommunityPage = () => {
             searchResults.length > 0 ? (
               <PostsView
                 posts={searchResults}
-                header={"Search Results"}
+                header={`${searchResults.length} Search Results`}
                 onClickSearch={setIsSearchCommunity}
               />
             ) : (
