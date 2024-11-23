@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../../Styles/PostView.css";
 import { FaReply } from "react-icons/fa";
 import { jwtDecode } from "jwt-decode";
+import httpClient from "../../Helpers/HttpClient";
 
 const PostsView = ({ posts, header }) => {
   // State to hold comments for each post, each comment can have nested replies
@@ -54,19 +55,48 @@ const PostsView = ({ posts, header }) => {
   };
 
   // Handle adding a comment
-  const handleAddComment = (postId) => {
-    if (newComment[postId].trim() !== "") {
-      setComments((prevState) => ({
-        ...prevState,
-        [postId]: [
-          ...prevState[postId],
-          { text: newComment[postId], replies: [] },
-        ],
-      }));
-      setNewComment((prevState) => ({
-        ...prevState,
-        [postId]: "",
-      }));
+  const handleAddComment = async (postId) => {
+    const content = newComment[postId]?.trim();
+    if (content !== "") {
+      try {
+        console.log("Content: ", content);
+        console.log("Post ID: ", postId);
+  
+        const now = new Date();
+        const currentTime = now.toISOString().slice(0, 19); // Format as "YYYY-MM-DDTHH:MM:SS"
+  
+        // API call to add the comment
+        const response = await httpClient.post(`/comment/create/${postId}`, {
+          content: content,
+          time: currentTime,
+          author: { id: auth.user.id },
+          post: { id: postId },
+        });
+  
+        const newCommentData = response.data; // Assuming this is the new comment object
+        console.log("New Comment Data: ", newCommentData);
+  
+        // Update the posts state in the parent via onUpdatePosts
+        const updatedPost = posts.find((post) => post.id === postId);
+        if (updatedPost) {
+          const updatedPostWithComments = {
+            ...updatedPost,
+            comments: [...updatedPost.comments, newCommentData], // Add new comment
+          };
+
+        }
+  
+        // Clear the comment input field
+        setNewComment((prevState) => ({
+          ...prevState,
+          [postId]: "",
+        }));
+  
+        console.log("New Comment Added to Post ID:", postId);
+      } catch (error) {
+        console.error("Error adding comment:", error);
+        alert("Failed to add comment. Please try again later.");
+      }
     }
   };
 
@@ -236,8 +266,8 @@ const PostsView = ({ posts, header }) => {
               <hr></hr>
               <h3>Comments</h3>
               <div className="comments-list">
-                {comments[post.id].length > 0 ? (
-                  comments[post.id].map((comment, index) => (
+                {post.comments.length > 0 ? (
+                  post.comments.map((comment, index) => (
                     <div key={index} className="comment-item">
                       {editComment.postId === post.id &&
                       editComment.commentIndex === index ? (
@@ -264,13 +294,13 @@ const PostsView = ({ posts, header }) => {
                         <>
                           <div className="comment-content">
                             <p>
-                              <strong>Posted by:</strong> {auth.user.sub}
+                              <strong>Posted by:</strong> {comment.author.username}
                             </p>
                             <p>
                               <strong>Posted at:</strong>{" "}
-                              {new Date(post.time).toLocaleString()}
+                              {new Date(comment.time).toLocaleString()}
                             </p>
-                            <p className="comment">{comment.text}</p>
+                            <p className="comment">{comment.content}</p>
                             {/* <div className="comment-options">
                                                             <span
                                                                 className="three-dots"
