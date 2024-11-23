@@ -26,7 +26,14 @@ const CommunityListOld = ({ communityList, title = "Communities" }) => {
                 <p className="community-card__description">
                   {community.communityDescription}
                 </p>
-
+                {/* Categories */}
+                <div className="community-card__categories">
+                  {community.tags.map((tag, idx) => (
+                    <span className="community-card__category" key={idx}>
+                      {tag.name}
+                    </span>
+                  ))}
+                </div>
                 {/* Status (Private or Public) */}
                 <div className="community-card__status">
                   {community.private ? (
