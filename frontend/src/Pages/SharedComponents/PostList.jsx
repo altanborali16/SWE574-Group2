@@ -83,9 +83,7 @@ const PostsView = ({ posts, header, onClickSearch }) => {
             ...updatedPost,
             comments: [...updatedPost.comments, newCommentData], // Add new comment
           };
-  
-          // Notify the parent about the updated post
-          onUpdatePosts(updatedPostWithComments);
+
         }
   
         // Clear the comment input field
