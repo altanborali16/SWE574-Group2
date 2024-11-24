@@ -4,8 +4,12 @@ import PageMetaData from "./PageMetaData";
 import Navbar from "./NavBar";
 import { useNavigate } from "react-router-dom";
 import httpClient from "../Helpers/HttpClient";
+import { useNotificationContext } from '../Context/useNotificationContext.jsx'
 
 const CreateCommunityPage = () => {
+  const {
+    showNotification
+  } = useNotificationContext();
   useEffect(() => {
     const fetchCommunityList = async () => {
       try {
@@ -54,6 +58,14 @@ const CreateCommunityPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if(communityData.tags.length === 0){
+      console.error("Error: Tags are required.");
+      showNotification({
+        message: 'Please add at least one tag before creating a community.',
+        variant: 'danger'
+      });
+      return; // Exit the function if validation fails
+    }
     try {
       const response = await httpClient.post(
         "/community/create", // relative URL since we set baseURL in axiosInstance

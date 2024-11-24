@@ -366,11 +366,11 @@ const CommunityPage = () => {
                   {community.memberships.length} Subscribers{" "}
                 </span>
               </div>
-              {/* <div className="community-categories">
-              {community.categories.map((category, index) => (
-                <span key={index} className="category-tag">{category}</span>
+              <div className="community-categories">
+              {community.tags.map((category, index) => (
+                <span key={index} className="category-tag">{category.name}</span>
               ))}
-            </div> */}
+            </div>
             </div>
             {/* Button to open the form */}
             {isUserOwner && (
