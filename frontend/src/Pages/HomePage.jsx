@@ -11,6 +11,9 @@ const Home = () => {
   const [filteredCommunities, setFilteredCommunityListDb] = useState([]);
   const [allPosts, setFilteredPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const updatePosts = (updatedPosts) => {
+    setFilteredPosts(updatedPosts); // Update posts state
+  };
   useEffect(() => {
     const fetchCommunityList = async () => {
       try {
@@ -69,7 +72,7 @@ const Home = () => {
 
               <div>
                 {/* Display community name or other details */}
-                  <PostsView posts={allPosts} />
+                  <PostsView posts={allPosts} setPosts={updatePosts} />
               </div>
 
           ) : (

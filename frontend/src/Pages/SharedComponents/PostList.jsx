@@ -1,31 +1,32 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import "../../Styles/PostView.css";
-import { FaReply, FaThumbsUp,FaThumbsDown } from "react-icons/fa";
+import { FaReply, FaThumbsUp, FaThumbsDown, FaTransgender } from "react-icons/fa";
 import { jwtDecode } from "jwt-decode";
 import httpClient from "../../Helpers/HttpClient";
 import LoadingScreen from "../SharedComponents/LoadingScreen";
 import { useParams } from "react-router-dom";
+import { useNotificationContext } from "../../Context/useNotificationContext.jsx";
 
-const PostsView = ({ posts, header }) => {
+const PostsView = ({ posts, header, setPosts }) => {
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
   // State to hold comments for each post, each comment can have nested replies
   const [comments, setComments] = useState(
     posts.reduce((acc, post) => {
-      acc[post.id] = post.comments || []; 
+      acc[post.id] = post.comments || [];
       return acc;
     }, {})
   );
+  const { showNotification } = useNotificationContext();
 
   const [localPosts, setLocalPosts] = useState(
     posts.map((post) => ({
       ...post,
-      upvotes: post.upvotes || 0, 
-      downvotes: post.downvotes || 0, 
-      voters: post.voters || [], 
+      upvotes: post.upvotes || 0,
+      downvotes: post.downvotes || 0,
+      voters: post.voters || [],
     }))
   );
-  
 
   // State to hold new comment text for each post
   const [newComment, setNewComment] = useState(
@@ -71,7 +72,7 @@ const PostsView = ({ posts, header }) => {
         const response = await httpClient.post(`/comment/create/${postId}`, {
           content: content,
           time: currentTime,
-          author: { id: auth.user.id },
+          author: { id: auth.user.userId },
           post: { id: postId },
         });
 
@@ -105,68 +106,91 @@ const PostsView = ({ posts, header }) => {
       }
     }
   };
-
+//HAndle Upvote
+  const handleUpvote = async (postId) => {
+    if (!postId) {
+      console.error("Post ID is undefined");
+      return;
+    }
   
-// Handle Upvote
-const handleUpvote = async (postId) => {
-  if (!postId) {
-    console.error("Post ID is undefined");
-    return;
-  }
-  console.log("Post ID:", postId);
-  console.log("Local Posts:", localPosts);
-
-  // Find the index of the post in the localPosts array
-  const postIndex = localPosts.findIndex((post) => post.id === postId);
-
-  if (postIndex === -1) {
-    console.error("Post not found with ID:", postId);
-    return;
-  }
-
-  console.log("Post Index:", postIndex);
-
-  // Check if the user has already voted
-  if (localPosts[postIndex].voters.includes(auth.user.id)) {
-    alert("You have already voted on this post.");
-    return;
-  }
-
-  try {
-    // Perform the upvote API call
-    const response = await httpClient.post(`post/upvote/${postId}`);
-    console.log("Upvote Response:", response.data);
-
-    // Update local state
-    const updatedPosts = [...localPosts];
-    updatedPosts[postIndex].voteCounter += 1; // Increment vote counter
-    updatedPosts[postIndex].voters.push(auth.user.id); // Add the user to voters list
-    setLocalPosts(updatedPosts); // Update state
-    console.log("Updated Local Posts:", updatedPosts);
-
-
-    alert("Upvoted successfully!");
-  } catch (error) {
-    console.error("Error upvoting post:", error);
-    alert("Failed to upvote. Please try again later.");
-  }
-};
-
+    console.log("Post ID:", postId);
+    console.log("Posts:", posts);
   
+    // Find the target post by postId
+    const targetPost = posts.find((post) => post.id === postId);
+  
+    if (!targetPost) {
+      console.error("Post not found with ID:", postId);
+      return;
+    }
+  
+    console.log("Target Post:", targetPost);
+  
+    // Extract voter IDs for comparison
+    const voterIds = targetPost.voters.map((voter) => voter.id);
+    console.log("Voters:", voterIds);
+    console.log("User ID:", auth.user.userId);
+  
+    // Check if the user has already voted
+    if (voterIds.includes(auth.user.userId)) {
+      showNotification({
+        message: "You have already voted on this post.",
+        variant: "danger",
+      });
+      return;
+    }
+  
+    try {
+      setLoading(true);
+  
+      // Perform the upvote API call
+      const response = await httpClient.post(`post/upvote/${postId}`);
+      console.log("Upvote Response:", response.data);
+  
+      // Update the specific post directly
+      const updatedPost = {
+        ...targetPost,
+        voteCounter: targetPost.voteCounter + 1, // Increment vote counter
+        voters: [...targetPost.voters, { id: auth.user.userId }], // Add voter
+      };
+  
+      // Update the posts array immutably
+      const updatedPosts = posts.map((post) =>
+        post.id === postId ? updatedPost : post
+      );
+  
+      setPosts(updatedPosts); // Update state
+      console.log("Updated Posts:", updatedPosts);
+  
+      showNotification({
+        message: "Upvoted successfully!",
+        variant: "success",
+      });
+      setLoading(false);
+    } catch (error) {
+      console.error("Error upvoting post:", error);
+      showNotification({
+        message: "Failed to upvote. Please try again later.",
+        variant: "danger",
+      });
+      setLoading(false);
+    }
+  };
+
   const handleDownvote = async (postId) => {
     const postIndex = localPosts.findIndex((post) => post.id === postId);
     if (postIndex === -1) return;
-  
+
     // Check if the user has already voted
     if (localPosts[postIndex].voters.includes(auth.user.id)) {
       alert("You have already voted on this post.");
       return;
     }
-  
+
     try {
       const response = await httpClient.post(`post/downvote/${postId}`);
       console.log("Downvote Response:", response.data);
-  
+
       // Update local state
       const updatedPosts = [...localPosts];
       updatedPosts[postIndex].voteCounter -= 1; // Decrement voteCounter
@@ -177,7 +201,7 @@ const handleUpvote = async (postId) => {
       alert("Failed to downvote. Please try again later.");
     }
   };
-  
+
   // Handle reply text change
   const handleReplyChange = (postId, commentIndex, value) => {
     setNewReply((prevState) => ({
@@ -268,23 +292,23 @@ const handleUpvote = async (postId) => {
                       <strong>{content.field.name}:</strong> {content.value}
                     </p>
                   )}
-                    <hr></hr>
-                     <div className="vote-buttons">
-                          <button
-                            className="upvote-button"
-                            onClick={() => handleUpvote(post.id)}
-                          >
-                            <FaThumbsUp /> Upvote ({post.upvotes || 0})
-                          </button>
-                          <button
-                            className="downvote-button"
-                            onClick={() => handleDownvote(post.id)}
-                          >
-                            <FaThumbsDown /> Downvote ({post.downvotes || 0})
-                          </button>
-                        </div>
                 </div>
               ))}
+            </div>
+            <hr></hr>
+            <div className="vote-buttons">
+              <button
+                className="upvote-button"
+                onClick={() => handleUpvote(post.id)}
+              >
+                <FaThumbsUp /> Upvote ({post.voteCounter || 0})
+              </button>
+              {/* <button
+                className="downvote-button"
+                onClick={() => handleDownvote(post.id)}
+              >
+                <FaThumbsDown /> Downvote ({post.downvotes || 0})
+              </button> */}
             </div>
 
             {/* Comment Section */}

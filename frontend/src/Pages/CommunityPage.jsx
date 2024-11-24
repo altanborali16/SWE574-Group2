@@ -32,6 +32,12 @@ const CommunityPage = () => {
     ? jwtDecode(localStorage.getItem("token"))
     : null;
 
+  const updateCommunityPosts = (updatedPosts) => {
+    setcommunityDb((prevCommunity) => ({
+      ...prevCommunity,
+      posts: updatedPosts,
+    }));
+  };
   const [showSubscribersList, setShowSubscribersList] = useState(false);
   const [postCount, setPostCount] = useState(0); // State for post count
   const [commentCount, setcommentCount] = useState(0); // State for community count
@@ -367,10 +373,12 @@ const CommunityPage = () => {
                 </span>
               </div>
               <div className="community-categories">
-              {community.tags.map((category, index) => (
-                <span key={index} className="category-tag">{category.name}</span>
-              ))}
-            </div>
+                {community.tags.map((category, index) => (
+                  <span key={index} className="category-tag">
+                    {category.name}
+                  </span>
+                ))}
+              </div>
             </div>
             {/* Button to open the form */}
             {isUserOwner && (
@@ -430,7 +438,7 @@ const CommunityPage = () => {
               memberResult={memberResult}
             />
           ) : community.posts.length > 0 ? (
-            <PostsView posts={community.posts} header={"Posts"} />
+            <PostsView posts={community.posts} header={"Posts"} setPosts={updateCommunityPosts} />
           ) : (
             <p>No posts available in this community.</p>
           )}
