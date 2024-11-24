@@ -14,6 +14,7 @@ import { useSearchEngine } from "./Functions/SearchFunctions/SearchEngine";
 import MemberList from "./SharedComponents/MemberList";
 import ShowResultPage from "./SharedComponents/ShowResultPage";
 import LoadingScreen from "./SharedComponents/LoadingScreen";
+import CommunityImages from "../Helpers/CommunityImages";
 
 const CommunityPage = () => {
   const { id } = useParams();
@@ -355,7 +356,28 @@ const CommunityPage = () => {
         <div className="community-page">
           <div className="community-header-card">
             <img
-              src={community.picture}
+              src={
+                community.tags.find((tag) =>
+                  CommunityImages.some(
+                    (image) =>
+                      image.tag.toLowerCase() === tag.name.toLowerCase()
+                  )
+                )
+                  ? CommunityImages.find(
+                      (image) =>
+                        image.tag.toLowerCase() ===
+                        community.tags
+                          .find((tag) =>
+                            CommunityImages.some(
+                              (image) =>
+                                image.tag.toLowerCase() ===
+                                tag.name.toLowerCase()
+                            )
+                          )
+                          .name.toLowerCase()
+                    ).imageUrl
+                  : "https://www.the-rampage.org/wp-content/uploads/2019/05/263480.jpg" // Default image
+              }
               alt={community.name}
               className="community-picture"
             />
@@ -438,7 +460,11 @@ const CommunityPage = () => {
               memberResult={memberResult}
             />
           ) : community.posts.length > 0 ? (
-            <PostsView posts={community.posts} header={"Posts"} setPosts={updateCommunityPosts} />
+            <PostsView
+              posts={community.posts}
+              header={"Posts"}
+              setPosts={updateCommunityPosts}
+            />
           ) : (
             <p>No posts available in this community.</p>
           )}
