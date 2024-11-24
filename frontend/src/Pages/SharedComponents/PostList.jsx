@@ -43,10 +43,10 @@ const PostsView = ({ posts, header, setPosts }) => {
   });
 
   // State to hold new reply text for each comment
-  const [newReply, setNewReply] = useState({});
+  // const [newReply, setNewReply] = useState({});
 
   // State to handle reply form visibility
-  const [replyFormVisible, setReplyFormVisible] = useState({});
+  // const [replyFormVisible, setReplyFormVisible] = useState({});
 
   // Handle comment text change
   const handleCommentChange = (postId, value) => {
@@ -202,49 +202,49 @@ const PostsView = ({ posts, header, setPosts }) => {
     }
   };
 
-  // Handle reply text change
-  const handleReplyChange = (postId, commentIndex, value) => {
-    setNewReply((prevState) => ({
-      ...prevState,
-      [`${postId}-${commentIndex}`]: value,
-    }));
-  };
+  // // Handle reply text change
+  // const handleReplyChange = (postId, commentIndex, value) => {
+  //   setNewReply((prevState) => ({
+  //     ...prevState,
+  //     [`${postId}-${commentIndex}`]: value,
+  //   }));
+  // };
 
-  // Handle adding a reply to a comment
-  const handleAddReply = (postId, commentIndex) => {
-    if (newReply[`${postId}-${commentIndex}`]?.trim() !== "") {
-      setComments((prevState) => ({
-        ...prevState,
-        [postId]: prevState[postId].map((comment, index) =>
-          index === commentIndex
-            ? {
-                ...comment,
-                replies: [
-                  ...comment.replies,
-                  newReply[`${postId}-${commentIndex}`],
-                ],
-              }
-            : comment
-        ),
-      }));
-      setNewReply((prevState) => ({
-        ...prevState,
-        [`${postId}-${commentIndex}`]: "",
-      }));
-      setReplyFormVisible((prevState) => ({
-        ...prevState,
-        [`${postId}-${commentIndex}`]: false,
-      }));
-    }
-  };
+  // // Handle adding a reply to a comment
+  // const handleAddReply = (postId, commentIndex) => {
+  //   if (newReply[`${postId}-${commentIndex}`]?.trim() !== "") {
+  //     setComments((prevState) => ({
+  //       ...prevState,
+  //       [postId]: prevState[postId].map((comment, index) =>
+  //         index === commentIndex
+  //           ? {
+  //               ...comment,
+  //               replies: [
+  //                 ...comment.replies,
+  //                 newReply[`${postId}-${commentIndex}`],
+  //               ],
+  //             }
+  //           : comment
+  //       ),
+  //     }));
+  //     setNewReply((prevState) => ({
+  //       ...prevState,
+  //       [`${postId}-${commentIndex}`]: "",
+  //     }));
+  //     setReplyFormVisible((prevState) => ({
+  //       ...prevState,
+  //       [`${postId}-${commentIndex}`]: false,
+  //     }));
+  //   }
+  // };
 
   // Handle toggling reply form visibility
-  const handleReplyButtonClick = (postId, commentIndex) => {
-    setReplyFormVisible((prevState) => ({
-      ...prevState,
-      [`${postId}-${commentIndex}`]: !prevState[`${postId}-${commentIndex}`],
-    }));
-  };
+  // const handleReplyButtonClick = (postId, commentIndex) => {
+  //   setReplyFormVisible((prevState) => ({
+  //     ...prevState,
+  //     [`${postId}-${commentIndex}`]: !prevState[`${postId}-${commentIndex}`],
+  //   }));
+  // };
 
   if (loading) {
     return <LoadingScreen />;
@@ -329,19 +329,19 @@ const PostsView = ({ posts, header, setPosts }) => {
                         </p>
                         <p className="comment">{comment.content}</p>
                       </div>
+                        {/* Reply Section
                       <div className="reply-section">
                         {(comment.replies || []).length > 0 && (
                           <div className="replies-list">
-                            {comment.replies.map((reply, replyIndex) => (
+                           {comment.replies.map((comment, replyIndex) => (
                               <div key={replyIndex} className="reply-item">
                                 <p>
-                                  <strong>Posted by:</strong> {auth.user.sub}
+                                  <strong>Posted by:</strong> {comment.author.username}
                                 </p>
                                 <p>
-                                  <strong>Posted at:</strong>{" "}
-                                  {new Date(post.time).toLocaleString()}
+                                  <strong>Posted at:</strong> {new Date(comment.time).toLocaleString()}
                                 </p>
-                                <p className="reply">{reply}</p>
+                                <p className="reply">{comment.content}</p>
                               </div>
                             ))}
                           </div>
@@ -377,7 +377,7 @@ const PostsView = ({ posts, header, setPosts }) => {
                             </button>
                           </div>
                         )}
-                      </div>
+                      </div> */}
                     </>
                   </div>
                 ))
