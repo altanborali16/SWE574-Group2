@@ -23,7 +23,13 @@ const NavbarCommunity = ({ isSearchForm }) => {
   return (
     <nav className="navbar">
       <div className="navbar__logo">
-        <NavLink to="/">Logo</NavLink>
+      <NavLink to="/">
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/2/25/Community_Notes_logo.png"
+            alt="Logo"
+            style={{ width: "50px", height: "auto" }} // Adjust size as needed
+          />
+        </NavLink>
       </div>
       <div
         className={`navbar__toggle ${isOpen ? "open" : ""}`}
