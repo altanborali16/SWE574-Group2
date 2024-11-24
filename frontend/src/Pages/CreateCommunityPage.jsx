@@ -66,6 +66,7 @@ const CreateCommunityPage = () => {
       });
       return; // Exit the function if validation fails
     }
+    console.log("Private : ", communityData.isPrivate)
     try {
       const response = await httpClient.post(
         "/community/create", // relative URL since we set baseURL in axiosInstance
