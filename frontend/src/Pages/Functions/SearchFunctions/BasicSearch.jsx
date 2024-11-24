@@ -47,11 +47,17 @@ export const basicSearch = (data, search) => {
       }
     });
 
-    // if (search?.basicSearch?.filters?.comments) {
-    //   posts?.comments.forEach((comment) => {
-    //     comment;
-    //   });
-    // }
+    if (search?.basicSearch?.filters?.comments) {
+      posts.forEach((post) => {
+        post?.comments.forEach((comment) => {
+          const commentMatch = comment?.content.toLowerCase().includes(query);
+          if (commentMatch && !results.includes(post)) {
+            results.push(post);
+          }
+        });
+      });
+    }
+
     return results;
   }
 };
