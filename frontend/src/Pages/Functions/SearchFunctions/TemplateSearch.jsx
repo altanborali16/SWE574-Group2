@@ -4,7 +4,6 @@ export const TemplateSearch = (data, search) => {
   const templateInputs = search?.postSearch?.templateSearchInputs || "";
   const template = search?.postSearch?.template || "";
   const results = [];
-  console.log("len", Object.keys(templateInputs).length);
 
   if (Object.keys(templateInputs).length === 0 && template === "") {
     return posts;
@@ -46,9 +45,7 @@ export const TemplateSearch = (data, search) => {
           if (type === "TEXT") {
             if (
               templateInputs?.[name] &&
-              !templateInputs?.[name]
-                ?.toLowerCase()
-                .includes(value.toLowerCase())
+              !value?.toLowerCase().includes(templateInputs?.[name])
             ) {
               return false;
             }

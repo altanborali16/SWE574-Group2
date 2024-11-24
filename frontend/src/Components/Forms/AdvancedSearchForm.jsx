@@ -244,7 +244,6 @@ function AdvancedSearchForm({
                       {postState.templateFields[field] === "NUMBER" && (
                         <div key={index}>
                           <label>{field}:</label>
-                          <label>{"Number"}:</label>
                           Minimum Value:
                           <input
                             type="text"
