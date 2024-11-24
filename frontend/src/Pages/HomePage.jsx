@@ -4,10 +4,16 @@ import Navbar from "./NavBar.jsx";
 import httpClient from "../Helpers/HttpClient";
 import { jwtDecode } from "jwt-decode";
 import PostsView from "./SharedComponents/PostList";
+import LoadingScreen from "./SharedComponents/LoadingScreen.jsx";
 
 const Home = () => {
   // Inline styles for the component
   const [filteredCommunities, setFilteredCommunityListDb] = useState([]);
+  const [allPosts, setFilteredPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const updatePosts = (updatedPosts) => {
+    setFilteredPosts(updatedPosts); // Update posts state
+  };
   useEffect(() => {
     const fetchCommunityList = async () => {
       try {
@@ -23,59 +29,70 @@ const Home = () => {
         );
         setFilteredCommunityListDb(filteredCommunities);
         console.log("Communities:", response.data);
+        // Extract all posts and include the communityId
+        const allPosts = filteredCommunities
+          .flatMap((community) =>
+            community.posts.map((post) => ({
+              ...post,
+              communityId: community.id, // Add communityId to each post
+            }))
+          )
+          .sort((a, b) => new Date(b.time) - new Date(a.time)); // Sort by descending time
+
+        console.log("All Sorted Posts with Community ID:", allPosts);
+
+        setFilteredPosts(allPosts); // Assuming a state to hold just the posts
+        setLoading(false);
       } catch (err) {
         console.error(err);
+        setLoading(false);
       }
     };
     fetchCommunityList();
   }, []);
-  const containerStyle = {
-    display: "flex",
-    flexDirection: "column", // Stack headings vertically
-    justifyContent: "center",
-    alignItems: "center",
-    height: "100vh", // Full viewport height
-    backgroundColor: "#f0f0f0", // Light background color
-    margin: 0, // Remove default margin
-    fontFamily: "Arial, sans-serif",
-  };
-
-  const titleStyle = {
-    fontSize: "2rem", // Title font size
-    color: "#333", // Dark text color
-    margin: "10px 0", // Margin between headings
-  };
 
   return (
     <>
       <PageMetaData title="Home" />
       <Navbar />
-      <div
-        style={{
-          maxWidth: "800px",
-          margin: "0 auto",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        {filteredCommunities.length > 0 ? (
-          filteredCommunities.map((community) => (
-            <div key={community.id} style={{ marginBottom: "20px" }}>
-              {/* Display community name or other details */}
-              {community.posts && community.posts.length > 0 ? (
-                <PostsView posts={community.posts} />
-              ) : (
-                <p>No posts available in this community.</p>
-              )}
+      {loading ? (
+        <LoadingScreen /> // Show the loading screen while data is being fetched
+      ) : (
+        <div
+          style={{
+            margin: "0 auto",
+            display: "flex", // Flexbox for centering
+            flexDirection: "column",
+            // alignItems: "center",
+            // justifyContent: "center", // Centering vertically
+            minHeight: "100vh", // Full viewport height for vertical centering
+          }}
+        >
+          {allPosts.length > 0 ? (
+
+              <div>
+                {/* Display community name or other details */}
+                  <PostsView posts={allPosts} setPosts={updatePosts} />
+              </div>
+
+          ) : (
+            <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              textAlign: "center", // Center text alignment
+              height: "50vh", // Adjust as needed
+            }}
+          >
+            <p>No subscribed or owned communities available. You can check Communities Page or Feed :) </p>
             </div>
-          ))
-        ) : (
-          <p>No subscribed or owned communities available.</p>
-        )}
-      </div>
+          )}
+        </div>
+      )}
     </>
   );
 };
 
 export default Home;
-

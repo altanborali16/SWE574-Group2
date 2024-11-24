@@ -3,11 +3,14 @@ import PageMetaData from "./PageMetaData";
 import Navbar from "./NavBar.jsx";
 import httpClient from "../Helpers/HttpClient";
 import { jwtDecode } from "jwt-decode";
-import PostsView from "./SharedComponents/PostList";
+import PostsView from "./SharedComponents/PostListForFeed.jsx";
+import LoadingScreen from "./SharedComponents/LoadingScreen.jsx";
 
 const Feed = () => {
   // Inline styles for the component
   const [filteredCommunities, setFilteredCommunityListDb] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [allPosts, setFilteredPosts] = useState([]);
   useEffect(() => {
     const fetchCommunityList = async () => {
       try {
@@ -16,65 +19,78 @@ const Feed = () => {
           : null;
         console.log("User : ", user);
         const response = await httpClient.get("/community/list");
-        const filteredCommunities = response.data.filter((community) =>
-          community.memberships.some(
-            (membership) => membership.id.userId !== user.userId
-          )
+        const filteredCommunities = response.data.filter(
+          (community) =>
+            !community.memberships.some(
+              (membership) => membership.id.userId === user.userId
+            )
         );
         setFilteredCommunityListDb(filteredCommunities);
+        const allPosts = filteredCommunities
+          .flatMap((community) =>
+            community.posts.map((post) => ({
+              ...post,
+              communityId: community.id, // Add communityId to each post
+            }))
+          )
+          .sort((a, b) => new Date(b.time) - new Date(a.time)); // Sort by descending time
+
+        console.log("All Sorted Posts with Community ID:", allPosts);
+
+        setFilteredPosts(allPosts); // Assuming a state to hold just the posts
         console.log("Communities:", response.data);
+        console.log("Filtered:", filteredCommunities);
+        setLoading(false);
       } catch (err) {
         console.error(err);
+        setLoading(false);
       }
     };
     fetchCommunityList();
   }, []);
-  const containerStyle = {
-    display: "flex",
-    flexDirection: "column", // Stack headings vertically
-    justifyContent: "center",
-    alignItems: "center",
-    height: "100vh", // Full viewport height
-    backgroundColor: "#f0f0f0", // Light background color
-    margin: 0, // Remove default margin
-    fontFamily: "Arial, sans-serif",
-  };
 
-  const titleStyle = {
-    fontSize: "2rem", // Title font size
-    color: "#333", // Dark text color
-    margin: "10px 0", // Margin between headings
-  };
-
-  return (
-    <>
-      <PageMetaData title="Home" />
-      <Navbar />
+return (
+  <>
+    <PageMetaData title="Feed" />
+    <Navbar />
+    {loading ? (
+      <LoadingScreen /> // Show the loading screen while data is being fetched
+    ) : (
       <div
         style={{
-          maxWidth: "800px",
           margin: "0 auto",
+          display: "flex", // Flexbox for centering
           flexDirection: "column",
-          alignItems: "center",
+          // alignItems: "center",
+          // justifyContent: "center", // Centering vertically
+          minHeight: "100vh", // Full viewport height for vertical centering
         }}
       >
-        {filteredCommunities.length > 0 ? (
-          filteredCommunities.map((community) => (
-            <div key={community.id} style={{ marginBottom: "20px" }}>
+        {allPosts.length > 0 ? (
+
+            <div>
               {/* Display community name or other details */}
-              {community.posts && community.posts.length > 0 ? (
-                <PostsView posts={community.posts} />
-              ) : (
-                <p>No posts available in this community.</p>
-              )}
+                <PostsView posts={allPosts} />
             </div>
-          ))
+
         ) : (
-          <p>No subscribed or owned communities available.</p>
+          <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            textAlign: "center", // Center text alignment
+            height: "50vh", // Adjust as needed
+          }}
+        >
+          <p>No Feed is available </p>
+          </div>
         )}
       </div>
-    </>
-  );
+    )}
+  </>
+);
 };
 
 export default Feed;

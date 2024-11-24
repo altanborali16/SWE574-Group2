@@ -4,218 +4,213 @@ import PageMetaData from "./PageMetaData";
 import Navbar from "./NavBar";
 import "../Styles/CommunityPage.css";
 import CreateTemplateForm from "../Components/Forms/CreateTemplateForm";
+import AdvancedSearchForm from "../Components/Forms/AdvancedSearchForm";
 import CreatePostForm from "../Components/Forms/CreatePostForm";
 import httpClient from "../Helpers/HttpClient";
 import { jwtDecode } from "jwt-decode";
 import PostsView from "./SharedComponents/PostList";
+import NavbarCommunity from "./NavBarCommunity";
+import { useSearchEngine } from "./Functions/SearchFunctions/SearchEngine";
+import MemberList from "./SharedComponents/MemberList";
+import ShowResultPage from "./SharedComponents/ShowResultPage";
+import LoadingScreen from "./SharedComponents/LoadingScreen";
+import CommunityImages from "../Helpers/CommunityImages";
 
 const CommunityPage = () => {
   const { id } = useParams();
 
-  const [communityList, setCommunityList] = useState([
-    {
-      id: "a",
-      name: "BJJ Club",
-      description: "A community for BJJ athletes",
-      picture:
-        "https://hooshmand.net/wp-content/uploads/2024/02/bjj-black-belt-on-tatami-mat.jpg",
-      isPrivate: false,
-      isFollowing: true,
-      categories: ["BJJ", "Martial Arts", "MMA"],
-      postCount: 120,
-      subscriberCount: 2400,
-      posts: [
-        {
-          creationDate: "2024-10-01",
-          createdBy: {
-            name: "Altan Boralı",
-            profilePic:
-              "https://robotics.ozyegin.edu.tr/sites/default/files/AltanBorali.jpg",
-          },
-          title: "BJJ Training Tips",
-          description: "Some tips for beginners in BJJ.",
-          likes: 30,
-          dislikes: 2,
-          comments: [
-            {
-              id: 1,
-              text: "Great tips!",
-              author: "Alice",
-              profilePic: "https://example.com/alice.jpg",
-            },
-            {
-              id: 2,
-              text: "Very helpful, thanks!",
-              author: "Bob",
-              profilePic: "https://example.com/bob.jpg",
-            },
-          ],
-        },
-        {
-          creationDate: "2024-09-20",
-          createdBy: {
-            name: "Efe Göçmen",
-            profilePic:
-              "https://corporateleagues.com/media/oyuncu/resim1703022799.jpg",
-          },
-          title: "Upcoming MMA Event",
-          description: "Details about the upcoming event.",
-          location: "Downtown Arena",
-          likes: 45,
-          dislikes: 5,
-          comments: [
-            {
-              id: 3,
-              text: "Can't wait for this event!",
-              author: "Chris",
-              profilePic: "https://example.com/chris.jpg",
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: "g",
-      name: "Art Lovers",
-      description: "Explore the world of art.",
-      picture:
-        "https://img.freepik.com/free-photo/fantasy-eye-illustration_23-2151675421.jpg",
-      isPrivate: true,
-      categories: ["Art", "Creativity", "Painting", "Patates"],
-      creator: {
-        name: "Lily Evans",
-        profilePic: "https://randomuser.me/api/portraits/women/45.jpg",
-      },
-      postCount: 85,
-      subscriberCount: 1500,
-      posts: [
-        {
-          creationDate: "2024-10-01",
-          createdBy: {
-            name: "Altan Boralı",
-            profilePic:
-              "https://robotics.ozyegin.edu.tr/sites/default/files/AltanBorali.jpg",
-          },
-          title: "Art Event",
-          description: "Some tips for beginners in BJJ.",
-          likes: 30,
-          dislikes: 2,
-          comments: [
-            {
-              id: 1,
-              text: "Great tips!",
-              author: "Alice",
-              profilePic: "https://example.com/alice.jpg",
-            },
-            {
-              id: 2,
-              text: "Very helpful, thanks!",
-              author: "Bob",
-              profilePic: "https://example.com/bob.jpg",
-            },
-          ],
-        },
-        {
-          creationDate: "2024-09-20",
-          createdBy: {
-            name: "Efe Göçmen",
-            profilePic:
-              "https://corporateleagues.com/media/oyuncu/resim1703022799.jpg",
-          },
-          title: "Upcoming Painting Event",
-          description: "Details about the upcoming event.",
-          location: "Downtown Arena",
-          likes: 45,
-          dislikes: 5,
-          comments: [
-            {
-              id: 3,
-              text: "Can't wait for this event!",
-              author: "Chris",
-              profilePic: "https://example.com/chris.jpg",
-            },
-          ],
-        },
-      ],
-    },
-  ]);
   const [communityDb, setcommunityDb] = useState([]);
   const [loading, setLoading] = useState(true); // Initialize loading state
   const [dataFromDb, setDataOnDb] = useState(false); // Initialize loading state
   const [isUserMember, setIsUserMember] = useState(false);
+
+  const [isSearchForm, setIsSearchForm] = useState(false);
+  const [isSearchCommunity, setIsSearchCommunity] = useState(false);
+  const [searchObject, setSearchObject] = useState({});
+
   const [isUserOwner, setIsUserOwner] = useState(false);
   const user = localStorage.getItem("token")
     ? jwtDecode(localStorage.getItem("token"))
     : null;
 
+  const updateCommunityPosts = (updatedPosts) => {
+    setcommunityDb((prevCommunity) => ({
+      ...prevCommunity,
+      posts: updatedPosts,
+    }));
+  };
+  const [showSubscribersList, setShowSubscribersList] = useState(false);
+  const [postCount, setPostCount] = useState(0); // State for post count
+  const [commentCount, setcommentCount] = useState(0); // State for community count
+  const badges = [
+    {
+      title: "First Comment",
+      image:
+        "https://png.pngtree.com/png-clipart/20190604/original/pngtree-badge-png-image_996483.jpg",
+      counter: 1,
+      tag: "Comment",
+    },
+    {
+      title: "Commander",
+      image:
+        "https://png.pngtree.com/png-clipart/20190604/original/pngtree-badge-png-image_996483.jpg",
+      counter: 5,
+      tag: "Comment",
+    },
+    {
+      title: "Fighter",
+      image:
+        "https://png.pngtree.com/png-clipart/20190604/original/pngtree-badge-png-image_996483.jpg",
+      counter: 10,
+      tag: "Comment",
+    },
+    {
+      title: "First Post",
+      image:
+        "https://png.pngtree.com/png-clipart/20190604/original/pngtree-badge-png-image_996483.jpg",
+      counter: 1,
+      tag: "Post",
+    },
+    {
+      title: "Poster",
+      image:
+        "https://png.pngtree.com/png-clipart/20190604/original/pngtree-badge-png-image_996483.jpg",
+      counter: 5,
+      tag: "Post",
+    },
+    {
+      title: "Post Master",
+      image:
+        "https://png.pngtree.com/png-clipart/20190604/original/pngtree-badge-png-image_996483.jpg",
+      counter: 10,
+      tag: "Post",
+    },
+  ];
+
+  const handleShowSubscribers = () => {
+    fetchSubscribers();
+    setShowSubscribersList(true);
+  };
+
+  const handleCloseSubscribers = () => {
+    setShowSubscribersList(false);
+  };
+
+  const [subscribers, setSubscribers] = useState([]);
+  const fetchSubscribers = async () => {
+    try {
+      const response = await httpClient.get("community/members/" + id);
+      console.log("Subscribers:", response.data);
+
+      setSubscribers(response.data);
+    } catch (err) {
+      console.error("Failed to fetch subscribers:", err);
+    }
+  };
+  const fetchBadges = async () => {
+    try {
+      console.log("Id : ", user.userId);
+      const postCountResponse = await httpClient.get(
+        `/community/userPostCount/${id}/${user.userId}`
+      );
+      const commentCountResponse = await httpClient.get(
+        `/community/userCommentCount/${id}/${user.userId}`
+      );
+
+      const postCount = postCountResponse.data || 0; // Assuming response includes 'count'
+      const commentCount = commentCountResponse.data || 0; // Assuming response includes 'count'
+      setPostCount(postCount); // Set post count in state
+      setcommentCount(commentCount); // Set community count in state
+
+      console.log("Post Count:", postCount);
+      console.log("Comment Count:", commentCount);
+
+      // Update your state or UI accordingly if needed
+    } catch (err) {
+      console.error("Error fetching counts:", err);
+    }
+  };
+
   useEffect(() => {
-    const fetchCommunity = async () => {
-      setLoading(true); // Set loading to true when starting the fetch
+    const fetchData = async () => {
       try {
-        const response = await httpClient.get("/community/" + id);
-        const communityData = response.data;
-        setcommunityDb(communityData);
-        setDataOnDb(true);
-        // Check if the user is a member
-        console.log("User : ", user);
-        const userMembership = communityData.memberships.find(
-          (membership) => Number(membership.id.userId) === Number(user.userId)
-        );
-        setIsUserMember(!!userMembership); // Set to true if user is a member
-        // Check if the user is the owner
-        setIsUserOwner(userMembership && userMembership.role === "CREATOR");
-        console.log("Community:", response.data);
-      } catch (err) {
-        console.error(err);
-        setcommunityDb([]);
+        setLoading(true);
+
+        // Wait for all fetch functions to finish
+        await Promise.all([
+          fetchCommunity(),
+          fetchSubscribers(),
+          fetchBadges(),
+        ]);
+        console.log("Is User Member:", isUserMember);
+        console.log("Is User Owner:", isUserOwner);
+        console.log("Data from db:", dataFromDb);
+        console.log("Community", community);
+      } catch (error) {
+        console.error("Error fetching data:", error);
       } finally {
-        setLoading(false); // Set loading to false once fetch completes or fails
+        setLoading(false); // Ensure loading is set to false even if there's an error
       }
     };
-    fetchCommunity();
+
+    fetchData();
   }, [id]);
+
+  const fetchCommunity = async () => {
+    setLoading(true); // Set loading to true when starting the fetch
+    try {
+      const response = await httpClient.get("/community/" + id);
+      const communityData = response.data;
+      setcommunityDb(communityData);
+      setDataOnDb(true);
+      // Check if the user is a member
+      console.log("User : ", user);
+      const userMembership = communityData.memberships.find(
+        (membership) => Number(membership.id.userId) === Number(user.userId)
+      );
+      setIsUserMember(!!userMembership); // Set to true if user is a member
+      // Check if the user is the owner
+      setIsUserOwner(userMembership && userMembership.role === "CREATOR");
+      console.log("Community:", response.data);
+    } catch (err) {
+      console.error(err);
+      setcommunityDb([]);
+    } finally {
+      // setLoading(false); // Set loading to false once fetch completes or fails
+    }
+  };
+
   // Logging state changes
-  useEffect(() => {
-    console.log("Is User Member:", isUserMember);
-    console.log("Is User Owner:", isUserOwner);
-    console.log("Data from db:", dataFromDb);
-    console.log("Community", community);
-  }, [isUserMember, isUserOwner]);
+  // useEffect(() => {
+  //   console.log("Is User Member:", isUserMember);
+  //   console.log("Is User Owner:", isUserOwner);
+  //   console.log("Data from db:", dataFromDb);
+  //   console.log("Community", community);
+  // }, [isUserMember, isUserOwner]);
+
+  console.log({ searchObject });
+
+  const filter = searchObject?.basicSearch?.filters;
+
+  let { result: searchResults, memberResult } = useSearchEngine(
+    communityDb,
+    searchObject,
+    subscribers
+  );
+
+  if (
+    !filter?.posts &&
+    !filter?.comments &&
+    searchObject?.basicSearch?.searchQuery === ""
+  ) {
+    searchResults = [];
+  }
+
+  console.log({ searchResults, memberResult });
+  console.log({ isSearchForm, isSearchCommunity });
 
   const [showCreateTemplateForm, setShowCreateTemplateForm] = useState(false);
   const [showCreatePostForm, setShowCreatePostForm] = useState(false);
-  const [templates, setTemplates] = useState([
-    {
-      id: 1,
-      name: "Basic Template",
-      description: "Basic Templates",
-      fields: [
-        {
-          name: "Title",
-          dataType: "TEXT",
-        },
-        {
-          name: "Description",
-          dataType: "TEXT",
-        },
-      ],
-    },
-    {
-      id: 2,
-      name: "Event Template",
-      description: "Event Templates",
-      fields: [
-        {
-          name: "Title",
-          dataType: "TEXT",
-        },
-        {
-          name: "Description",
-          dataType: "TEXT",
-        },
-      ],
-    },
-  ]); // State to hold list of templates
 
   const createFields = async (templateId, fields) => {
     for (const field of fields) {
@@ -251,13 +246,16 @@ const CommunityPage = () => {
     }
     // setTemplates((prevTemplates) => [...prevTemplates, newTemplate]);
   };
+
   const addPost = async (newPost) => {
+    console.log(newPost);
     try {
       const responseCreatePost = await httpClient.post(
         "/post/create/" + id,
         newPost
       );
       console.log("Post created successfully:", responseCreatePost.data);
+      window.location.href = window.location.href; // This will refresh the page
     } catch (error) {
       console.error("Error creating post:", error);
     }
@@ -275,6 +273,7 @@ const CommunityPage = () => {
   const handleCloseForm = () => {
     setShowCreateTemplateForm(false);
     setShowCreatePostForm(false);
+    setIsSearchForm(false);
   };
 
   const handleFollow = async () => {
@@ -295,53 +294,38 @@ const CommunityPage = () => {
       console.error("Error unfollow:", error);
     }
   };
-
-  const community = (dataFromDb)
-        ? communityDb
-        : communityList.find((community) => community.id === id);
-  const [newComment, setNewComment] = useState({});
-
-  const handleLike = (postIndex) => {
-    const updatedList = [...communityList];
-    updatedList[0].posts[postIndex].likes += 1;
-    setCommunityList(updatedList);
-  };
-
-  const handleDislike = (postIndex) => {
-    const updatedList = [...communityList];
-    updatedList[0].posts[postIndex].dislikes += 1;
-    setCommunityList(updatedList);
-  };
-
-  const handleCommentChange = (postIndex, text) => {
-    setNewComment({ ...newComment, [postIndex]: text });
-  };
-
-  const addComment = (postIndex) => {
-    const updatedList = [...communityList];
-    const newCommentObj = {
-      id: Date.now(), // Unique id for each new comment
-      text: newComment[postIndex],
-      author: "Current User",
-      profilePic: "https://example.com/currentuser.jpg", // Profile pic of the current user
-    };
-    updatedList[0].posts[postIndex].comments.push(newCommentObj);
-    setCommunityList(updatedList);
-    setNewComment({ ...newComment, [postIndex]: "" }); // Clear the comment input
-  };
-
+  const community = communityDb;
   if (loading) {
     // Display loading message or spinner
-    return <div>Loading...</div>;
-  }
-  if (!community) {
+    return (
+      <div>
+        <LoadingScreen />
+      </div>
+    );
+  } else if (!community) {
     return <div>Community not found</div>;
-  }
-  if (dataFromDb) {
+  } else {
     return (
       <>
         <PageMetaData title="Communities" />
-        <Navbar />
+        <NavbarCommunity isSearchForm={setIsSearchForm} />
+        {isSearchForm && (
+          <div className="modal-overlay" onClick={handleCloseForm}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <button className="close-button" onClick={handleCloseForm}>
+                &times;
+              </button>
+              <AdvancedSearchForm
+                formPlace="community"
+                community={community}
+                setSearchObject={setSearchObject}
+                setIsSearchForm={setIsSearchForm}
+                setIsSearch={setIsSearchCommunity}
+              />
+            </div>
+          </div>
+        )}
+
         {showCreateTemplateForm && (
           <div className="modal-overlay" onClick={handleCloseForm}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -372,7 +356,28 @@ const CommunityPage = () => {
         <div className="community-page">
           <div className="community-header-card">
             <img
-              src={community.picture}
+              src={
+                community.tags.find((tag) =>
+                  CommunityImages.some(
+                    (image) =>
+                      image.tag.toLowerCase() === tag.name.toLowerCase()
+                  )
+                )
+                  ? CommunityImages.find(
+                      (image) =>
+                        image.tag.toLowerCase() ===
+                        community.tags
+                          .find((tag) =>
+                            CommunityImages.some(
+                              (image) =>
+                                image.tag.toLowerCase() ===
+                                tag.name.toLowerCase()
+                            )
+                          )
+                          .name.toLowerCase()
+                    ).imageUrl
+                  : "https://www.the-rampage.org/wp-content/uploads/2019/05/263480.jpg" // Default image
+              }
               alt={community.name}
               className="community-picture"
             />
@@ -380,14 +385,22 @@ const CommunityPage = () => {
               <h1>{community.name}</h1>
               <p>{community.description}</p>
               <div className="community-stats">
-                <span>{community.posts.length} Posts</span> |
-                <span>{community.memberships.length} Subscribers</span>
+                <span>{community?.posts?.length || 0} Posts</span> |
+                <span
+                  className="subscribers-link"
+                  onClick={handleShowSubscribers}
+                  style={{ cursor: "pointer", color: "blue" }}
+                >
+                  {community.memberships.length} Subscribers{" "}
+                </span>
               </div>
-              {/* <div className="community-categories">
-              {community.categories.map((category, index) => (
-                <span key={index} className="category-tag">{category}</span>
-              ))}
-            </div> */}
+              <div className="community-categories">
+                {community.tags.map((category, index) => (
+                  <span key={index} className="category-tag">
+                    {category.name}
+                  </span>
+                ))}
+              </div>
             </div>
             {/* Button to open the form */}
             {isUserOwner && (
@@ -414,127 +427,76 @@ const CommunityPage = () => {
             )}
           </div>
         </div>
-        <div style={{ maxWidth: "800px", margin: "0 auto", flexDirection: "column", alignItems: "center" }}>
-          {community.posts.length > 0 ? (
-            <PostsView posts={community.posts} />
+        <div>
+          <div className="badges-section">
+            <h3>Badges</h3>
+            <div className="badges-list">
+              {badges.map((badge, index) => {
+                const isBlurred =
+                  (badge.tag === "Post" && postCount < badge.counter) ||
+                  (badge.tag === "Comment" && commentCount < badge.counter);
+
+                return (
+                  <div
+                    key={index}
+                    className={`badge ${isBlurred ? "badge--blurred" : ""}`}
+                  >
+                    <img
+                      src={badge.image}
+                      alt={badge.title}
+                      className="badge__image"
+                    />
+                    <span className="badge__title">{badge.title}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          {isSearchCommunity ? (
+            <ShowResultPage
+              onClickSearch={setIsSearchCommunity}
+              posts={searchResults}
+              header={`${searchResults.length} Post Results`}
+              memberResult={memberResult}
+            />
+          ) : community.posts.length > 0 ? (
+            <PostsView
+              posts={community.posts}
+              header={"Posts"}
+              setPosts={updateCommunityPosts}
+            />
           ) : (
             <p>No posts available in this community.</p>
           )}
         </div>
-      </>
-    );
-  }
-  if(!dataFromDb){
-    return (
-      <>
-        <PageMetaData title="Communities" />
-        <Navbar />
-  
-        {/* Conditionally render the CreateTemplateForm as a modal */}
-        {showCreateTemplateForm && (
-          <div className="modal-overlay" onClick={handleCloseForm}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-              <button className="close-button" onClick={handleCloseForm}>
-                &times;
-              </button>
-              <CreateTemplateForm
-                onTemplateCreated={addTemplate}
-                onClose={handleCloseForm}
-              />
+        {showSubscribersList && (
+          <div className="subscribers-modal">
+            <div className="modal-overlay" onClick={handleCloseSubscribers}>
+              <div
+                className="modal-content"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button
+                  className="close-button"
+                  onClick={handleCloseSubscribers}
+                >
+                  &times;
+                </button>
+                <h2>Subscribers</h2>
+                <ul className="subscribers-list">
+                  {subscribers.map((subscriber, index) => (
+                    <li key={index}>
+                      {subscriber.username || "Unknown Subscriber"}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         )}
-        <div className="community-page">
-          <div className="community-header-card">
-            <img
-              src={community.picture}
-              alt={community.name}
-              className="community-picture"
-            />
-            <div className="community-header-content">
-              <h1>{community.name}</h1>
-              <p>{community.description}</p>
-              <div className="community-stats">
-                <span>{community.postCount} Posts</span> |
-                <span>{community.subscriberCount} Subscribers</span>
-              </div>
-              <div className="community-categories">
-                {community.categories.map((category, index) => (
-                  <span key={index} className="category-tag">
-                    {category}
-                  </span>
-                ))}
-              </div>
-            </div>
-            {/* Button to open the form */}
-            <button onClick={handleOpenForm}>Create Template</button>
-          </div>
-  
-          <div
-            className={`posts-section ${
-              community.isPrivate && !community.isFollowing ? "blurred" : ""
-            }`}
-          >
-            {community.posts.map((post, postIndex) => (
-              <div key={postIndex} className="post-card">
-                <div className="post-header">
-                  <img
-                    src={post.createdBy.profilePic}
-                    alt={post.createdBy.name}
-                    className="author-profile-pic"
-                  />
-                  <div>
-                    <h3>{post.title}</h3>
-                    <p>
-                      by {post.createdBy.name} on {post.creationDate}
-                    </p>
-                  </div>
-                </div>
-                <p>{post.description}</p>
-                <div className="post-actions">
-                  <button onClick={() => handleLike(postIndex)}>
-                    👍 {post.likes}
-                  </button>
-                  <button onClick={() => handleDislike(postIndex)}>
-                    👎 {post.dislikes}
-                  </button>
-                </div>
-  
-                <div className="comments-section">
-                  <h4>Comments</h4>
-                  {post.comments.map((comment) => (
-                    <div key={comment.id} className="comment">
-                      <img
-                        src={comment.profilePic}
-                        alt={comment.author}
-                        className="comment-profile-pic"
-                      />
-                      <div>
-                        <strong>{comment.author}</strong>
-                        <p>{comment.text}</p>
-                      </div>
-                    </div>
-                  ))}
-                  <div className="add-comment">
-                    <input
-                      type="text"
-                      placeholder="Add a comment..."
-                      value={newComment[postIndex] || ""}
-                      onChange={(e) =>
-                        handleCommentChange(postIndex, e.target.value)
-                      }
-                    />
-                    <button onClick={() => addComment(postIndex)}>Post</button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
       </>
     );
   }
-
 };
 
 export default CommunityPage;

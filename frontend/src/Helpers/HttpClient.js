@@ -1,13 +1,13 @@
-
 // HttpClient.js
-import axios from 'axios';
+import axios from "axios";
 
 // Create an instance of Axios
 const axiosInstance = axios.create({
   // Set the base URL if applicable
-  baseURL: 'http://3.86.23.8:8080', // Replace with your base URL if you have one 
+  // baseURL: 'http://3.86.23.8:8080', // Replace with your base URL if you have one
+  baseURL: "http://localhost:8080", // Replace with your base URL if you have one
 });
-const PUBLIC_ENDPOINTS = ['/auth/register', '/auth/authenticate'];
+const PUBLIC_ENDPOINTS = ["/auth/register", "/auth/authenticate"];
 // function HttpClient() {
 //   return {
 //     get: axiosInstance.get,
@@ -20,9 +20,12 @@ const PUBLIC_ENDPOINTS = ['/auth/register', '/auth/authenticate'];
 // Add a request interceptor
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     // Check if the request URL is not a public endpoint
-    if (token && !PUBLIC_ENDPOINTS.some((endpoint) => config.url.includes(endpoint))) {
+    if (
+      token &&
+      !PUBLIC_ENDPOINTS.some((endpoint) => config.url.includes(endpoint))
+    ) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
@@ -32,26 +35,28 @@ axiosInstance.interceptors.request.use(
 
 async function registerUser(data) {
   try {
-    const response = await axiosInstance.post('/auth/register', data);
-    console.log('Registration successful:', response.data);
+    const response = await axiosInstance.post("/auth/register", data);
+    console.log("Registration successful:", response.data);
     return response;
   } catch (error) {
-    console.error('Error registering user:', error);
+    console.error("Error registering user:", error);
   }
 }
 
 // Authenticate function
 async function authenticateUser(credentials) {
   try {
-    console.log("Burda")
-    const response = await axiosInstance.post('/auth/authenticate', credentials);
-    console.log('Authentication successful:', response.data);
+    console.log("Burda");
+    const response = await axiosInstance.post(
+      "/auth/authenticate",
+      credentials
+    );
+    console.log("Authentication successful:", response.data);
     return response;
   } catch (error) {
-    console.error('Error authenticating user:', error);
+    console.error("Error authenticating user:", error);
   }
 }
 
 export { registerUser, authenticateUser };
 export default axiosInstance;
-

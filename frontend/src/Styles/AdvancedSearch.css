@@ -1,0 +1,76 @@
+.advanced-search-form-container {
+  max-height: 80vh; /* Formun yüksekliğini sınırlıyoruz */
+  overflow-y: scroll; /* Kaydırma çubuğu görünmeden içerik kaydırılabilir */
+  -ms-overflow-style: none; /* Internet Explorer'da scrollbar'ı gizle */
+  scrollbar-width: none; /* Firefox'ta scrollbar'ı gizle */
+}
+
+/* Webkit tarayıcıları (Chrome, Safari) için scrollbar'ı tamamen gizliyoruz */
+.advanced-search-form-container::-webkit-scrollbar {
+  display: none; /* Kaydırma çubuğunu gizliyoruz */
+}
+.advance-search {
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+.advance-search label {
+  margin: 0 10px;
+  font-size: 14px;
+  color: #333;
+}
+
+.post-search-container {
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.post-search-container h2 {
+  text-align: center;
+}
+
+.post-search-container div {
+  margin-bottom: 15px;
+}
+
+.post-search-container label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.post-search-container input,
+.post-search-container select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Yan yana yerleştirme için inline-block kullanımı */
+.operator-author-container {
+  overflow: hidden; /* Clearfix */
+}
+
+.operator-author-container .input-container {
+  display: inline-block;
+  width: 48%; /* Her iki öğe için %48 genişlik */
+  margin-right: 4%; /* Sağdaki öğe için sağdan 4% boşluk */
+}
+
+/* Son öğe için sağ margin'i kaldırmak */
+.operator-author-container .input-container:last-child {
+  margin-right: 0;
+}
+
+/* Görsel olarak güzel bir düzen için */
+.post-search-container input,
+.post-search-container select {
+  padding: 8px;
+  border-radius: 4px;
+  width: 100%;
+}
