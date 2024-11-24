@@ -161,3 +161,40 @@
   font-size: 1.5rem;
   cursor: pointer;
 }
+.badges-section {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.badges-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px; /* Space between badges */
+}
+
+.badge {
+  background-color: #f0f0f0; /* Light background for badges */
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.badge--blurred {
+  opacity: 0.5; /* Reduced visibility */
+  filter: blur(2px); /* Add blur effect */
+  pointer-events: none; /* Prevent interaction */
+}
+
+.badge__image {
+  width: 50px; /* Badge image size */
+  height: 50px;
+}
+
+.badge__title {
+  margin-top: 5px; /* Space between image and title */
+  font-size: 0.9rem; /* Adjust font size */
+  color :black;
+}

@@ -13,6 +13,7 @@ import NavbarCommunity from "./NavBarCommunity";
 import { useSearchEngine } from "./Functions/SearchFunctions/SearchEngine";
 import MemberList from "./SharedComponents/MemberList";
 import ShowResultPage from "./SharedComponents/ShowResultPage";
+import LoadingScreen from "./SharedComponents/LoadingScreen";
 
 const CommunityPage = () => {
   const { id } = useParams();
@@ -32,6 +33,52 @@ const CommunityPage = () => {
     : null;
 
   const [showSubscribersList, setShowSubscribersList] = useState(false);
+  const [postCount, setPostCount] = useState(0); // State for post count
+  const [commentCount, setcommentCount] = useState(0); // State for community count
+  const badges = [
+    {
+      title: "First Comment",
+      image:
+        "https://png.pngtree.com/png-clipart/20190604/original/pngtree-badge-png-image_996483.jpg",
+      counter: 1,
+      tag: "Comment",
+    },
+    {
+      title: "Commander",
+      image:
+        "https://png.pngtree.com/png-clipart/20190604/original/pngtree-badge-png-image_996483.jpg",
+      counter: 5,
+      tag: "Comment",
+    },
+    {
+      title: "Fighter",
+      image:
+        "https://png.pngtree.com/png-clipart/20190604/original/pngtree-badge-png-image_996483.jpg",
+      counter: 10,
+      tag: "Comment",
+    },
+    {
+      title: "First Post",
+      image:
+        "https://png.pngtree.com/png-clipart/20190604/original/pngtree-badge-png-image_996483.jpg",
+      counter: 1,
+      tag: "Post",
+    },
+    {
+      title: "Poster",
+      image:
+        "https://png.pngtree.com/png-clipart/20190604/original/pngtree-badge-png-image_996483.jpg",
+      counter: 5,
+      tag: "Post",
+    },
+    {
+      title: "Post Master",
+      image:
+        "https://png.pngtree.com/png-clipart/20190604/original/pngtree-badge-png-image_996483.jpg",
+      counter: 10,
+      tag: "Post",
+    },
+  ];
 
   const handleShowSubscribers = () => {
     fetchSubscribers();
@@ -53,44 +100,86 @@ const CommunityPage = () => {
       console.error("Failed to fetch subscribers:", err);
     }
   };
+  const fetchBadges = async () => {
+    try {
+      console.log("Id : ", user.userId);
+      const postCountResponse = await httpClient.get(
+        `/community/userPostCount/${id}/${user.userId}`
+      );
+      const commentCountResponse = await httpClient.get(
+        `/community/userCommentCount/${id}/${user.userId}`
+      );
+
+      const postCount = postCountResponse.data || 0; // Assuming response includes 'count'
+      const commentCount = commentCountResponse.data || 0; // Assuming response includes 'count'
+      setPostCount(postCount); // Set post count in state
+      setcommentCount(commentCount); // Set community count in state
+
+      console.log("Post Count:", postCount);
+      console.log("Comment Count:", commentCount);
+
+      // Update your state or UI accordingly if needed
+    } catch (err) {
+      console.error("Error fetching counts:", err);
+    }
+  };
 
   useEffect(() => {
-    fetchSubscribers();
-  }, [id]);
-
-  useEffect(() => {
-    const fetchCommunity = async () => {
-      setLoading(true); // Set loading to true when starting the fetch
+    const fetchData = async () => {
       try {
-        const response = await httpClient.get("/community/" + id);
-        const communityData = response.data;
-        setcommunityDb(communityData);
-        setDataOnDb(true);
-        // Check if the user is a member
-        console.log("User : ", user);
-        const userMembership = communityData.memberships.find(
-          (membership) => Number(membership.id.userId) === Number(user.userId)
-        );
-        setIsUserMember(!!userMembership); // Set to true if user is a member
-        // Check if the user is the owner
-        setIsUserOwner(userMembership && userMembership.role === "CREATOR");
-        console.log("Community:", response.data);
-      } catch (err) {
-        console.error(err);
-        setcommunityDb([]);
+        setLoading(true);
+
+        // Wait for all fetch functions to finish
+        await Promise.all([
+          fetchCommunity(),
+          fetchSubscribers(),
+          fetchBadges(),
+        ]);
+        console.log("Is User Member:", isUserMember);
+        console.log("Is User Owner:", isUserOwner);
+        console.log("Data from db:", dataFromDb);
+        console.log("Community", community);
+      } catch (error) {
+        console.error("Error fetching data:", error);
       } finally {
-        setLoading(false); // Set loading to false once fetch completes or fails
+        setLoading(false); // Ensure loading is set to false even if there's an error
       }
     };
-    fetchCommunity();
+
+    fetchData();
   }, [id]);
+
+  const fetchCommunity = async () => {
+    setLoading(true); // Set loading to true when starting the fetch
+    try {
+      const response = await httpClient.get("/community/" + id);
+      const communityData = response.data;
+      setcommunityDb(communityData);
+      setDataOnDb(true);
+      // Check if the user is a member
+      console.log("User : ", user);
+      const userMembership = communityData.memberships.find(
+        (membership) => Number(membership.id.userId) === Number(user.userId)
+      );
+      setIsUserMember(!!userMembership); // Set to true if user is a member
+      // Check if the user is the owner
+      setIsUserOwner(userMembership && userMembership.role === "CREATOR");
+      console.log("Community:", response.data);
+    } catch (err) {
+      console.error(err);
+      setcommunityDb([]);
+    } finally {
+      // setLoading(false); // Set loading to false once fetch completes or fails
+    }
+  };
+
   // Logging state changes
-  useEffect(() => {
-    console.log("Is User Member:", isUserMember);
-    console.log("Is User Owner:", isUserOwner);
-    console.log("Data from db:", dataFromDb);
-    console.log("Community", community);
-  }, [isUserMember, isUserOwner]);
+  // useEffect(() => {
+  //   console.log("Is User Member:", isUserMember);
+  //   console.log("Is User Owner:", isUserOwner);
+  //   console.log("Data from db:", dataFromDb);
+  //   console.log("Community", community);
+  // }, [isUserMember, isUserOwner]);
 
   console.log({ searchObject });
 
@@ -201,139 +290,179 @@ const CommunityPage = () => {
   const community = communityDb;
   if (loading) {
     // Display loading message or spinner
-    return <div>Loading...</div>;
-  }
-  if (!community) {
+    return (
+      <div>
+        <LoadingScreen />
+      </div>
+    );
+  } else if (!community) {
     return <div>Community not found</div>;
-  }
-  return (
-    <>
-      <PageMetaData title="Communities" />
-      <NavbarCommunity isSearchForm={setIsSearchForm} />
-      {isSearchForm && (
-        <div className="modal-overlay" onClick={handleCloseForm}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="close-button" onClick={handleCloseForm}>
-              &times;
-            </button>
-            <AdvancedSearchForm
-              formPlace="community"
-              community={community}
-              setSearchObject={setSearchObject}
-              setIsSearchForm={setIsSearchForm}
-              setIsSearch={setIsSearchCommunity}
-            />
-          </div>
-        </div>
-      )}
-
-      {showCreateTemplateForm && (
-        <div className="modal-overlay" onClick={handleCloseForm}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="close-button" onClick={handleCloseForm}>
-              &times;
-            </button>
-            <CreateTemplateForm
-              onTemplateCreated={addTemplate}
-              onClose={handleCloseForm}
-            />
-          </div>
-        </div>
-      )}
-      {showCreatePostForm && (
-        <div className="modal-overlay" onClick={handleCloseForm}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="close-button" onClick={handleCloseForm}>
-              &times;
-            </button>
-            <CreatePostForm
-              templates={community.templates}
-              onPostCreated={addPost}
-              onClose={handleCloseForm}
-            />
-          </div>
-        </div>
-      )}
-      <div className="community-page">
-        <div className="community-header-card">
-          <img
-            src={community.picture}
-            alt={community.name}
-            className="community-picture"
-          />
-          <div className="community-header-content">
-            <h1>{community.name}</h1>
-            <p>{community.description}</p>
-            <div className="community-stats">
-              <span>{community.posts.length} Posts</span> |
-              <span
-                className="subscribers-link"
-                onClick={handleShowSubscribers}
-                style={{ cursor: "pointer", color: "blue" }}
-              >
-                {community.memberships.length} Subscribers{" "}
-              </span>
+  } else {
+    return (
+      <>
+        <PageMetaData title="Communities" />
+        <NavbarCommunity isSearchForm={setIsSearchForm} />
+        {isSearchForm && (
+          <div className="modal-overlay" onClick={handleCloseForm}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <button className="close-button" onClick={handleCloseForm}>
+                &times;
+              </button>
+              <AdvancedSearchForm
+                formPlace="community"
+                community={community}
+                setSearchObject={setSearchObject}
+                setIsSearchForm={setIsSearchForm}
+                setIsSearch={setIsSearchCommunity}
+              />
             </div>
-            {/* <div className="community-categories">
+          </div>
+        )}
+
+        {showCreateTemplateForm && (
+          <div className="modal-overlay" onClick={handleCloseForm}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <button className="close-button" onClick={handleCloseForm}>
+                &times;
+              </button>
+              <CreateTemplateForm
+                onTemplateCreated={addTemplate}
+                onClose={handleCloseForm}
+              />
+            </div>
+          </div>
+        )}
+        {showCreatePostForm && (
+          <div className="modal-overlay" onClick={handleCloseForm}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <button className="close-button" onClick={handleCloseForm}>
+                &times;
+              </button>
+              <CreatePostForm
+                templates={community.templates}
+                onPostCreated={addPost}
+                onClose={handleCloseForm}
+              />
+            </div>
+          </div>
+        )}
+        <div className="community-page">
+          <div className="community-header-card">
+            <img
+              src={community.picture}
+              alt={community.name}
+              className="community-picture"
+            />
+            <div className="community-header-content">
+              <h1>{community.name}</h1>
+              <p>{community.description}</p>
+              <div className="community-stats">
+                <span>{community?.posts?.length || 0} Posts</span> |
+                <span
+                  className="subscribers-link"
+                  onClick={handleShowSubscribers}
+                  style={{ cursor: "pointer", color: "blue" }}
+                >
+                  {community.memberships.length} Subscribers{" "}
+                </span>
+              </div>
+              {/* <div className="community-categories">
               {community.categories.map((category, index) => (
                 <span key={index} className="category-tag">{category}</span>
               ))}
             </div> */}
-          </div>
-          {/* Button to open the form */}
-          {isUserOwner && (
-            <button onClick={handleOpenForm}>Create Template</button>
-          )}
-          {isUserMember && (
-            <button onClick={handleOpenPostForm}>Create Post</button>
-          )}
-          {!isUserMember && (
-            <button style={{ backgroundColor: "green" }} onClick={handleFollow}>
-              Follow
-            </button>
-          )}
-          {isUserMember && !isUserOwner && (
-            <button style={{ backgroundColor: "red" }} onClick={handleUnFollow}>
-              UnFollow
-            </button>
-          )}
-        </div>
-      </div>
-      <div>
-        {isSearchCommunity ? (
-          <ShowResultPage
-            onClickSearch={setIsSearchCommunity}
-            posts={searchResults}
-            header={`${searchResults.length} Post Results`}
-            memberResult={memberResult}
-          />
-        ) : community.posts.length > 0 ? (
-          <PostsView posts={community.posts} header={"Posts"} />
-        ) : (
-          <p>No posts available in this community.</p>
-        )}
-      </div>
-      {showSubscribersList && (
-        <div className="subscribers-modal">
-          <div className="modal-overlay" onClick={handleCloseSubscribers}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-              <button className="close-button" onClick={handleCloseSubscribers}>
-                &times;
+            </div>
+            {/* Button to open the form */}
+            {isUserOwner && (
+              <button onClick={handleOpenForm}>Create Template</button>
+            )}
+            {isUserMember && (
+              <button onClick={handleOpenPostForm}>Create Post</button>
+            )}
+            {!isUserMember && (
+              <button
+                style={{ backgroundColor: "green" }}
+                onClick={handleFollow}
+              >
+                Follow
               </button>
-              <h2>Subscribers</h2>
-              <ul className="subscribers-list">
-                {subscribers.map((subscriber, index) => (
-                  <li key={index}>
-                    {subscriber.username || "Unknown Subscriber"}
-                  </li>
-                ))}
-              </ul>
+            )}
+            {isUserMember && !isUserOwner && (
+              <button
+                style={{ backgroundColor: "red" }}
+                onClick={handleUnFollow}
+              >
+                UnFollow
+              </button>
+            )}
+          </div>
+        </div>
+        <div>
+          <div className="badges-section">
+            <h3>Badges</h3>
+            <div className="badges-list">
+              {badges.map((badge, index) => {
+                const isBlurred =
+                  (badge.tag === "Post" && postCount < badge.counter) ||
+                  (badge.tag === "Comment" && commentCount < badge.counter);
+
+                return (
+                  <div
+                    key={index}
+                    className={`badge ${isBlurred ? "badge--blurred" : ""}`}
+                  >
+                    <img
+                      src={badge.image}
+                      alt={badge.title}
+                      className="badge__image"
+                    />
+                    <span className="badge__title">{badge.title}</span>
+                  </div>
+                );
+              })}
             </div>
           </div>
+          {isSearchCommunity ? (
+            <ShowResultPage
+              onClickSearch={setIsSearchCommunity}
+              posts={searchResults}
+              header={`${searchResults.length} Post Results`}
+              memberResult={memberResult}
+            />
+          ) : community.posts.length > 0 ? (
+            <PostsView posts={community.posts} header={"Posts"} />
+          ) : (
+            <p>No posts available in this community.</p>
+          )}
         </div>
-      )}
-    </>
-  );
+        {showSubscribersList && (
+          <div className="subscribers-modal">
+            <div className="modal-overlay" onClick={handleCloseSubscribers}>
+              <div
+                className="modal-content"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button
+                  className="close-button"
+                  onClick={handleCloseSubscribers}
+                >
+                  &times;
+                </button>
+                <h2>Subscribers</h2>
+                <ul className="subscribers-list">
+                  {subscribers.map((subscriber, index) => (
+                    <li key={index}>
+                      {subscriber.username || "Unknown Subscriber"}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        )}
+      </>
+    );
+  }
 };
 
 export default CommunityPage;
