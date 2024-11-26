@@ -43,28 +43,28 @@ public class Community {
     @JsonIgnore
     private User owner;
 
-    @OneToMany(mappedBy = "community",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "community",fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.DELETE_ORPHAN)
     @JsonManagedReference("community-members")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<Membership> memberships;
 
-    @OneToMany(mappedBy = "community",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "community",fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.REMOVE)
     @JsonManagedReference("community-templates")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<Template> templates;
 
-    @OneToMany(mappedBy = "community",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "community",fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.REMOVE)
     @JsonManagedReference("community-posts")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @JsonIgnoreProperties({"community"})
     private Set<Post> posts;
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "community_tags",
             joinColumns = @JoinColumn(name = "community_id"),

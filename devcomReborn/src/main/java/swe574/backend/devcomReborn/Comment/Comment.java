@@ -35,12 +35,12 @@ public class Comment {
     @Column(nullable = false, length = 2000)
     private String content;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_author_id",nullable = false)
     @JsonIgnoreProperties({"memberships","password"})
     private User author;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id",nullable = false)
     @JsonBackReference("post-comments")
     @JsonIgnoreProperties({"community","template","voteCounter"})

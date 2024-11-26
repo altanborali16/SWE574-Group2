@@ -119,5 +119,9 @@ const CommunityImages =[
     "tag": "bilim",
     "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-t-RIz5hz89EnVo6iO1FI620y5flFabr5ew&s"
   },
+  {
+    "tag": "depression",
+    "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThwbVlM8__Ti0fj2orsWMGo1MH1rneD2eSMw&s"
+  },
 ];
 export default CommunityImages;

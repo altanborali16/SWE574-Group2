@@ -34,7 +34,7 @@ public class Template {
     @ToString.Exclude
     private Community community;
 
-    @OneToMany(mappedBy = "template",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "template",fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.REMOVE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
