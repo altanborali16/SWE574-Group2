@@ -42,7 +42,7 @@ const PostsView = ({ posts, header, setPosts }) => {
               <strong>Posted at:</strong> {new Date(post.time).toLocaleString()}
             </p>
             <p>
-               <strong>Posted by:</strong> {/*{auth.user.sub} */}
+            <strong>Posted by:</strong> {post.author.username}
             </p>
             <p>
               <strong>Template:</strong>{" "}

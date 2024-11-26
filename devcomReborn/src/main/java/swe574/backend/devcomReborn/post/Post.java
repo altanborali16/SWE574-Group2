@@ -35,23 +35,23 @@ public class Post {
     private LocalDateTime time;
 
     //TODO: create post returns user password lol
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id",nullable = false)
     @JsonIgnoreProperties({"memberships","password"})
     private User author;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "community_id",nullable = false)
     @JsonBackReference("community-posts")
     @JsonIgnoreProperties({"memberships","templates","posts"})
     private Community community;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "template_id",nullable = false)
     @JsonIgnoreProperties({"fields","community"})
     private Template template;
 
-    @OneToMany(mappedBy = "post",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "post",fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.REMOVE)
     @JsonManagedReference("post-contents")
     @EqualsAndHashCode.Exclude
@@ -62,7 +62,7 @@ public class Post {
     private int voteCounter;
 
     // New attribute to track users who voted
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "post_user_votes",
             joinColumns = @JoinColumn(name = "post_id"),
@@ -71,7 +71,7 @@ public class Post {
     @JsonIgnoreProperties({"memberships", "password", "posts"})
     private Set<User> voters;
 
-//    @ManyToMany(fetch = FetchType.EAGER)
+//    @ManyToMany(fetch = FetchType.LAZY)
 //    @JoinTable(
 //            name = "post_tags",
 //            joinColumns = @JoinColumn(name = "post_id"),
@@ -83,7 +83,7 @@ public class Post {
 //    private Set<Tag> tags;
 
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "post_tags",
             joinColumns = @JoinColumn(name = "post_id"),
@@ -93,7 +93,7 @@ public class Post {
     @ToString.Exclude
     private Set<Tag> tags;
 
-    @OneToMany(mappedBy = "post",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "post",fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.REMOVE)
     @JsonManagedReference("post-comments")
     @EqualsAndHashCode.Exclude

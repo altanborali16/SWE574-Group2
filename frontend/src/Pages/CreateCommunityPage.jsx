@@ -10,19 +10,19 @@ const CreateCommunityPage = () => {
   const {
     showNotification
   } = useNotificationContext();
-  useEffect(() => {
-    const fetchCommunityList = async () => {
-      try {
-        const response = await httpClient.get("/profile/currentProfile");
-        console.log("profile:", response.data);
-      } catch (err) {
-        console.error(err);
-      } finally {
-      }
-    };
+  // useEffect(() => {
+  //   const fetchCommunityList = async () => {
+  //     try {
+  //       const response = await httpClient.get("/profile/currentProfile");
+  //       console.log("profile:", response.data);
+  //     } catch (err) {
+  //       console.error(err);
+  //     } finally {
+  //     }
+  //   };
 
-    fetchCommunityList();
-  }, []);
+  //   fetchCommunityList();
+  // }, []);
   const [communityData, setCommunityData] = useState({
     name: "",
     description: "",
