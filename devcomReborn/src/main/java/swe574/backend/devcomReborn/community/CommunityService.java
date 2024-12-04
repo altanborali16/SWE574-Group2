@@ -194,7 +194,11 @@ public class CommunityService {
     }
 
     public List<Community> getRecommendedCommunities(User user) {
-        return communityRepository.findRecommendedCommunities(user);
+        List<Community> communities = communityRepository.findRecommendedCommunities(user);
+        if (communities.isEmpty()) {
+            return communityRepository.findByIsPrivateFalse();
+        }
+        return communities;
     }
 
 }

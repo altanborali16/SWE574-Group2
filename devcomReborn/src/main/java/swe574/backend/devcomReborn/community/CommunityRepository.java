@@ -38,4 +38,6 @@ public interface CommunityRepository extends JpaRepository<Community,Long> {
             AND com.isPrivate = false
             """)
     List<Community> findRecommendedCommunities(@Param("user") User user);
+
+    List<Community> findByIsPrivateFalse();
 }

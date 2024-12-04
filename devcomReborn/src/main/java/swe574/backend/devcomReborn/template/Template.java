@@ -1,6 +1,7 @@
 package swe574.backend.devcomReborn.template;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -16,6 +17,7 @@ import java.util.Set;
 @Entity
 @Builder
 @Table(name="templates")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Template {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

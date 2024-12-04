@@ -139,9 +139,12 @@ public class PostService {
 
     public List<Post> getRecommendedPosts(User user) {
         List<Community> communities = communityRepository.findRecommendedCommunities(user);
+        if (communities.isEmpty()) {
+            communities = communityRepository.findByIsPrivateFalse();
+        }
         List<Post> top10PostsFromAllCommunities = get10PostsFromAllCommunities(communities, Comparator.comparingInt(Post::getVoteCounter));
         List<Post> newest10PostsFromAllCommunities = get10PostsFromAllCommunities(communities, Comparator.comparing(Post::getTime));
-        return Stream.concat(top10PostsFromAllCommunities.stream(), newest10PostsFromAllCommunities.stream()).toList();
+        return Stream.concat(top10PostsFromAllCommunities.stream(), newest10PostsFromAllCommunities.stream()).distinct().toList();
     }
 
     private static List<Post> get10PostsFromAllCommunities(List<Community> communities, Comparator<Post> comparator) {
