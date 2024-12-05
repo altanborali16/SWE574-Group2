@@ -59,10 +59,16 @@ public class PostController {
     }
 
 
-    @GetMapping("/recommendations")
-    public ResponseEntity<List<Post>> getRecommendedPosts() {
+    @GetMapping("/recommendations-by-likes")
+    public ResponseEntity<List<Post>> getRecommendedPostsByLikes() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return ResponseEntity.ok(postService.getRecommendedPosts(user));
+        return ResponseEntity.ok(postService.getRecommendedPostsBasedOnLikes(user));
+    }
+
+    @GetMapping("/recommendations-by-tags")
+    public ResponseEntity<List<Post>> getRecommendedPostsByTags() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return ResponseEntity.ok(postService.getRecommendedPostsBasedOnMembership(user));
     }
 
 }

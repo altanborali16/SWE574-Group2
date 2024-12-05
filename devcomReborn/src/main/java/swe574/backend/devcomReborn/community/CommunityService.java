@@ -194,7 +194,7 @@ public class CommunityService {
     }
 
     public List<Community> getRecommendedCommunities(User user) {
-        List<Community> communities = communityRepository.findRecommendedCommunities(user);
+        List<Community> communities = communityRepository.findRecommendedCommunitiesBasedOnLikes(user);
         if (communities.isEmpty()) {
             return communityRepository.findByIsPrivateFalse();
         }
