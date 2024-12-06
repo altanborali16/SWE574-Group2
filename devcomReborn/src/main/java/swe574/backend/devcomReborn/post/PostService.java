@@ -32,6 +32,7 @@ public class PostService {
     //TODO: add validation to post creation
     @Transactional
     public Post createPost(Long communityId, Post post) {
+        checkFieldDataType(post);
         User creator = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Community community = communityRepository.findById(communityId).orElseThrow(() -> new RuntimeException("Community not found"));
         Template postTemplate = templateRepository.findById(post.getTemplate().getId()).orElseThrow(() -> new RuntimeException("Template not found"));
@@ -45,6 +46,13 @@ public class PostService {
         }
         postContentRepository.saveAll(post.getPostContents());
         return createdPost;
+    }
+
+    private void checkFieldDataType(Post post) {
+        post.getPostContents().stream()
+                .forEach(postContent -> postContent.getField()
+                        .getDataType()
+                        .validate(postContent.getValue()));
     }
 
     @Transactional
