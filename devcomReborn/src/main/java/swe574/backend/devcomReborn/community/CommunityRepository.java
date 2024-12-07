@@ -37,5 +37,35 @@ public interface CommunityRepository extends JpaRepository<Community,Long> {
             )
             AND com.isPrivate = false
             """)
-    List<Community> findRecommendedCommunities(@Param("user") User user);
+    List<Community> findRecommendedCommunitiesBasedOnLikes(@Param("user") User user);
+
+    @Query(value = """
+            SELECT com
+            FROM Community com
+            WHERE com IN (
+                SELECT DISTINCT c
+                FROM Community c, Community target
+                WHERE target IN (
+                    SELECT m.community
+                    FROM Membership m
+                    WHERE m.user = :user
+                )
+                AND c != target
+                AND EXISTS (
+                    SELECT t
+                    FROM target.tags t
+                    WHERE t MEMBER OF c.tags
+                )
+            )
+            AND NOT EXISTS (
+                SELECT m
+                FROM Membership m
+                WHERE m.community = com
+                AND m.user = :user
+            )
+            AND com.isPrivate = false
+            """)
+    List<Community> findRecommendedCommunitiesBasedOnMembership(@Param("user") User user);
+
+    List<Community> findByIsPrivateFalse();
 }
