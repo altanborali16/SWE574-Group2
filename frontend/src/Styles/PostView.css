@@ -250,4 +250,16 @@
   .downvote-button:hover {
     color: #dc3545;
   }
+  .geo-link {
+    color: inherit; /* Matches the text color of the surrounding text */
+    text-decoration: none; /* Removes the underline */
+    cursor: pointer; /* Adds a pointer cursor for clarity */
+    text-decoration: underline; /* Optional: underline on hover for clarity */
+    margin-bottom: 16px;
+  }
+  
+  .geo-link:hover {
+    text-decoration: underline; /* Optional: underline on hover for clarity */
+    color : blue
+  }
   
