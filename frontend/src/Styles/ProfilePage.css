@@ -73,10 +73,11 @@
     align-items: center;
     text-align: center;
   }
-  .badge--blurred {
-    opacity: 0.5; /* Reduced visibility */
-    filter: blur(2px); /* Add blur effect */
-    pointer-events: none; /* Prevent interaction */
+
+  .badge--blurred .badge__image,
+  .badge--blurred .badge__title {
+    filter: blur(2px); /* Blur only the image and title */
+    opacity: 0.5; /* Reduce visibility for blurred elements */
   }
   
   .badge__image {
