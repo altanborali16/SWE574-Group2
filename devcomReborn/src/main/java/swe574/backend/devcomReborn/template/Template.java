@@ -17,7 +17,6 @@ import java.util.Set;
 @Entity
 @Builder
 @Table(name="templates")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Template {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
