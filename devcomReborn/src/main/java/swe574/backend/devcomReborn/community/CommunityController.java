@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import swe574.backend.devcomReborn.Comment.CommentRepository;
 import org.springframework.web.multipart.MultipartFile;
 import swe574.backend.devcomReborn.community.dto.MemberDTO;
+import swe574.backend.devcomReborn.community.dto.MemberRoleAssignmentDTO;
 import swe574.backend.devcomReborn.user.User;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,12 @@ public class CommunityController {
 
         return ResponseEntity.ok(communityService.createCommunity(community));
     }
+
+    @PostMapping(value = "/{communityId}/assign-member-role", consumes = {"application/json", "application/json;charset=UTF-8"})
+    public ResponseEntity<String> assignMemberRole(@PathVariable("communityId") Long id, @RequestBody MemberRoleAssignmentDTO roleAssignmentDto){
+        return ResponseEntity.ok(communityService.assignMemberRole(id, roleAssignmentDto.getUserId(), roleAssignmentDto.getNewRole()));
+    }
+
 
     @PostMapping("/join/{id}")
     public ResponseEntity<Membership> joinCommunity(@PathVariable Long id){

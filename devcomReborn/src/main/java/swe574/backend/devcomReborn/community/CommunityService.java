@@ -14,14 +14,14 @@ import swe574.backend.devcomReborn.user.User;
 import swe574.backend.devcomReborn.user.UserRepository;
 import swe574.backend.devcomReborn.tag.Tag;
 import swe574.backend.devcomReborn.tag.TagRepository;
-import swe574.backend.devcomReborn.user.User;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.Set;
-import java.net.URL;
+
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
@@ -201,4 +201,22 @@ public class CommunityService {
         return communities;
     }
 
+    public String assignMemberRole(Long communityId, Long assigneeUserId, CommunityRole newRole) {
+        User assigner = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Community community = communityRepository.findById(communityId).orElseThrow();
+        MembershipCode assignerMembershipCode = new MembershipCode(assigner.getId(), community.getId());
+        Optional<Membership> assignerMembership = membershipRepository.findById(assignerMembershipCode);
+        if (assignerMembership.isEmpty() || !canAssignRole(assignerMembership.get().getRole())) throw new RuntimeException("User cannot assign roles");
+        MembershipCode assigneeMembershipCode = new MembershipCode(assigneeUserId, community.getId());
+        Optional<Membership> foundAssigneeMembership = membershipRepository.findById(assigneeMembershipCode);
+        if (foundAssigneeMembership.isEmpty()) throw new RuntimeException("User is not a member");
+        Membership assigneeMembership = foundAssigneeMembership.get();
+        assigneeMembership.setRole(newRole);
+        membershipRepository.save(assigneeMembership);
+        return "The user: " + assigneeMembership.getUser().getUsername() + " is given role: " + newRole;
+    }
+
+    private boolean canAssignRole(CommunityRole role) {
+        return CommunityRole.CREATOR == role || CommunityRole.ADMIN == role;
+    }
 }
