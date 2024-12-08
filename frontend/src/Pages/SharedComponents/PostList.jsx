@@ -253,9 +253,9 @@ const PostsView = ({ posts, header, setPosts }) => {
           [postId]: prevState[postId].map((comment, commentIndex) =>
             commentIndex === index
               ? {
-                  ...comment,
-                  replies: [...comment.replies, newReplyData], // Use the new reply object from the API
-                }
+                ...comment,
+                replies: [...comment.replies, newReplyData], // Use the new reply object from the API
+              }
               : comment
           ),
         }));
@@ -324,6 +324,18 @@ const PostsView = ({ posts, header, setPosts }) => {
                           height: "60vh",
                         }}
                       />
+                    </div>
+                  ) : content.field.dataType === "GEOLOCATION" ? (
+                    <div style={{marginBottom : "1rem"}}>
+                      <strong>{content.field.name}:</strong>{" "}
+                      <a
+                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(content.value)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="geo-link"
+                      >
+                        {content.value}
+                      </a>
                     </div>
                   ) : (
                     <p>
