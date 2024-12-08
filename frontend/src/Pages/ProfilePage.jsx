@@ -6,6 +6,12 @@ import { FaEdit } from "react-icons/fa";
 import httpClient from "../Helpers/HttpClient";
 import { jwtDecode } from "jwt-decode";
 import LoadingScreen from "./SharedComponents/LoadingScreen.jsx";
+import firstInteractionImage from "../assets/team.png";
+import firstCommunityImage from "../assets/number.png";
+import communityGrowerImage from "../assets/leader.png";
+import communitiestImage from "../assets/role-model.png";
+import postIdealistImage from "../assets/5.png";
+import thoughtLeaderImage from "../assets/anniversary.png";
 
 const ProfilePage = () => {
   const [user, setUser] = useState({});
@@ -84,47 +90,48 @@ const ProfilePage = () => {
   const badges = [
     {
       title: "First Community",
-      image:
-        "https://png.pngtree.com/png-clipart/20190604/original/pngtree-badge-png-image_996483.jpg",
+      image: firstCommunityImage,
       counter: 1,
       tag: "Community",
+      requirement: "Create your first community to earn this badge."
     },
     {
       title: "Community Grower",
-      image:
-        "https://png.pngtree.com/png-clipart/20190604/original/pngtree-badge-png-image_996483.jpg",
+      image: communityGrowerImage,
       counter: 5,
       tag: "Community",
+      requirement: "Create at least 5 communities to earn this badge."
     },
     {
       title: "Communitiest",
-      image:
-        "https://png.pngtree.com/png-clipart/20190604/original/pngtree-badge-png-image_996483.jpg",
+      image: communitiestImage,
       counter: 10,
       tag: "Community",
+      requirement: "Create at least 10 communities to earn this badge."
     },
     {
       title: "First Interaction",
-      image:
-        "https://png.pngtree.com/png-clipart/20190604/original/pngtree-badge-png-image_996483.jpg",
+      image: firstInteractionImage,
       counter: 1,
       tag: "Post",
+      requirement: "Make your first comment to earn this badge."
     },
     {
-      title: "Poster",
-      image:
-        "https://png.pngtree.com/png-clipart/20190604/original/pngtree-badge-png-image_996483.jpg",
+      title: "Post Idealist",
+      image: postIdealistImage,
       counter: 5,
       tag: "Post",
+      requirement: "Create at least 5  posts to earn this badge."
     },
     {
-      title: "Post Master",
-      image:
-        "https://png.pngtree.com/png-clipart/20190604/original/pngtree-badge-png-image_996483.jpg",
+      title: "Thought Leader",
+      image: thoughtLeaderImage,
       counter: 10,
       tag: "Post",
-    },
+      requirement: "Create at least 10  posts to earn this badge."
+    }
   ];
+  
 
   const handleEdit = () => {
     console.log("Edit Profile clicked");
@@ -180,29 +187,31 @@ const ProfilePage = () => {
           </div>
   
           <div className="badges-section">
-            <h3>Badges</h3>
-            <div className="badges-list">
-              {badges.map((badge, index) => {
-                const isBlurred =
-                  (badge.tag === "Post" && postCount < badge.counter) ||
-                  (badge.tag === "Community" && communityCount < badge.counter);
-  
-                return (
-                  <div
-                    key={index}
-                    className={`badge ${isBlurred ? "badge--blurred" : ""}`}
-                  >
-                    <img
-                      src={badge.image}
-                      alt={badge.title}
-                      className="badge__image"
-                    />
-                    <span className="badge__title">{badge.title}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+  <h3>Badges</h3>
+  <div className="badges-list">
+    {badges.map((badge, index) => {
+      const isBlurred =
+        (badge.tag === "Post" && postCount < badge.counter) ||
+        (badge.tag === "Community" && communityCount < badge.counter);
+
+      return (
+        <div
+          key={index}
+          className={`badge ${isBlurred ? "badge--blurred" : ""}`}
+        >
+          <img
+            src={badge.image}
+            alt={badge.title}
+            className="badge__image"
+          />
+          <span className="badge__title">{badge.title}</span>
+          <span className="badge__requirement-profile">{badge.requirement}</span>
+        </div>
+      );
+    })}
+  </div>
+</div>
+
   
           {showModal && (
             <div className="modal">

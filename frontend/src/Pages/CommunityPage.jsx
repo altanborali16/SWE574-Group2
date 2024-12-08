@@ -15,6 +15,13 @@ import MemberList from "./SharedComponents/MemberList";
 import ShowResultPage from "./SharedComponents/ShowResultPage";
 import LoadingScreen from "./SharedComponents/LoadingScreen";
 import CommunityImages from "../Helpers/CommunityImages";
+import topContibutorImage from "../assets/first-prize.png";
+import creativityImage from "../assets/creativity.png";
+import leadershipImage from "../assets/leadership.png";
+import commentImage from "../assets/comment.png";
+import likeImage from "../assets/like.png";
+import AspiringAuthorImage from "../assets/writer.png";
+
 
 const CommunityPage = () => {
   const { id } = useParams();
@@ -46,24 +53,23 @@ const CommunityPage = () => {
     {
       title: "First Comment",
       image:
-        "https://png.pngtree.com/png-clipart/20190604/original/pngtree-badge-png-image_996483.jpg",
+        commentImage,
       counter: 1,
       tag: "Comment",
       requirement: "Post at least 1 comment to earn this badge.",
     },
     {
-      title: "Commander",
+      title: "Innovator",
       image:
-        "https://png.pngtree.com/png-clipart/20190604/original/pngtree-badge-png-image_996483.jpg",
+        creativityImage,
       counter: 5,
       tag: "Comment",
       requirement: "Post at least 5 comments to earn this badge.",
 
     },
     {
-      title: "Fighter",
-      image:
-        "https://png.pngtree.com/png-clipart/20190604/original/pngtree-badge-png-image_996483.jpg",
+      title: "Visionary",
+      image: leadershipImage,
       counter: 10,
       tag: "Comment",
       requirement: "Post at least 10 comments to earn this badge.",
@@ -71,23 +77,21 @@ const CommunityPage = () => {
     {
       title: "First Post",
       image:
-        "https://png.pngtree.com/png-clipart/20190604/original/pngtree-badge-png-image_996483.jpg",
+        likeImage,
       counter: 1,
       tag: "Post",
       requirement: "Create at least 1 post to earn this badge.",
     },
     {
-      title: "Poster",
-      image:
-        "https://png.pngtree.com/png-clipart/20190604/original/pngtree-badge-png-image_996483.jpg",
+      title: "Aspiring Author",
+      image: AspiringAuthorImage,
       counter: 5,
       tag: "Post",
       requirement: "Create at least 5 posts to earn this badge.",
     },
     {
-      title: "Post Master",
-      image:
-        "https://png.pngtree.com/png-clipart/20190604/original/pngtree-badge-png-image_996483.jpg",
+      title: "Top Contributor",
+      image: topContibutorImage,
       counter: 10,
       tag: "Post",
       requirement: "Create at least 10 posts to earn this badge.",
@@ -454,7 +458,7 @@ const CommunityPage = () => {
                     className="badge__image"
                   />
                   <span className="badge__title">{badge.title}</span>
-                  <span className="badge__requirement">{badge.requirement}</span>
+                  <span className="badge__requirement-community">{badge.requirement}</span>
                 </div>
               );
             })}

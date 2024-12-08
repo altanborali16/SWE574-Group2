@@ -200,7 +200,7 @@
 
 
 /* Make sure the requirement isn't affected by the blur */
-.badge__requirement {
+.badge__requirement-community {
   visibility: hidden;
   opacity: 0;
   font-size: 12px;
@@ -220,7 +220,7 @@
 }
 
 /* Show requirement on badge hover, regardless of blur state */
-.badge:hover .badge__requirement {
+.badge:hover .badge__requirement-community {
   visibility: visible;
   opacity: 1;
 }
