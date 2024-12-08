@@ -73,10 +73,11 @@
     align-items: center;
     text-align: center;
   }
-  .badge--blurred {
-    opacity: 0.5; /* Reduced visibility */
-    filter: blur(2px); /* Add blur effect */
-    pointer-events: none; /* Prevent interaction */
+
+  .badge--blurred .badge__image,
+  .badge--blurred .badge__title {
+    filter: blur(2px); /* Blur only the image and title */
+    opacity: 0.5; /* Reduce visibility for blurred elements */
   }
   
   .badge__image {
@@ -113,7 +114,7 @@
 }
 
 /* Modal content */
-.modal-content {
+.modal-content-profile {
   background-color: #fff;
   padding: 20px;
   width: 90%;
@@ -180,4 +181,59 @@
 
 .modal-content .button-1:hover {
   background-color: #45a049;
+}
+
+.badge {
+  position: relative;
+  text-align: center;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer; /* Add pointer to indicate hoverable element */
+}
+
+.badge__requirement-profile {
+  visibility: hidden; /* Hidden by default */
+  opacity: 0;
+  font-size: 12px;
+  color: #ff6347; /* Highlight requirement text */
+  position: absolute;
+  top: 110%; /* Position below the badge */
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 5px 10px;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  z-index: 10;
+  white-space: nowrap; /* Prevent text wrapping */
+}
+
+.badge:hover .badge__requirement-profile {
+  visibility: visible; /* Show on hover */
+  opacity: 1;
+}
+
+/* MOBILE VIEW */
+
+
+@media (max-width: 768px) {
+  .badges-list {
+    display: grid; 
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 10px; 
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .badges-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }

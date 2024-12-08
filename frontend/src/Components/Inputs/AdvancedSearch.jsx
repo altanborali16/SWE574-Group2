@@ -6,7 +6,7 @@ function AdvancedSearch({ onClick }) {
 
   return (
     <div>
-      <nav>
+      <nav className="mobile-search">
         {/* Text Search Area */}
         <button onClick={() => onClick && onClick((prev) => !prev)}>
           Search...

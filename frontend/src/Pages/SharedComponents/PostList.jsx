@@ -90,7 +90,12 @@ const PostsView = ({ posts, header, setPosts }) => {
           post: { id: postId },
         });
 
-        const newCommentData = response.data; // Assuming this is the new comment object
+        const newCommentData = {
+          ...response.data,
+          replies: response.data.replies || [], // Ensure replies is an array
+        };
+        
+        console.log("New Comment Data: ", newCommentData);
         console.log("New Comment Data: ", newCommentData);
 
         const updatedPost = posts.find((post) => post.id === postId);
@@ -244,18 +249,22 @@ const PostsView = ({ posts, header, setPosts }) => {
           }
         );
 
-        const newReplyData = response.data; // Assuming this is the new reply object
+        const newReplyData = {
+          ...response.data,
+          replies: response.data.replies || [], // Ensure nested replies is an array
+        };
+    
         console.log("New Reply Data: ", newReplyData);
-
+    
         // Update the comments state
         setComments((prevState) => ({
           ...prevState,
-          [postId]: prevState[postId].map((comment, commentIndex) =>
-            commentIndex === index
+          [postId]: prevState[postId].map((comment) =>
+            comment.id === commentId
               ? {
-                ...comment,
-                replies: [...comment.replies, newReplyData], // Use the new reply object from the API
-              }
+                  ...comment,
+                  replies: [...(comment.replies || []), newReplyData], // Safely add the new reply
+                }
               : comment
           ),
         }));
@@ -313,16 +322,11 @@ const PostsView = ({ posts, header, setPosts }) => {
               {post.postContents.map((content, index) => (
                 <div key={index} className="post-content">
                   {content.field.dataType === "IMAGE" ? (
-                    <div>
+                    <div className="post-image">
                       <strong>{content.field.name}:</strong>
                       <img
                         src={content.value}
                         alt={content.field.name}
-                        style={{
-                          width: "60vh",
-                          maxWidth: "1000px",
-                          height: "60vh",
-                        }}
                       />
                     </div>
                   ) : content.field.dataType === "GEOLOCATION" ? (

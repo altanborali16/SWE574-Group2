@@ -74,3 +74,12 @@
   border-radius: 4px;
   width: 100%;
 }
+
+/* MOBILE VIEW */
+
+@media (max-width: 768px) { 
+  .mobile-search {
+    margin: 1rem 0;
+    text-align: center;
+  }
+}
