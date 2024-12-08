@@ -113,7 +113,7 @@
 }
 
 /* Modal content */
-.modal-content {
+.modal-content-profile {
   background-color: #fff;
   padding: 20px;
   width: 90%;
@@ -180,4 +180,22 @@
 
 .modal-content .button-1:hover {
   background-color: #45a049;
+}
+
+/* MOBILE VIEW */
+
+
+@media (max-width: 768px) {
+  .badges-list {
+    display: grid; 
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 10px; 
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .badges-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }

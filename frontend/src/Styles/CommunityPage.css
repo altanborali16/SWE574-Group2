@@ -142,7 +142,7 @@
   z-index: 1000;
 }
 
-.modal-content {
+.modal-content-community {
   background-color: #fff;
   padding: 20px;
   border-radius: 8px;
@@ -182,19 +182,112 @@
   align-items: center;
   text-align: center;
 }
-.badge--blurred {
-  opacity: 0.5; /* Reduced visibility */
-  filter: blur(2px); /* Add blur effect */
-  pointer-events: none; /* Prevent interaction */
+.badge--blurred .badge__image,
+.badge--blurred .badge__title {
+  filter: blur(2px); 
+  opacity: 0.5; 
 }
 
 .badge__image {
   width: 50px; /* Badge image size */
-  height: 50px;
+  height: 50px; 
 }
 
 .badge__title {
   margin-top: 5px; /* Space between image and title */
   font-size: 0.9rem; /* Adjust font size */
   color :black;
+}
+
+
+/* Make sure the requirement isn't affected by the blur */
+.badge__requirement {
+  visibility: hidden;
+  opacity: 0;
+  font-size: 12px;
+  color: red;
+  position: absolute  ;
+  top: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 5px 10px;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  white-space: nowrap;
+  z-index: 100;
+  pointer-events: none;
+}
+
+/* Show requirement on badge hover, regardless of blur state */
+.badge:hover .badge__requirement {
+  visibility: visible;
+  opacity: 1;
+}
+
+
+
+/* Optional: you might want to add this to make the container handle overlaps properly */
+.badges-list {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 20px; /* Add some space between badges */
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+}
+
+
+
+/* MOBILE VIEW */
+
+@media (max-width: 768px) {
+  .modal-content-community {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      width: 90%; 
+      max-width: 90%; 
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      position: relative;
+      margin: 0 auto; 
+  }
+    .badges-list {
+      display: grid; 
+      grid-template-columns: repeat(2, 1fr); 
+      gap: 10px; 
+      justify-content: center;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: -20px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5); 
+      display: flex;
+      align-items:normal;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .community-header-card {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 20px;
+          background-color: #f5f5f5;
+          border-radius: 12px;
+          margin-bottom: 20px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+  
+  @media (max-width: 480px) {
+    .badges-list {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
 }

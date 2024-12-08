@@ -206,7 +206,7 @@ const ProfilePage = () => {
   
           {showModal && (
             <div className="modal">
-              <div className="modal-content">
+              <div className="modal-content-profile">
                 <span className="close" onClick={handleCloseModal}>
                   &times;
                 </span>

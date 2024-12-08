@@ -49,6 +49,7 @@ const CommunityPage = () => {
         "https://png.pngtree.com/png-clipart/20190604/original/pngtree-badge-png-image_996483.jpg",
       counter: 1,
       tag: "Comment",
+      requirement: "Post at least 1 comment to earn this badge.",
     },
     {
       title: "Commander",
@@ -56,6 +57,8 @@ const CommunityPage = () => {
         "https://png.pngtree.com/png-clipart/20190604/original/pngtree-badge-png-image_996483.jpg",
       counter: 5,
       tag: "Comment",
+      requirement: "Post at least 5 comments to earn this badge.",
+
     },
     {
       title: "Fighter",
@@ -63,6 +66,7 @@ const CommunityPage = () => {
         "https://png.pngtree.com/png-clipart/20190604/original/pngtree-badge-png-image_996483.jpg",
       counter: 10,
       tag: "Comment",
+      requirement: "Post at least 10 comments to earn this badge.",
     },
     {
       title: "First Post",
@@ -70,6 +74,7 @@ const CommunityPage = () => {
         "https://png.pngtree.com/png-clipart/20190604/original/pngtree-badge-png-image_996483.jpg",
       counter: 1,
       tag: "Post",
+      requirement: "Create at least 1 post to earn this badge.",
     },
     {
       title: "Poster",
@@ -77,6 +82,7 @@ const CommunityPage = () => {
         "https://png.pngtree.com/png-clipart/20190604/original/pngtree-badge-png-image_996483.jpg",
       counter: 5,
       tag: "Post",
+      requirement: "Create at least 5 posts to earn this badge.",
     },
     {
       title: "Post Master",
@@ -84,6 +90,7 @@ const CommunityPage = () => {
         "https://png.pngtree.com/png-clipart/20190604/original/pngtree-badge-png-image_996483.jpg",
       counter: 10,
       tag: "Post",
+      requirement: "Create at least 10 posts to earn this badge.",
     },
   ];
 
@@ -311,7 +318,7 @@ const CommunityPage = () => {
         <NavbarCommunity isSearchForm={setIsSearchForm} />
         {isSearchForm && (
           <div className="modal-overlay" onClick={handleCloseForm}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-content-community" onClick={(e) => e.stopPropagation()}>
               <button className="close-button" onClick={handleCloseForm}>
                 &times;
               </button>
@@ -328,7 +335,7 @@ const CommunityPage = () => {
 
         {showCreateTemplateForm && (
           <div className="modal-overlay" onClick={handleCloseForm}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-content-community" onClick={(e) => e.stopPropagation()}>
               <button className="close-button" onClick={handleCloseForm}>
                 &times;
               </button>
@@ -341,7 +348,7 @@ const CommunityPage = () => {
         )}
         {showCreatePostForm && (
           <div className="modal-overlay" onClick={handleCloseForm}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-content-community" onClick={(e) => e.stopPropagation()}>
               <button className="close-button" onClick={handleCloseForm}>
                 &times;
               </button>
@@ -431,26 +438,27 @@ const CommunityPage = () => {
           <div className="badges-section">
             <h3>Badges</h3>
             <div className="badges-list">
-              {badges.map((badge, index) => {
-                const isBlurred =
-                  (badge.tag === "Post" && postCount < badge.counter) ||
-                  (badge.tag === "Comment" && commentCount < badge.counter);
+            {badges.map((badge, index) => {
+              const isBlurred =
+                (badge.tag === "Post" && postCount < badge.counter) ||
+                (badge.tag === "Comment" && commentCount < badge.counter);
 
-                return (
-                  <div
-                    key={index}
-                    className={`badge ${isBlurred ? "badge--blurred" : ""}`}
-                  >
-                    <img
-                      src={badge.image}
-                      alt={badge.title}
-                      className="badge__image"
-                    />
-                    <span className="badge__title">{badge.title}</span>
-                  </div>
-                );
-              })}
-            </div>
+              return (
+                <div
+                  key={index}
+                  className={`badge ${isBlurred ? "badge--blurred" : ""}`}
+                >
+                  <img
+                    src={badge.image}
+                    alt={badge.title}
+                    className="badge__image"
+                  />
+                  <span className="badge__title">{badge.title}</span>
+                  <span className="badge__requirement">{badge.requirement}</span>
+                </div>
+              );
+            })}
+          </div>
           </div>
           {isSearchCommunity ? (
             <ShowResultPage
@@ -473,7 +481,7 @@ const CommunityPage = () => {
           <div className="subscribers-modal">
             <div className="modal-overlay" onClick={handleCloseSubscribers}>
               <div
-                className="modal-content"
+                className="modal-content-community"
                 onClick={(e) => e.stopPropagation()}
               >
                 <button
