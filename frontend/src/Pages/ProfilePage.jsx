@@ -114,7 +114,7 @@ const ProfilePage = () => {
       image: firstInteractionImage,
       counter: 1,
       tag: "Post",
-      requirement: "Make your first comment to earn this badge."
+      requirement: "Create your first post to earn this badge."
     },
     {
       title: "Post Idealist",
