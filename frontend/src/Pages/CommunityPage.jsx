@@ -298,7 +298,7 @@ const CommunityPage = () => {
   };
   const handleUnFollow = async () => {
     try {
-      const res = await httpClient.post("/community/leave/" + id);
+      const res = await httpClient.delete("/community/leave/" + id);
       console.log("Res : ", res);
       window.location.href = window.location.href; // This will refresh the page
     } catch (error) {
