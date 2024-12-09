@@ -44,6 +44,10 @@ public class CommunityController {
         return ResponseEntity.ok(communityService.assignMemberRole(id, roleAssignmentDto.getUserId(), roleAssignmentDto.getNewRole()));
     }
 
+    @DeleteMapping("/remove-member/{communityId}/{userId}")
+    public ResponseEntity<String> removeMember(@PathVariable Long userId, @PathVariable Long communityId) {
+        return ResponseEntity.ok(communityService.removeMember(userId, communityId));
+    }
 
     @PostMapping("/join/{id}")
     public ResponseEntity<Membership> joinCommunity(@PathVariable Long id){

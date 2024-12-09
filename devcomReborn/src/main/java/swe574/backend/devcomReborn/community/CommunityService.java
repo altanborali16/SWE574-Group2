@@ -206,7 +206,7 @@ public class CommunityService {
         Community community = communityRepository.findById(communityId).orElseThrow();
         MembershipCode assignerMembershipCode = new MembershipCode(assigner.getId(), community.getId());
         Optional<Membership> assignerMembership = membershipRepository.findById(assignerMembershipCode);
-        if (assignerMembership.isEmpty() || !canAssignRole(assignerMembership.get().getRole())) throw new RuntimeException("User cannot assign roles");
+        if (assignerMembership.isEmpty() || !canManageUsers(assignerMembership.get().getRole())) throw new RuntimeException("User cannot assign roles");
         MembershipCode assigneeMembershipCode = new MembershipCode(assigneeUserId, community.getId());
         Optional<Membership> foundAssigneeMembership = membershipRepository.findById(assigneeMembershipCode);
         if (foundAssigneeMembership.isEmpty()) throw new RuntimeException("User is not a member");
@@ -216,7 +216,23 @@ public class CommunityService {
         return "The user: " + assigneeMembership.getUser().getUsername() + " is given role: " + newRole;
     }
 
-    private boolean canAssignRole(CommunityRole role) {
+    private boolean canManageUsers(CommunityRole role) {
         return CommunityRole.CREATOR == role || CommunityRole.ADMIN == role;
+    }
+
+    public String removeMember(Long userId, Long communityId) {
+        User remover = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Community community = communityRepository.findById(communityId).orElseThrow();
+        MembershipCode removerMembershipCode = new MembershipCode(remover.getId(), community.getId());
+        Optional<Membership> removerMembership = membershipRepository.findById(removerMembershipCode);
+        if (removerMembership.isEmpty() || !canManageUsers(removerMembership.get().getRole())) throw new RuntimeException("User cannot remove members from community");
+        MembershipCode removedUserMembershipCode = new MembershipCode(userId, community.getId());
+        Optional<Membership> foundMembershipToRemove = membershipRepository.findById(removedUserMembershipCode);
+        if (foundMembershipToRemove.isEmpty()) throw new RuntimeException("User is not a member");
+        Membership membershipToRemove = foundMembershipToRemove.get();
+        if (membershipToRemove.getRole().equals(CommunityRole.CREATOR))
+            throw new RuntimeException("As the community creator you can not leave the community!");
+        membershipRepository.delete(membershipToRemove);
+        return "The membership for user: " + membershipToRemove.getUser().getUsername() + " is removed";
     }
 }
