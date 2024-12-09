@@ -35,7 +35,7 @@ public interface CommunityRepository extends JpaRepository<Community,Long> {
                 WHERE m.community = com
                 AND m.user = :user
             )
-            AND com.isPrivate = false
+            AND com.privateCommunity = false
             """)
     List<Community> findRecommendedCommunitiesBasedOnLikes(@Param("user") User user);
 
@@ -63,9 +63,9 @@ public interface CommunityRepository extends JpaRepository<Community,Long> {
                 WHERE m.community = com
                 AND m.user = :user
             )
-            AND com.isPrivate = false
+            AND com.privateCommunity = false
             """)
     List<Community> findRecommendedCommunitiesBasedOnMembership(@Param("user") User user);
 
-    List<Community> findByIsPrivateFalse();
+    List<Community> findByprivateCommunityFalse();
 }

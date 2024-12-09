@@ -140,7 +140,7 @@ public class PostService {
     public List<Post> getRecommendedPostsBasedOnLikes(User user) {
         List<Community> communities = communityRepository.findRecommendedCommunitiesBasedOnLikes(user);
         if (communities.isEmpty()) {
-            communities = communityRepository.findByIsPrivateFalse();
+            communities = communityRepository.findByprivateCommunityFalse();
         }
         List<Post> top10PostsFromAllCommunities = get10PostsFromAllCommunities(communities, Comparator.comparingInt(Post::getVoteCounter));
         List<Post> newest10PostsFromAllCommunities = get10PostsFromAllCommunities(communities, Comparator.comparing(Post::getTime));
@@ -150,7 +150,7 @@ public class PostService {
     public List<Post> getRecommendedPostsBasedOnMembership(User user) {
         List<Community> communities = communityRepository.findRecommendedCommunitiesBasedOnMembership(user);
         if (communities.isEmpty()) {
-            communities = communityRepository.findByIsPrivateFalse();
+            communities = communityRepository.findByprivateCommunityFalse();
         }
         List<Post> top10PostsFromAllCommunities = get10PostsFromAllCommunities(communities, Comparator.comparingInt(Post::getVoteCounter));
         List<Post> newest10PostsFromAllCommunities = get10PostsFromAllCommunities(communities, Comparator.comparing(Post::getTime));

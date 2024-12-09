@@ -27,8 +27,8 @@ public class Community {
     private String name;
     private String communityDescription;
     @Column(name = "is_private",nullable = false)
-    private boolean isPrivate;
-    private boolean isArchived;
+    private boolean privateCommunity;
+    private boolean archivedCommunity;
     @Lob
     @Column(name = "image_data")
     private byte[] imageData;
