@@ -39,9 +39,10 @@ public class Post {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "community_id",nullable = false)
-// Yana: Commented out the following annotations to be able to return the communityId
-//    @JsonBackReference("community-posts")
-//    @JsonIgnoreProperties({"memberships","templates","posts"})
+    // Yana: Commented out the following annotations to be able to return the communityId
+    // Altan : Commented in because it is creating issues on comments replys etc...
+    @JsonBackReference("community-posts")
+    @JsonIgnoreProperties({"memberships","templates","posts"})
     @JsonIncludeProperties({ "id" })
     private Community community;
 
