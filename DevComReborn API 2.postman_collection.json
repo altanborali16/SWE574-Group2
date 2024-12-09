@@ -951,14 +951,19 @@
 			"name": "Recommendations",
 			"item": [
 				{
-					"name": "Get recommended posts",
+					"name": "Get recommended posts based on  membership",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
 					"request": {
 						"auth": {
 							"type": "bearer",
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsInN1YiI6Im9zbWFuQGtvc2hhbi5jb20iLCJpYXQiOjE3MzIyMDIyODYsImV4cCI6MTczMjI4ODY4Nn0.sI3Fi5w1KxeNc0toYO6fzL9GwPg8x4R_Vq_XXJTMg-k",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsInN1YiI6InRlcnJ5QHRlcnJ5LmNvbSIsImlhdCI6MTczMzY2NjcwMCwiZXhwIjoxNzMzNzUzMTAwfQ.yd7O-fPKIwqFNoLsVUXRKTeAaWUFtnzoCt81ID3EeGg",
 									"type": "string"
 								}
 							]
@@ -966,7 +971,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/post/recommendations",
+							"raw": "http://localhost:8080/post/recommendations-by-tags",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -974,7 +979,42 @@
 							"port": "8080",
 							"path": [
 								"post",
-								"recommendations"
+								"recommendations-by-tags"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get recommended posts based on  likes",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsInN1YiI6InRlcnJ5QHRlcnJ5LmNvbSIsImlhdCI6MTczMzY2NjcwMCwiZXhwIjoxNzMzNzUzMTAwfQ.yd7O-fPKIwqFNoLsVUXRKTeAaWUFtnzoCt81ID3EeGg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/post/recommendations-by-tags",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"post",
+								"recommendations-by-tags"
 							]
 						}
 					},
@@ -1005,6 +1045,93 @@
 							"path": [
 								"community",
 								"recommendations"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin Operations",
+			"item": [
+				{
+					"name": "Assign member role",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsInN1YiI6InRlcnJ5QHRlcnJ5LmNvbSIsImlhdCI6MTczMzY2NjcwMCwiZXhwIjoxNzMzNzUzMTAwfQ.yd7O-fPKIwqFNoLsVUXRKTeAaWUFtnzoCt81ID3EeGg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"123\",\r\n    \"newRole\": \"ADMIN\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/community/1/assign-member-role",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"community",
+								"1",
+								"assign-member-role"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Kick out a community member",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjMsInN1YiI6InRlcnJ5QHRlcnJ5LmNvbSIsImlhdCI6MTczMzczMjA0OSwiZXhwIjoxNzMzODE4NDQ5fQ.3QVkYUZ7mE_x_yXpIMujd1SP_exs93OnXn1LLuIpQ_I",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/community/remove-member/1/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"community",
+								"remove-member",
+								"1",
+								"2"
 							]
 						}
 					},

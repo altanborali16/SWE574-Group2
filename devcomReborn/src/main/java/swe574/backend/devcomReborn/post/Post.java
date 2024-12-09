@@ -1,9 +1,6 @@
 package swe574.backend.devcomReborn.post;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
@@ -42,8 +39,11 @@ public class Post {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "community_id",nullable = false)
+    // Yana: Commented out the following annotations to be able to return the communityId
+    // Altan : Commented in because it is creating issues on comments replys etc...
     @JsonBackReference("community-posts")
     @JsonIgnoreProperties({"memberships","templates","posts"})
+    @JsonIncludeProperties({ "id" })
     private Community community;
 
     @ManyToOne(fetch = FetchType.LAZY)

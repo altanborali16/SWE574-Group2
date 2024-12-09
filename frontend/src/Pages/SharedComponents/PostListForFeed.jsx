@@ -65,6 +65,18 @@ const PostsView = ({ posts, header, setPosts }) => {
                         }}
                       />
                     </div>
+                  ) : content.field.dataType === "GEOLOCATION" ? (
+                    <div style={{marginBottom : "1rem"}}>
+                      <strong>{content.field.name}:</strong>{" "}
+                      <a
+                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(content.value)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="geo-link"
+                      >
+                        {content.value}
+                      </a>
+                    </div>
                   ) : (
                     <p>
                       <strong>{content.field.name}:</strong> {content.value}

@@ -247,7 +247,44 @@
     color: #007bff;
   }
   
-  .downvote-button:hover {
-    color: #dc3545;
+  .post-image img {
+    max-width: 600px;
+    height: auto;
+    border-radius: 8px;
+    margin-top: 10px;
+  }
+
+
+  .geo-link {
+    color: inherit; /* Matches the text color of the surrounding text */
+    text-decoration: none; /* Removes the underline */
+    cursor: pointer; /* Adds a pointer cursor for clarity */
+    text-decoration: underline; /* Optional: underline on hover for clarity */
+    margin-bottom: 16px;
   }
   
+  .geo-link:hover {
+    text-decoration: underline; /* Optional: underline on hover for clarity */
+    color : blue
+  }
+  
+/* MOBILE VIEW */
+
+@media (max-width: 768px) { 
+  .post-image img {
+    max-width: 300px;
+    height: auto;
+    border-radius: 8px;
+    margin-top: 10px;
+  }
+  .posts-view {
+    display: grid;
+    gap: 20px;
+    width: 100%;
+    padding: 50px;
+    margin: 0 auto;
+    max-height: 100vh;
+    overflow-y: auto;
+    box-sizing: border-box;
+  }
+}

@@ -1,4 +1,4 @@
-/* Basic page styling */
+
 .communities-page {
   display: flex;
   flex-direction: column;
@@ -139,7 +139,7 @@
 }
 
 /* Responsive adjustments */
-@media (min-width: 768px) {
+@media (max-width: 768px) {
   .communities-page h1 {
     font-size: 2.5rem;
   }
@@ -151,7 +151,27 @@
   .community-card__image {
     height: 200px;
   }
+  .communities-page {
+    width: 100%;
+    max-width: 800px; /* or whatever max-width you prefer */
+    margin: 0 auto;
+    padding-bottom: 20px; /* Add some padding at the bottom */
 }
+.community-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: #f4f6f8;
+  overflow-y: scroll; 
+  height: calc(100vh - 60px); 
+  width: 100%;
+  position: fixed; 
+
+}
+}
+
+
 
 /* @media (min-width: 1024px) {
   .community-list {

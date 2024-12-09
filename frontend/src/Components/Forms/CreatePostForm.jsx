@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import "../../Styles/CreatePostFrom.css";
+import { useNotificationContext } from "../../Context/useNotificationContext";
 
 const CreatePostForm = ({ templates, onPostCreated, onClose }) => {
   const [selectedTemplate, setSelectedTemplate] = useState(null);
+  const { showNotification } = useNotificationContext(); // Use the notification context
   const [postData, setPostData] = useState({
     title: "",
     template: { id: null },
@@ -47,14 +49,26 @@ const CreatePostForm = ({ templates, onPostCreated, onClose }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+  
+    // Check if a template is selected
+    if (!postData.template.id) {
+      showNotification({
+        title: "Error",
+        message: "Please select a template before creating a post.",
+        variant: "danger",
+      });
+      return;
+    }
+  
     const now = new Date();
     const currentTime = now.toISOString().slice(0, 19); // "YYYY-MM-DDTHH:MM:SS"
     const finalPostData = {
       ...postData,
       time: currentTime, // Automatically set the time to the current timestamp
     };
-
+  
     console.log("Post Data:", finalPostData);
+  
     // Here you can make an API call to save the post
     if (onPostCreated) {
       onPostCreated(finalPostData); // Notify parent component if needed
@@ -63,6 +77,11 @@ const CreatePostForm = ({ templates, onPostCreated, onClose }) => {
     if (onClose) {
       onClose();
     }
+    showNotification({
+      title: "Success",
+      message: "Post created successfully!",
+      variant: "success",
+    });
   };
 
   return (
