@@ -85,7 +85,7 @@ const PostsView = ({ posts, header, setPosts }) => {
                 </div>
               ))}
             </div>
-            <button onClick={() => onNavigateClick(post.communityId)}>Check Community</button>
+            <button onClick={() => onNavigateClick(post.community.id)}>Check Community</button>
           </div>
         ))}
       </div>
