@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import "../../Styles/PostView.css";
 import {
   FaReply,
@@ -12,9 +12,10 @@ import LoadingScreen from "../SharedComponents/LoadingScreen";
 import { useParams } from "react-router-dom";
 import { useNotificationContext } from "../../Context/useNotificationContext.jsx";
 
-const PostsView = ({ posts, header, setPosts }) => {
+const PostsView = ({ posts, header, setPosts, isPrivate }) => {
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
+  const [isMember, setIsMember] = useState(false);
   // State to hold comments for each post, each comment can have nested replies
   const [comments, setComments] = useState(
     posts.reduce((acc, post) => {
@@ -55,6 +56,7 @@ const PostsView = ({ posts, header, setPosts }) => {
   // Example usage
   const replyIds = getReplyIds(posts);
   console.log("Reply IDs:", replyIds);
+  console.log(isPrivate);
 
   // State to hold new reply text for each comment
   const [newReply, setNewReply] = useState({});
@@ -196,6 +198,42 @@ const PostsView = ({ posts, header, setPosts }) => {
     }
   };
 
+  const user = localStorage.getItem("token")
+  ? jwtDecode(localStorage.getItem("token"))
+  : null;
+
+  const [subscribers, setSubscribers] = useState([]);
+  const fetchSubscribers = async () => {
+    if (header !== "Posts") {
+      setIsMember(true);
+        return;
+    }
+    try {
+      const response = await httpClient.get("community/members/" + id);
+      console.log("Subscribers:", response.data);
+
+      setSubscribers(response.data);
+      
+      if (user) {
+        const userId = user.userId; 
+        const isUserMember = response.data.some(
+          (subscriber) => subscriber.id === userId
+        );
+        setIsMember(isUserMember); 
+        console.log("Is User Member:", isUserMember);
+  
+      }
+
+    } catch (err) {
+      console.error("Failed to fetch subscribers:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchSubscribers();
+  }, [id]);
+
+
   // const handleDownvote = async (postId) => {
   //   const postIndex = localPosts.findIndex((post) => post.id === postId);
   //   if (postIndex === -1) return;
@@ -299,174 +337,170 @@ const PostsView = ({ posts, header, setPosts }) => {
   return (
     <div className="posts-view">
       <h1>{header}</h1>
-      <div className="posts-container">
-        {posts.map((post) => (
-          <div key={post.id} className="post-card">
-            <h2>
-              {" "}
-              <span>Title:</span> {post.title}
-            </h2>
-            <hr></hr>
-            <p>
-              <strong>Posted at:</strong> {new Date(post.time).toLocaleString()}
-            </p>
-            <p>
-              <strong>Posted by:</strong> {post.author.username}
-            </p>
-            <p>
-              <strong>Template:</strong>{" "}
-              {post.template ? post.template.name : "No Template"}
-            </p>
-            {/* Display post contents dynamically */}
-            <div className="post-contents">
-              {post.postContents.map((content, index) => (
-                <div key={index} className="post-content">
-                  {content.field.dataType === "IMAGE" ? (
-                    <div className="post-image">
-                      <strong>{content.field.name}:</strong>
-                      <img
-                        src={content.value}
-                        alt={content.field.name}
-                      />
-                    </div>
-                  ) : content.field.dataType === "GEOLOCATION" ? (
-                    <div style={{marginBottom : "1rem"}}>
-                      <strong>{content.field.name}:</strong>{" "}
-                      <a
-                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(content.value)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="geo-link"
-                      >
-                        {content.value}
-                      </a>
-                    </div>
-                  ) : (
-                    <p>
-                      <strong>{content.field.name}:</strong> {content.value}
-                    </p>
-                  )}
-                </div>
-              ))}
-            </div>
-            <hr></hr>
-            <div className="vote-buttons">
-              <button
-                className="upvote-button"
-                onClick={() => handleUpvote(post.id)}
-              >
-                <FaThumbsUp /> Upvote ({post.voteCounter || 0})
-              </button>
-              {/* <button
-                className="downvote-button"
-                onClick={() => handleDownvote(post.id)}
-              >
-                <FaThumbsDown /> Downvote ({post.downvotes || 0})
-              </button> */}
-            </div>
-
-            {/* Comment Section */}
-            <div className="comment-section">
+     
+        <div className={`posts-container ${ isPrivate && !isMember ? "post--blurred" : ""}`}> 
+          {posts.map((post) => (
+            <div key={post.id} className="post-card">
+              <h2>
+                {" "}
+                <span>Title:</span> {post.title}
+              </h2>
               <hr></hr>
-              <h3>Comments</h3>
-              {(comments[post.id] || []).length > 0 ? (
-                (comments[post.id] || [])
-                  .filter((comment) => !replyIds.includes(comment.id)) // Exclude comments whose id is in replyIds
-                  .map((comment, index) => (
-                    <div key={index} className="comment-item">
-                      <>
-                        <div className="comment-content">
-                          <p>
-                            <strong>Posted by:</strong>{" "}
-                            {comment.author.username}
-                          </p>
-                          <p>
-                            <strong>Posted at:</strong>{" "}
-                            {new Date(comment.time).toLocaleString()}
-                          </p>
-                          <p className="comment">{comment.content}</p>
-                        </div>
-                        {/* Reply Section */}
-                        <div className="reply-section">
-                          {(comment.replies || []).length > 0 && (
-                            <div className="replies-list">
-                              {comment.replies.map((comment, replyIndex) => (
-                                <div key={replyIndex} className="reply-item">
-                                  <p>
-                                    <strong>Posted by:</strong>{" "}
-                                    {comment.author.username}
-                                  </p>
-                                  <p>
-                                    <strong>Posted at:</strong>{" "}
-                                    {new Date(comment.time).toLocaleString()}
-                                  </p>
-                                  <p className="reply">{comment.content}</p>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                          <div className="reply-button-wrapper">
-                            <span>Reply</span>
-                            <FaReply
-                              className="reply-icon"
-                              onClick={() =>
-                                handleReplyButtonClick(post.id, index)
-                              }
-                            />
-                          </div>
-                          {replyFormVisible[`${post.id}-${index}`] && (
-                            <div className="add-reply">
-                              <textarea
-                                value={newReply[`${post.id}-${index}`] || ""}
-                                onChange={(e) =>
-                                  handleReplyChange(
-                                    post.id,
-                                    index,
-                                    e.target.value
-                                  )
-                                }
-                                placeholder="Write a reply..."
-                                className="reply-input"
-                              />
-                              <button
-                                onClick={() =>
-                                  handleAddReply(post.id, index, comment.id)
-                                }
-                                className="reply-button"
-                              >
-                                Reply
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      </>
-                    </div>
-                  ))
-              ) : (
-                <p className="no-comments">No comments yet.</p>
-              )}
-
-              {/* Text area for adding comments */}
-              <div className="add-comment">
-                <textarea
-                  value={newComment[post.id]}
-                  onChange={(e) => handleCommentChange(post.id, e.target.value)}
-                  placeholder="Write a comment..."
-                  className="comment-input"
-                />
+              <p>
+                <strong>Posted at:</strong> {new Date(post.time).toLocaleString()}
+              </p>
+              <p>
+                <strong>Posted by:</strong> {post.author.username}
+              </p>
+              <p>
+                <strong>Template:</strong>{" "}
+                {post.template ? post.template.name : "No Template"}
+              </p>
+              {/* Display post contents dynamically */}
+              <div className="post-contents">
+                {post.postContents.map((content, index) => (
+                  <div key={index} className="post-content">
+                    {content.field.dataType === "IMAGE" ? (
+                      <div className="post-image">
+                        <strong>{content.field.name}:</strong>
+                        <img
+                          src={content.value}
+                          alt={content.field.name}
+                        />
+                      </div>
+                    ) : content.field.dataType === "GEOLOCATION" ? (
+                      <div style={{ marginBottom: "1rem" }}>
+                        <strong>{content.field.name}:</strong>{" "}
+                        <a
+                          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(content.value)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="geo-link"
+                        >
+                          {content.value}
+                        </a>
+                      </div>
+                    ) : (
+                      <p>
+                        <strong>{content.field.name}:</strong> {content.value}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <hr></hr>
+              <div className="vote-buttons">
                 <button
-                  onClick={() => handleAddComment(post.id)}
-                  className="comment-button"
+                  className="upvote-button"
+                  onClick={() => handleUpvote(post.id)}
                 >
-                  Comment
+                  <FaThumbsUp /> Upvote ({post.voteCounter || 0})
                 </button>
               </div>
+  
+              {/* Comment Section */}
+              <div className="comment-section">
+                <hr></hr>
+                <h3>Comments</h3>
+                {(comments[post.id] || []).length > 0 ? (
+                  (comments[post.id] || [])
+                    .filter((comment) => !replyIds.includes(comment.id)) // Exclude comments whose id is in replyIds
+                    .map((comment, index) => (
+                      <div key={index} className="comment-item">
+                        <>
+                          <div className="comment-content">
+                            <p>
+                              <strong>Posted by:</strong>{" "}
+                              {comment.author.username}
+                            </p>
+                            <p>
+                              <strong>Posted at:</strong>{" "}
+                              {new Date(comment.time).toLocaleString()}
+                            </p>
+                            <p className="comment">{comment.content}</p>
+                          </div>
+                          {/* Reply Section */}
+                          <div className="reply-section">
+                            {(comment.replies || []).length > 0 && (
+                              <div className="replies-list">
+                                {comment.replies.map((comment, replyIndex) => (
+                                  <div key={replyIndex} className="reply-item">
+                                    <p>
+                                      <strong>Posted by:</strong>{" "}
+                                      {comment.author.username}
+                                    </p>
+                                    <p>
+                                      <strong>Posted at:</strong>{" "}
+                                      {new Date(comment.time).toLocaleString()}
+                                    </p>
+                                    <p className="reply">{comment.content}</p>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                            <div className="reply-button-wrapper">
+                              <span>Reply</span>
+                              <FaReply
+                                className="reply-icon"
+                                onClick={() =>
+                                  handleReplyButtonClick(post.id, index)
+                                }
+                              />
+                            </div>
+                            {replyFormVisible[`${post.id}-${index}`] && (
+                              <div className="add-reply">
+                                <textarea
+                                  value={newReply[`${post.id}-${index}`] || ""}
+                                  onChange={(e) =>
+                                    handleReplyChange(
+                                      post.id,
+                                      index,
+                                      e.target.value
+                                    )
+                                  }
+                                  placeholder="Write a reply..."
+                                  className="reply-input"
+                                />
+                                <button
+                                  onClick={() =>
+                                    handleAddReply(post.id, index, comment.id)
+                                  }
+                                  className="reply-button"
+                                >
+                                  Reply
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        </>
+                      </div>
+                    ))
+                ) : (
+                  <p className="no-comments">No comments yet.</p>
+                )}
+  
+                {/* Text area for adding comments */}
+                <div className="add-comment">
+                  <textarea
+                    value={newComment[post.id]}
+                    onChange={(e) => handleCommentChange(post.id, e.target.value)}
+                    placeholder="Write a comment..."
+                    className="comment-input"
+                  />
+                  <button
+                    onClick={() => handleAddComment(post.id)}
+                    className="comment-button"
+                  >
+                    Comment
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
     </div>
   );
+  
 };
 
 export default PostsView;
