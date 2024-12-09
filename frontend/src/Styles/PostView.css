@@ -267,6 +267,13 @@
     text-decoration: underline; /* Optional: underline on hover for clarity */
     color : blue
   }
+
+  .post--blurred {
+    filter: blur(2px); /* Blur only the image and title */
+    opacity: 0.5; /* Reduce visibility for blurred elements */
+    pointer-events: none;
+  }
+ 
   
 /* MOBILE VIEW */
 
