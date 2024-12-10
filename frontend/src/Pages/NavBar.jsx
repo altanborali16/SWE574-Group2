@@ -4,6 +4,7 @@ import { NavLink } from "react-router-dom";
 import "../Styles/Navbar.css"; // Make sure the path is correct
 import { useAuthContext } from "../Context/useAuthContext";
 import AdvancedSearch from "../Components/Inputs/AdvancedSearch";
+import Logo from "../assets/Community_Logo.png"
 
 const Navbar = ({ isSearchForm }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -25,7 +26,7 @@ const Navbar = ({ isSearchForm }) => {
       <div className="navbar__logo">
         <NavLink to="/">
           <img
-            src="https://upload.wikimedia.org/wikipedia/commons/2/25/Community_Notes_logo.png"
+            src={Logo}
             alt="Logo"
             style={{ width: "50px", height: "auto" }} // Adjust size as needed
           />
