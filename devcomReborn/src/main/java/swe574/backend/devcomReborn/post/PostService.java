@@ -148,26 +148,27 @@ public class PostService {
     public List<Post> getRecommendedPostsBasedOnLikes(User user) {
         List<Community> communities = communityRepository.findRecommendedCommunitiesBasedOnLikes(user);
         if (communities.isEmpty()) {
-            communities = communityRepository.findByprivateCommunityFalse();
+            communities = communityRepository.findPublicCommunitiesWhereNoMembershipExistsFor(user);
         }
-        List<Post> top10PostsFromAllCommunities = get10PostsFromAllCommunities(communities, Comparator.comparingInt(Post::getVoteCounter));
-        List<Post> newest10PostsFromAllCommunities = get10PostsFromAllCommunities(communities, Comparator.comparing(Post::getTime));
+        List<Post> top10PostsFromAllCommunities = get10PostsFromAllCommunities(communities, Comparator.comparingInt(Post::getVoteCounter), user);
+        List<Post> newest10PostsFromAllCommunities = get10PostsFromAllCommunities(communities, Comparator.comparing(Post::getTime), user);
         return Stream.concat(top10PostsFromAllCommunities.stream(), newest10PostsFromAllCommunities.stream()).distinct().toList();
     }
 
     public List<Post> getRecommendedPostsBasedOnMembership(User user) {
         List<Community> communities = communityRepository.findRecommendedCommunitiesBasedOnMembership(user);
         if (communities.isEmpty()) {
-            communities = communityRepository.findByprivateCommunityFalse();
+            communities = communityRepository.findPublicCommunitiesWhereNoMembershipExistsFor(user);
         }
-        List<Post> top10PostsFromAllCommunities = get10PostsFromAllCommunities(communities, Comparator.comparingInt(Post::getVoteCounter));
-        List<Post> newest10PostsFromAllCommunities = get10PostsFromAllCommunities(communities, Comparator.comparing(Post::getTime));
+        List<Post> top10PostsFromAllCommunities = get10PostsFromAllCommunities(communities, Comparator.comparingInt(Post::getVoteCounter), user);
+        List<Post> newest10PostsFromAllCommunities = get10PostsFromAllCommunities(communities, Comparator.comparing(Post::getTime), user);
         return Stream.concat(top10PostsFromAllCommunities.stream(), newest10PostsFromAllCommunities.stream()).distinct().toList();
     }
 
-    private static List<Post> get10PostsFromAllCommunities(List<Community> communities, Comparator<Post> comparator) {
+    private static List<Post> get10PostsFromAllCommunities(List<Community> communities, Comparator<Post> comparator, User user) {
         return communities.stream()
                 .flatMap(c -> c.getPosts().stream())
+                .filter(p -> !p.getVoters().contains(user))
                 .sorted(comparator)
                 .limit(10)
                 .toList();
