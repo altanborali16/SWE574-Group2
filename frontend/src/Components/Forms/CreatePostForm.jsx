@@ -49,7 +49,7 @@ const CreatePostForm = ({ templates, onPostCreated, onClose }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  
+
     // Check if a template is selected
     if (!postData.template.id) {
       showNotification({
@@ -59,16 +59,16 @@ const CreatePostForm = ({ templates, onPostCreated, onClose }) => {
       });
       return;
     }
-  
+
     const now = new Date();
     const currentTime = now.toISOString().slice(0, 19); // "YYYY-MM-DDTHH:MM:SS"
     const finalPostData = {
       ...postData,
       time: currentTime, // Automatically set the time to the current timestamp
     };
-  
+
     console.log("Post Data:", finalPostData);
-  
+
     // Here you can make an API call to save the post
     if (onPostCreated) {
       onPostCreated(finalPostData); // Notify parent component if needed
@@ -126,6 +126,23 @@ const CreatePostForm = ({ templates, onPostCreated, onClose }) => {
               ) : field.dataType === "TIME" ? (
                 <input
                   type="time"
+                  value={postData.postContents[index]?.value || ""}
+                  onChange={(e) => handleInputChange(index, e.target.value)}
+                  required
+                />
+              ) : field.dataType === "UNSIGNED_NUMBER" ? (
+                <input
+                  type="number"
+                  min="0"
+                  step="any"
+                  value={postData.postContents[index]?.value || ""}
+                  onChange={(e) => handleInputChange(index, e.target.value)}
+                  required
+                />
+              ) : field.dataType === "SIGNED_NUMBER" ? (
+                <input
+                  type="number"
+                  step="any"
                   value={postData.postContents[index]?.value || ""}
                   onChange={(e) => handleInputChange(index, e.target.value)}
                   required
