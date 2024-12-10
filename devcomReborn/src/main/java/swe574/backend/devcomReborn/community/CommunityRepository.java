@@ -22,7 +22,6 @@ public interface CommunityRepository extends JpaRepository<Community,Long> {
                     FROM Post p
                     WHERE :user MEMBER OF p.voters
                 )
-                AND c != target
                 AND EXISTS (
                     SELECT t
                     FROM target.tags t
@@ -67,5 +66,15 @@ public interface CommunityRepository extends JpaRepository<Community,Long> {
             """)
     List<Community> findRecommendedCommunitiesBasedOnMembership(@Param("user") User user);
 
-    List<Community> findByprivateCommunityFalse();
+    @Query(value = """
+            SELECT DISTINCT c
+            FROM Community c
+            WHERE c NOT IN (
+                SELECT m.community
+                FROM Membership m
+                WHERE m.user = :user
+            )
+            AND c.privateCommunity = false
+            """)
+    List<Community> findPublicCommunitiesWhereNoMembershipExistsFor(User user);
 }
