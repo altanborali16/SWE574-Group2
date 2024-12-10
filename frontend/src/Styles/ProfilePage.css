@@ -100,7 +100,7 @@
  
 
   /* Modal container */
-.modal {
+.modal-profile {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -114,7 +114,7 @@
 }
 
 /* Modal content */
-.modal-content-profile {
+.modal-profile-content-profile {
   background-color: #fff;
   padding: 20px;
   width: 90%;
@@ -140,22 +140,22 @@
 }
 
 /* Heading */
-.modal-content h2 {
+.modal-profile-content-profile h2 {
   text-align: center;
   font-size: 1.5em;
   margin-bottom: 20px;
 }
 
 /* Form labels */
-.modal-content label {
+.modal-profile-content-profile label {
   display: block;
   margin-bottom: 8px;
   font-weight: bold;
 }
 
 /* Input fields */
-.modal-content textarea,
-.modal-content input[type="text"] {
+.modal-profile-content-profile textarea,
+.modal-profile-content-profile input[type="text"] {
   width: 100%;
   padding: 10px;
   margin-bottom: 15px;
@@ -166,7 +166,7 @@
 }
 
 /* Save button */
-.modal-content .button-1 {
+.modal-profile-content-profile .button-1 {
   width: 100%;
   padding: 12px;
   background-color: #4CAF50;
@@ -179,7 +179,7 @@
   transition: background-color 0.3s ease;
 }
 
-.modal-content .button-1:hover {
+.modal-profile-content .button-1:hover {
   background-color: #45a049;
 }
 

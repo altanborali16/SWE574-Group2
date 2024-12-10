@@ -131,7 +131,7 @@ const ProfilePage = () => {
       requirement: "Create at least 10  posts to earn this badge."
     }
   ];
-  
+
 
   const handleEdit = () => {
     console.log("Edit Profile clicked");
@@ -185,37 +185,37 @@ const ProfilePage = () => {
               <FaEdit /> Edit Profile
             </button>
           </div>
-  
+
           <div className="badges-section">
-  <h3>Badges</h3>
-  <div className="badges-list">
-    {badges.map((badge, index) => {
-      const isBlurred =
-        (badge.tag === "Post" && postCount < badge.counter) ||
-        (badge.tag === "Community" && communityCount < badge.counter);
+            <h3>Badges</h3>
+            <div className="badges-list">
+              {badges.map((badge, index) => {
+                const isBlurred =
+                  (badge.tag === "Post" && postCount < badge.counter) ||
+                  (badge.tag === "Community" && communityCount < badge.counter);
 
-      return (
-        <div
-          key={index}
-          className={`badge ${isBlurred ? "badge--blurred" : ""}`}
-        >
-          <img
-            src={badge.image}
-            alt={badge.title}
-            className="badge__image"
-          />
-          <span className="badge__title">{badge.title}</span>
-          <span className="badge__requirement-profile">{badge.requirement}</span>
-        </div>
-      );
-    })}
-  </div>
-</div>
+                return (
+                  <div
+                    key={index}
+                    className={`badge ${isBlurred ? "badge--blurred" : ""}`}
+                  >
+                    <img
+                      src={badge.image}
+                      alt={badge.title}
+                      className="badge__image"
+                    />
+                    <span className="badge__title">{badge.title}</span>
+                    <span className="badge__requirement-profile">{badge.requirement}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
 
-  
+
           {showModal && (
-            <div className="modal">
-              <div className="modal-content-profile">
+            <div className="modal-profile">
+              <div className="modal-profile-content-profile">
                 <span className="close" onClick={handleCloseModal}>
                   &times;
                 </span>
@@ -229,7 +229,7 @@ const ProfilePage = () => {
                     rows="4"
                     cols="50"
                   />
-  
+
                   <label htmlFor="avatarUrl">Photo URL: </label>
                   <input
                     type="text"
