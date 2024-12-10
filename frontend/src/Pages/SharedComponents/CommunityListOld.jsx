@@ -1,11 +1,12 @@
 import React from "react";
 import { FaLock, FaLockOpen, FaClipboardList, FaUsers } from "react-icons/fa";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import "../../Styles/CommunitiesPage.css"; // Ensure CSS is scoped or modular
 import CommunityImages from "../../Helpers/CommunityImages";
 
 // Default image
-const defaultImage = "https://www.the-rampage.org/wp-content/uploads/2019/05/263480.jpg";
+const defaultImage =
+  "https://www.the-rampage.org/wp-content/uploads/2019/05/263480.jpg";
 
 const CommunityListOld = ({ communityList, title = "Communities" }) => {
   return (
@@ -16,11 +17,15 @@ const CommunityListOld = ({ communityList, title = "Communities" }) => {
           // Find the first matching image based on tags
           const matchingImage = community.tags
             .map((tag) =>
-              CommunityImages.find((image) => image.tag.toLowerCase() === tag.name.toLowerCase())
+              CommunityImages.find(
+                (image) => image.tag.toLowerCase() === tag.name.toLowerCase()
+              )
             )
             .find(Boolean); // Get the first non-null match
 
-          const imageUrl = matchingImage ? matchingImage.imageUrl : defaultImage;
+          const imageUrl = matchingImage
+            ? matchingImage.imageUrl
+            : defaultImage;
 
           return (
             <Link
@@ -31,7 +36,11 @@ const CommunityListOld = ({ communityList, title = "Communities" }) => {
             >
               <div className="community-card" key={index}>
                 <img
-                  src={imageUrl} // Use the matched or default image
+                  src={
+                    community?.imageData
+                      ? `data:${community.imageType};base64,${community.imageData}`
+                      : imageUrl
+                  } // Use the matched or default image
                   alt={`${community.name} cover`}
                   className="community-card__image"
                 />
@@ -60,7 +69,8 @@ const CommunityListOld = ({ communityList, title = "Communities" }) => {
                   {/* Stats (Post count and Subscriber count) */}
                   <div className="community-card__stats">
                     <div className="community-card__stat">
-                      <FaClipboardList /> <span>{community.posts.length} Posts</span>
+                      <FaClipboardList />{" "}
+                      <span>{community.posts.length} Posts</span>
                     </div>
                     <div className="community-card__stat">
                       <FaUsers />{" "}
