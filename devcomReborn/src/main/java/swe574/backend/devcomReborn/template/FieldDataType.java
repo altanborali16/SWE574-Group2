@@ -6,5 +6,6 @@ public enum FieldDataType {
     GEOLOCATION,
     DATE,
     TIME,
-    NUMBER
+    NUMBER,
+    ENUM
 }

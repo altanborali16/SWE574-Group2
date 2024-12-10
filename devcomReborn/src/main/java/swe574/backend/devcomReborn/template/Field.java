@@ -25,4 +25,7 @@ public class Field {
     private Template template;
 
     private FieldDataType dataType;
+
+    @Column(length = 1000)
+    private String parameters;
 }
