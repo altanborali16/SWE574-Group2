@@ -22,7 +22,6 @@ import commentImage from "../assets/comment.png";
 import likeImage from "../assets/like.png";
 import AspiringAuthorImage from "../assets/writer.png";
 
-
 const CommunityPage = () => {
   const { id } = useParams();
 
@@ -52,20 +51,17 @@ const CommunityPage = () => {
   const badges = [
     {
       title: "First Comment",
-      image:
-        commentImage,
+      image: commentImage,
       counter: 1,
       tag: "Comment",
       requirement: "Post at least 1 comment to earn this badge.",
     },
     {
       title: "Innovator",
-      image:
-        creativityImage,
+      image: creativityImage,
       counter: 5,
       tag: "Comment",
       requirement: "Post at least 5 comments to earn this badge.",
-
     },
     {
       title: "Visionary",
@@ -76,8 +72,7 @@ const CommunityPage = () => {
     },
     {
       title: "First Post",
-      image:
-        likeImage,
+      image: likeImage,
       counter: 1,
       tag: "Post",
       requirement: "Create at least 1 post to earn this badge.",
@@ -306,6 +301,7 @@ const CommunityPage = () => {
     }
   };
   const community = communityDb;
+  console.log({ community });
   if (loading) {
     // Display loading message or spinner
     return (
@@ -322,7 +318,10 @@ const CommunityPage = () => {
         <NavbarCommunity isSearchForm={setIsSearchForm} />
         {isSearchForm && (
           <div className="modal-overlay" onClick={handleCloseForm}>
-            <div className="modal-content-community" onClick={(e) => e.stopPropagation()}>
+            <div
+              className="modal-content-community"
+              onClick={(e) => e.stopPropagation()}
+            >
               <button className="close-button" onClick={handleCloseForm}>
                 &times;
               </button>
@@ -339,7 +338,10 @@ const CommunityPage = () => {
 
         {showCreateTemplateForm && (
           <div className="modal-overlay" onClick={handleCloseForm}>
-            <div className="modal-content-community" onClick={(e) => e.stopPropagation()}>
+            <div
+              className="modal-content-community"
+              onClick={(e) => e.stopPropagation()}
+            >
               <button className="close-button" onClick={handleCloseForm}>
                 &times;
               </button>
@@ -352,7 +354,10 @@ const CommunityPage = () => {
         )}
         {showCreatePostForm && (
           <div className="modal-overlay" onClick={handleCloseForm}>
-            <div className="modal-content-community" onClick={(e) => e.stopPropagation()}>
+            <div
+              className="modal-content-community"
+              onClick={(e) => e.stopPropagation()}
+            >
               <button className="close-button" onClick={handleCloseForm}>
                 &times;
               </button>
@@ -368,28 +373,30 @@ const CommunityPage = () => {
           <div className="community-header-card">
             <img
               src={
-                community.tags.find((tag) =>
-                  CommunityImages.some(
-                    (image) =>
-                      image.tag.toLowerCase() === tag.name.toLowerCase()
-                  )
-                )
+                community?.imageData
+                  ? `data:${community.imageType};base64,${community.imageData}` // Öncelikli olarak imageData kullanılır
+                  : community?.tags?.find((tag) =>
+                      CommunityImages.some(
+                        (image) =>
+                          image.tag.toLowerCase() === tag.name?.toLowerCase()
+                      )
+                    )
                   ? CommunityImages.find(
                       (image) =>
                         image.tag.toLowerCase() ===
-                        community.tags
-                          .find((tag) =>
+                        community?.tags
+                          ?.find((tag) =>
                             CommunityImages.some(
                               (image) =>
                                 image.tag.toLowerCase() ===
-                                tag.name.toLowerCase()
+                                tag.name?.toLowerCase()
                             )
                           )
-                          .name.toLowerCase()
-                    ).imageUrl
-                  : "https://www.the-rampage.org/wp-content/uploads/2019/05/263480.jpg" // Default image
+                          ?.name?.toLowerCase()
+                    )?.imageUrl
+                  : "https://www.the-rampage.org/wp-content/uploads/2019/05/263480.jpg" // Varsayılan görsel
               }
-              alt={community.name}
+              alt={community?.name || "community"}
               className="community-picture"
             />
             <div className="community-header-content">
@@ -442,27 +449,29 @@ const CommunityPage = () => {
           <div className="badges-section">
             <h3>Badges</h3>
             <div className="badges-list">
-            {badges.map((badge, index) => {
-              const isBlurred =
-                (badge.tag === "Post" && postCount < badge.counter) ||
-                (badge.tag === "Comment" && commentCount < badge.counter);
+              {badges.map((badge, index) => {
+                const isBlurred =
+                  (badge.tag === "Post" && postCount < badge.counter) ||
+                  (badge.tag === "Comment" && commentCount < badge.counter);
 
-              return (
-                <div
-                  key={index}
-                  className={`badge ${isBlurred ? "badge--blurred" : ""}`}
-                >
-                  <img
-                    src={badge.image}
-                    alt={badge.title}
-                    className="badge__image"
-                  />
-                  <span className="badge__title">{badge.title}</span>
-                  <span className="badge__requirement-community">{badge.requirement}</span>
-                </div>
-              );
-            })}
-          </div>
+                return (
+                  <div
+                    key={index}
+                    className={`badge ${isBlurred ? "badge--blurred" : ""}`}
+                  >
+                    <img
+                      src={badge.image}
+                      alt={badge.title}
+                      className="badge__image"
+                    />
+                    <span className="badge__title">{badge.title}</span>
+                    <span className="badge__requirement-community">
+                      {badge.requirement}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
           {isSearchCommunity ? (
             <ShowResultPage
