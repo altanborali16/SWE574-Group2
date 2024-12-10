@@ -12,7 +12,7 @@ import LoadingScreen from "../SharedComponents/LoadingScreen";
 import { useParams } from "react-router-dom";
 import { useNotificationContext } from "../../Context/useNotificationContext.jsx";
 
-const PostsView = ({ posts, header, setPosts, isPrivate }) => {
+const PostsView = ({ posts, header, setPosts, privateCommunity }) => {
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
   const [isMember, setIsMember] = useState(false);
@@ -56,7 +56,7 @@ const PostsView = ({ posts, header, setPosts, isPrivate }) => {
   // Example usage
   const replyIds = getReplyIds(posts);
   console.log("Reply IDs:", replyIds);
-  console.log(isPrivate);
+  console.log(privateCommunity);
 
   // State to hold new reply text for each comment
   const [newReply, setNewReply] = useState({});
@@ -369,7 +369,7 @@ const PostsView = ({ posts, header, setPosts, isPrivate }) => {
     <div className="posts-view">
       <h1>{header}</h1>
 
-      <div className={`posts-container ${isPrivate && !isMember ? "post--blurred" : ""}`}>
+      <div className={`posts-container ${privateCommunity && !isMember ? "post--blurred" : ""}`}>
         {posts.map((post) => (
           <div key={post.id} className="post-card">
             <h2>

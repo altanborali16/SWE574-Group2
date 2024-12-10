@@ -13,7 +13,7 @@ const CreateCommunityPage = () => {
     communityDescription: "",
     imageData: null, // Base64 kodlanmış resim
     imageType: "",
-    isPrivate: false,
+    privateCommunity: false,
     tags: [],
   });
   const [previewImage, setPreviewImage] = useState(null);
@@ -64,7 +64,7 @@ const CreateCommunityPage = () => {
       });
       return;
     }
-
+    console.log("privateCommunity : ", communityData.privateCommunity);
     try {
       const response = await httpClient.post(
         "/community/create",
@@ -150,8 +150,8 @@ const CreateCommunityPage = () => {
             <label>Private</label>
             <input
               type="checkbox"
-              name="isPrivate"
-              checked={communityData.isPrivate}
+              name="privateCommunity"
+              checked={communityData.privateCommunity}
               onChange={handleChange}
             />
           </div>

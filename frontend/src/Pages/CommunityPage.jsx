@@ -485,7 +485,7 @@ const CommunityPage = () => {
               posts={community.posts}
               header={"Posts"}
               setPosts={updateCommunityPosts}
-              isPrivate={community.private}
+              privateCommunity={community.privateCommunity}
             />
           ) : (
             <p>No posts available in this community.</p>
