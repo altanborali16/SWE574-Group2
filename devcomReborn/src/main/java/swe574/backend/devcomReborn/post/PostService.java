@@ -34,7 +34,12 @@ public class PostService {
     public Post createPost(Long communityId, Post post) {
         checkFieldDataType(post);
         User creator = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Community community = communityRepository.findById(communityId).orElseThrow(() -> new RuntimeException("Community not found"));
+        //Community community = communityRepository.findById(communityId).orElseThrow(() -> new RuntimeException("Community not found"));
+        Community community = communityRepository.findById(communityId)
+                .orElseThrow(() -> new RuntimeException("Community not found"));
+
+        // Trigger lazy loading
+        community.getTags().size();
         Template postTemplate = templateRepository.findById(post.getTemplate().getId()).orElseThrow(() -> new RuntimeException("Template not found"));
         if (!postTemplate.getCommunity().getId().equals(community.getId()))
             throw new RuntimeException("Community does not support this template");

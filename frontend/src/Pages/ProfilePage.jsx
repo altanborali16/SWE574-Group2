@@ -47,12 +47,14 @@ const ProfilePage = () => {
             const postCountResponse = await httpClient.get(
               `/user/userPostCount/${auth.user.userId}`
             );
+            console.log("Post count : ", postCountResponse.data);
             const communityCountResponse = await httpClient.get(
               `/user/userCommunityCount/${auth.user.userId}`
             );
 
             const postCount = postCountResponse.data || 0; // Assuming response includes 'count'
             const communityCount = communityCountResponse.data || 0; // Assuming response includes 'count'
+            //const communityCount = 0; // Assuming response includes 'count'
             setPostCount(postCount); // Set post count in state
             setCommunityCount(communityCount); // Set community count in state
 

@@ -24,9 +24,12 @@ public class UserService {
         return postRepository.findByAuthor(author).stream().count();
     }
 
+//    public Long getCommunityCountByUser(Long userId) {
+//        User user = userRepository.findById(userId).orElseThrow();
+//        return membershipRepository.findByUser(user).stream().count();
+//
+//    }
     public Long getCommunityCountByUser(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow();
-        return membershipRepository.findByUser(user).stream().count();
-
+        return membershipRepository.countByUserId(userId);
     }
 }
