@@ -53,7 +53,25 @@ export const TemplateSearch = (data, search) => {
               return false;
             }
           }
-          if (type === "NUMBER") {
+          if (type === "UNSIGNED_NUMBER") {
+            if (
+              templateInputs?.[name]?.Min &&
+              Number(templateInputs?.[name]?.Min) > Number(value)
+            ) {
+              return false;
+            }
+            if (
+              templateInputs?.[name]?.Max &&
+              Number(templateInputs?.[name]?.Max) < Number(value)
+            ) {
+              return false;
+            }
+            if (Number(value) < 0) {
+              return false; // Ensure value is non-negative
+            }
+          }
+          
+          if (type === "SIGNED_NUMBER") {
             if (
               templateInputs?.[name]?.Min &&
               Number(templateInputs?.[name]?.Min) > Number(value)

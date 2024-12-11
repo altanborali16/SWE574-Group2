@@ -21,9 +21,9 @@ const postReducer = (state, action) => {
         template: selectedTemplate?.name || "",
         templateFields: selectedTemplate?.fields
           ? selectedTemplate.fields.reduce((acc, field) => {
-              acc[field.name] = field.dataType;
-              return acc;
-            }, {})
+            acc[field.name] = field.dataType;
+            return acc;
+          }, {})
           : {},
       };
     case "CREATE_SEARCH_INPUTS":
@@ -241,13 +241,14 @@ function AdvancedSearchForm({
                           />
                         </div>
                       )} */}
-                      {postState.templateFields[field] === "NUMBER" && (
+                      {postState.templateFields[field] === "UNSIGNED_NUMBER" && (
                         <div key={index}>
                           <label>{field}:</label>
-                          <label>{"Number"}:</label>
+                          {/* <label>{"Unsigned Number"}:</label> */}
                           Minimum Value:
                           <input
-                            type="text"
+                            type="number"
+                            min="0"
                             value={
                               dataTypeState?.[field]?.Min
                                 ? dataTypeState[field].Min
@@ -264,11 +265,12 @@ function AdvancedSearchForm({
                                 },
                               });
                             }}
-                            placeholder={`Enter Minimum Value`}
+                            placeholder={`Enter Minimum Value (>= 0)`}
                           />
                           Maximum Value:
                           <input
-                            type="text"
+                            type="number"
+                            min="0"
                             value={
                               dataTypeState?.[field]?.Max
                                 ? dataTypeState[field].Max
@@ -289,6 +291,56 @@ function AdvancedSearchForm({
                           />
                         </div>
                       )}
+
+                      {postState.templateFields[field] === "SIGNED_NUMBER" && (
+                        <div key={index}>
+                          <label>{field}:</label>
+                          {/* <label>{"Signed Number"}:</label> */}
+                          Minimum Value:
+                          <input
+                            type="number"
+                            value={
+                              dataTypeState?.[field]?.Min
+                                ? dataTypeState[field].Min
+                                : ""
+                            }
+                            onChange={(e) => {
+                              const intervalKey = "Min";
+                              dataTypeDispatch({
+                                type: "UPDATE_TEMPLATE_FIELD",
+                                payload: {
+                                  field,
+                                  value: e.target.value,
+                                  intervalKey,
+                                },
+                              });
+                            }}
+                            placeholder={`Enter Minimum Value`}
+                          />
+                          Maximum Value:
+                          <input
+                            type="number"
+                            value={
+                              dataTypeState?.[field]?.Max
+                                ? dataTypeState[field].Max
+                                : ""
+                            }
+                            onChange={(e) => {
+                              const intervalKey = "Max";
+                              dataTypeDispatch({
+                                type: "UPDATE_TEMPLATE_FIELD",
+                                payload: {
+                                  field,
+                                  value: e.target.value,
+                                  intervalKey,
+                                },
+                              });
+                            }}
+                            placeholder={`Enter Maximum Value`}
+                          />
+                        </div>
+                      )}
+
                       {/* {postState.templateFields[field] === "GEOLOCATION" && (
                         <div key={index}>
                           <label>{field}:</label>
