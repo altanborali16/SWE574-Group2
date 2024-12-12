@@ -107,12 +107,29 @@ const CommunityPage = () => {
     try {
       const response = await httpClient.get("community/members/" + id);
       console.log("Subscribers:", response.data);
-
-      setSubscribers(response.data);
+  
+      // Ensure community data is loaded before mapping roles
+      if (communityDb.memberships && communityDb.memberships.length > 0) {
+        const subscribersWithRoles = response.data.map((subscriber) => {
+          const membership = communityDb.memberships.find(
+            (m) => m.id.userId === subscriber.id
+          );
+          return {
+            ...subscriber,
+            role: membership ? membership.role : "Member", // Default role to "Member"
+          };
+        });
+  
+        setSubscribers(subscribersWithRoles);
+      } else {
+        console.error("Community memberships data not available.");
+        setSubscribers(response.data);
+      }
     } catch (err) {
       console.error("Failed to fetch subscribers:", err);
     }
   };
+  
   const fetchBadges = async () => {
     try {
       console.log("Id : ", user.userId);
@@ -266,6 +283,19 @@ const CommunityPage = () => {
       console.error("Error creating post:", error);
     }
     // setTemplates((prevTemplates) => [...prevTemplates, newTemplate]);
+  };
+
+  const handleKickMember = async (userId) => {
+    try {
+      const response = await httpClient.delete(`/community/remove-member/${id}/${userId}`);
+      alert(response.data); // Display a success message
+      setSubscribers((prevSubscribers) =>
+        prevSubscribers.filter((subscriber) => subscriber.id !== userId)
+      ); // Remove the kicked member from the list
+    } catch (error) {
+      console.error("Error kicking member:", error);
+      alert("Failed to remove the member. Please try again.");
+    }
   };
 
   const handleOpenForm = () => {
@@ -492,30 +522,67 @@ const CommunityPage = () => {
           )}
         </div>
         {showSubscribersList && (
-          <div className="subscribers-modal">
-            <div className="modal-overlay" onClick={handleCloseSubscribers}>
-              <div
-                className="modal-content-community"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <button
-                  className="close-button"
-                  onClick={handleCloseSubscribers}
+      <div className="subscribers-modal">
+        <div className="modal-overlay" onClick={handleCloseSubscribers}>
+          <div
+            className="modal-content-community"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="close-button"
+              onClick={handleCloseSubscribers}
+            >
+              &times;
+            </button>
+            <h2>Subscribers</h2>
+            <ul className="subscribers-list">
+              {subscribers.map((subscriber, index) => (
+                <li
+                  key={index}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: "8px",
+                  }}
                 >
-                  &times;
-                </button>
-                <h2>Subscribers</h2>
-                <ul className="subscribers-list">
-                  {subscribers.map((subscriber, index) => (
-                    <li key={index}>
-                      {subscriber.username || "Unknown Subscriber"}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
+                  <div>
+                    <span>
+                      {subscriber.username || "Unknown Subscriber"}{" "}
+                      <span
+                        style={{
+                          fontStyle: "italic",
+                          fontSize: "0.9em",
+                          color: "gray",
+                        }}
+                      >
+                        ({subscriber.role || "Member"})
+                      </span>
+                    </span>
+                  </div>
+                  {isUserOwner && subscriber.role !== "CREATOR" && (
+                    <button
+                      style={{
+                        marginLeft: "10px",
+                        padding: "5px 10px",
+                        backgroundColor: "red",
+                        color: "white",
+                        border: "none",
+                        cursor: "pointer",
+                        borderRadius: "4px",
+                      }}
+                      onClick={() => handleKickMember(subscriber.id)}
+                    >
+                      Kick
+                    </button>
+                  )}
+                </li>
+              ))}
+            </ul>
           </div>
-        )}
+        </div>
+      </div>
+    )}
       </>
     );
   }
