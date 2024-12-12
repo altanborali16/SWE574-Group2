@@ -70,7 +70,7 @@
   background-color: #fff;
   padding: 20px;
   border-radius: 8px;
-  width: 500px; /* Adjust as needed */
+  width: 50%;
   max-width: 90%;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   position: relative;
@@ -159,6 +159,33 @@
   display: flex;
   gap: 20px; /* Add some space between badges */
   flex-wrap: wrap; /* Allow wrapping on smaller screens */
+}
+
+.kick-button {
+  padding: 5px 10px;
+  background-color: red;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.kick-button:hover {
+  background-color: darkred;
+}
+.assign-admin-button {
+  padding: 5px 10px;
+  background-color: blue;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.assign-admin-button:hover {
+  background-color: darkblue;
 }
 
 

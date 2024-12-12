@@ -622,20 +622,12 @@ console.log("Is User Owner:", isUserOwner);
       <div style={{ display: "flex", gap: "10px" }}>
         {/* Allow only owner and admins to kick members */}
     {/* Allow only owner and admins to kick members */}
-{(isUserOwner || isUserAdmin) &&
-  subscriber.role !== "CREATOR" && // Prevent kicking the owner
-  subscriber.id !== user.userId && // Prevent admins from kicking themselves
-  (
-    <button
-      style={{
-        padding: "5px 10px",
-        backgroundColor: "red",
-        color: "white",
-        border: "none",
-        cursor: "pointer",
-        borderRadius: "4px",
-      }}
-      onClick={() => handleKickMember(subscriber.id)}
+    {(isUserOwner || isUserAdmin) &&
+      subscriber.role !== "CREATOR" && // Prevent kicking the owner
+      subscriber.id !== user.userId && // Prevent admins from kicking themselves
+      (
+    <button className="kick-button"
+    onClick={() => handleKickMember(subscriber.id)}
     >
       Kick
     </button>
@@ -644,15 +636,7 @@ console.log("Is User Owner:", isUserOwner);
 
         {/* Allow only owner to assign admin */}
         {isUserOwner && subscriber.role !== "ADMIN" && subscriber.role !== "CREATOR" && (
-          <button
-            style={{
-              padding: "5px 10px",
-              backgroundColor: "blue",
-              color: "white",
-              border: "none",
-              cursor: "pointer",
-              borderRadius: "4px",
-            }}
+          <button  className="assign-admin-button"
             onClick={() => handleAssignAsAdmin(subscriber.id)}
           >
             Assign as Admin
