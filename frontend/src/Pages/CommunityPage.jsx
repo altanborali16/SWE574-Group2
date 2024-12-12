@@ -289,15 +289,25 @@ const CommunityPage = () => {
     try {
       const response = await httpClient.delete(`/community/remove-member/${id}/${userId}`);
       alert(response.data); // Display a success message
+  
+      // Update the subscribers list dynamically
       setSubscribers((prevSubscribers) =>
         prevSubscribers.filter((subscriber) => subscriber.id !== userId)
-      ); // Remove the kicked member from the list
+      );
+  
+      // Optional: Update the community's membership count (if needed)
+      setcommunityDb((prevCommunity) => ({
+        ...prevCommunity,
+        memberships: prevCommunity.memberships.filter(
+          (membership) => membership.id.userId !== userId
+        ),
+      }));
     } catch (error) {
       console.error("Error kicking member:", error);
       alert("Failed to remove the member. Please try again.");
     }
   };
-
+  
   const handleOpenForm = () => {
     setShowCreateTemplateForm(true);
   };
