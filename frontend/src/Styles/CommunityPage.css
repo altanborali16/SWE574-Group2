@@ -70,7 +70,7 @@
   background-color: #fff;
   padding: 20px;
   border-radius: 8px;
-  width: 500px; /* Adjust as needed */
+  width: 50%;
   max-width: 90%;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   position: relative;
@@ -161,6 +161,102 @@
   flex-wrap: wrap; /* Allow wrapping on smaller screens */
 }
 
+.kick-button {
+  padding: 5px 10px;
+  background-color: red;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.kick-button:hover {
+  background-color: darkred;
+}
+.assign-admin-button {
+  padding: 5px 10px;
+  background-color: blue;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.assign-admin-button:hover {
+  background-color: darkblue;
+}
+
+.subscribers-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 20px;
+  font-weight: bold;
+  border-bottom: 2px solid #ccc;
+  margin-bottom: 10px;
+}
+
+.header-username,
+.header-role,
+.header-actions {
+  flex: 1;
+  text-align: center;
+}
+
+.subscribers-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.subscriber-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 20px;
+  border-bottom: 1px solid #eee;
+  align-items: center;
+}
+
+.subscriber-username,
+.subscriber-role,
+.subscriber-actions {
+  flex: 1;
+  text-align: center;
+}
+
+.kick-button {
+  padding: 5px 10px;
+  background-color: red;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.kick-button:hover {
+  background-color: darkred;
+}
+
+.assign-admin-button {
+  padding: 5px 10px;
+  background-color: blue;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.assign-admin-button:hover {
+  background-color: darkblue;
+}
+
+.button-container {
+  display: flex;
+  gap: 20px; /* Adds spacing between buttons */
+}
 
 
 /* MOBILE VIEW */
