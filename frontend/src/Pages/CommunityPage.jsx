@@ -580,79 +580,72 @@ console.log("Is User Owner:", isUserOwner);
           )}
         </div>
         {showSubscribersList && (
-      <div className="subscribers-modal">
-        <div className="modal-overlay" onClick={handleCloseSubscribers}>
-          <div
-            className="modal-content-community"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              className="close-button"
-              onClick={handleCloseSubscribers}
-            >
-              &times;
-            </button>
-            <h2>Subscribers</h2>
-            <ul className="subscribers-list">
-            <ul className="subscribers-list">
-  {subscribers.map((subscriber, index) => (
-    <li
-      key={index}
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginBottom: "8px",
-      }}
-    >
-      <div>
-        <span>
-          {subscriber.username || "Unknown Subscriber"}{" "}
-          <span
-            style={{
-              fontStyle: "italic",
-              fontSize: "0.9em",
-              color: "gray",
-            }}
-          >
-            ({subscriber.role || "Member"})
-          </span>
-        </span>
-      </div>
-      <div style={{ display: "flex", gap: "10px" }}>
-        {/* Allow only owner and admins to kick members */}
-    {/* Allow only owner and admins to kick members */}
-    {(isUserOwner || isUserAdmin) &&
-      subscriber.role !== "CREATOR" && // Prevent kicking the owner
-      subscriber.id !== user.userId && // Prevent admins from kicking themselves
-      (
-    <button className="kick-button"
-    onClick={() => handleKickMember(subscriber.id)}
-    >
-      Kick
-    </button>
-  )}
+  <div className="subscribers-modal">
+    <div className="modal-overlay" onClick={handleCloseSubscribers}>
+      <div
+        className="modal-content-community"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button className="close-button" onClick={handleCloseSubscribers}>
+          &times;
+        </button>
+        <h2>Subscribers</h2>
 
-
-        {/* Allow only owner to assign admin */}
-        {isUserOwner && subscriber.role !== "ADMIN" && subscriber.role !== "CREATOR" && (
-          <button  className="assign-admin-button"
-            onClick={() => handleAssignAsAdmin(subscriber.id)}
-          >
-            Assign as Admin
-          </button>
-        )}
-      </div>
-    </li>
-  ))}
-</ul>
-
-</ul>
-
-          </div>
+        {/* Header Row */}
+        <div className="subscribers-header">
+          <span className="header-username">Username</span>
+          <span className="header-role">Role</span>
+          <span className="header-actions">Actions</span>
         </div>
+
+        {/* Subscribers List */}
+        <ul className="subscribers-list">
+          {subscribers.map((subscriber, index) => (
+            <li
+              key={index}
+              className="subscriber-item"
+            >
+              <div className="subscriber-username">
+                {subscriber.username || "Unknown Subscriber"}
+              </div>
+              <div className="subscriber-role">
+                ({subscriber.role || "Member"})
+              </div>
+              <div className="subscriber-actions">
+                {/* Allow only owner and admins to kick members */}
+                <div className="button-container">
+                {(isUserOwner || isUserAdmin) &&
+                  subscriber.role !== "CREATOR" &&
+                  subscriber.id !== user.userId && (
+                    <button
+                      className="kick-button"
+                      onClick={() => handleKickMember(subscriber.id)}
+                    >
+                      Kick
+                    </button>
+                  )}
+
+                {/* Allow only owner to assign admin */}
+                {isUserOwner &&
+                  subscriber.role !== "ADMIN" &&
+                  subscriber.role !== "CREATOR" && (
+                    <button
+                      className="assign-admin-button"
+                      onClick={() => handleAssignAsAdmin(subscriber.id)}
+                    >
+                      Assign as Admin
+                    </button>
+                  )}
+                  </div>
+              </div>
+            </li>
+          ))}
+        </ul>
       </div>
-    )}
+    </div>
+  </div>
+)}
+
       </>
     );
   }
