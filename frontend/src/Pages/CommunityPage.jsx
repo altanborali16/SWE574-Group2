@@ -29,11 +29,10 @@ const CommunityPage = () => {
   const [loading, setLoading] = useState(true); // Initialize loading state
   const [dataFromDb, setDataOnDb] = useState(false); // Initialize loading state
   const [isUserMember, setIsUserMember] = useState(false);
-
   const [isSearchForm, setIsSearchForm] = useState(false);
   const [isSearchCommunity, setIsSearchCommunity] = useState(false);
   const [searchObject, setSearchObject] = useState({});
-
+  const [isUserAdmin, setIsUserAdmin] = useState(false);
   const [isUserOwner, setIsUserOwner] = useState(false);
   const user = localStorage.getItem("token")
     ? jwtDecode(localStorage.getItem("token"))
@@ -186,15 +185,20 @@ const CommunityPage = () => {
       const communityData = response.data;
       setcommunityDb(communityData);
       setDataOnDb(true);
+  
       // Check if the user is a member
       console.log("User : ", user);
       const userMembership = communityData.memberships.find(
         (membership) => Number(membership.id.userId) === Number(user.userId)
       );
+  
       setIsUserMember(!!userMembership); // Set to true if user is a member
-      // Check if the user is the owner
-      setIsUserOwner(userMembership && userMembership.role === "CREATOR");
+      setIsUserOwner(userMembership?.role === "CREATOR"); // Set owner
+      setIsUserAdmin(userMembership?.role === "ADMIN"); // Set admin
+  
       console.log("Community:", response.data);
+      console.log("Is User Owner:", userMembership?.role === "CREATOR");
+      console.log("Is User Admin:", userMembership?.role === "ADMIN");
     } catch (err) {
       console.error(err);
       setcommunityDb([]);
@@ -202,7 +206,7 @@ const CommunityPage = () => {
       // setLoading(false); // Set loading to false once fetch completes or fails
     }
   };
-
+  
   // Logging state changes
   // useEffect(() => {
   //   console.log("Is User Member:", isUserMember);
@@ -295,7 +299,7 @@ const CommunityPage = () => {
         prevSubscribers.filter((subscriber) => subscriber.id !== userId)
       );
   
-      // Optional: Update the community's membership count (if needed)
+      // Optional: Update the community's membership count 
       setcommunityDb((prevCommunity) => ({
         ...prevCommunity,
         memberships: prevCommunity.memberships.filter(
@@ -305,6 +309,46 @@ const CommunityPage = () => {
     } catch (error) {
       console.error("Error kicking member:", error);
       alert("Failed to remove the member. Please try again.");
+    }
+  };
+
+  const handleAssignAsAdmin = async (userId) => {
+    try {
+      // Prepare the payload for the role assignment
+      const payload = {
+        userId: userId,
+        newRole: "ADMIN", // The new role to assign
+      };
+  
+      // Send a POST request to assign the role
+      const response = await httpClient.post(
+        `/community/${id}/assign-member-role`,
+        payload
+      );
+  
+      alert(response.data); // Show success message
+  
+      // Update the subscriber's role dynamically
+      setSubscribers((prevSubscribers) =>
+        prevSubscribers.map((subscriber) =>
+          subscriber.id === userId
+            ? { ...subscriber, role: "ADMIN" } // Update the role to ADMIN
+            : subscriber
+        )
+      );
+  
+      // update the community memberships state
+      setcommunityDb((prevCommunity) => ({
+        ...prevCommunity,
+        memberships: prevCommunity.memberships.map((membership) =>
+          membership.id.userId === userId
+            ? { ...membership, role: "ADMIN" }
+            : membership
+        ),
+      }));
+    } catch (error) {
+      console.error("Error assigning admin role:", error);
+      alert("Failed to assign admin role. Please try again.");
     }
   };
   
@@ -321,6 +365,10 @@ const CommunityPage = () => {
     setShowCreatePostForm(false);
     setIsSearchForm(false);
   };
+
+console.log("User:", user);
+console.log("User Role:", user?.role);
+console.log("Is User Owner:", isUserOwner);
 
   const handleFollow = async () => {
     try {
@@ -461,9 +509,9 @@ const CommunityPage = () => {
               </div>
             </div>
             {/* Button to open the form */}
-            {isUserOwner && (
-              <button onClick={handleOpenForm}>Create Template</button>
-            )}
+            {(isUserOwner || isUserAdmin) && (
+            <button onClick={handleOpenForm}>Create Template</button>
+             )}
             {isUserMember && (
               <button onClick={handleOpenPostForm}>Create Post</button>
             )}
@@ -546,49 +594,77 @@ const CommunityPage = () => {
             </button>
             <h2>Subscribers</h2>
             <ul className="subscribers-list">
-              {subscribers.map((subscriber, index) => (
-                <li
-                  key={index}
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginBottom: "8px",
-                  }}
-                >
-                  <div>
-                    <span>
-                      {subscriber.username || "Unknown Subscriber"}{" "}
-                      <span
-                        style={{
-                          fontStyle: "italic",
-                          fontSize: "0.9em",
-                          color: "gray",
-                        }}
-                      >
-                        ({subscriber.role || "Member"})
-                      </span>
-                    </span>
-                  </div>
-                  {isUserOwner && subscriber.role !== "CREATOR" && (
-                    <button
-                      style={{
-                        marginLeft: "10px",
-                        padding: "5px 10px",
-                        backgroundColor: "red",
-                        color: "white",
-                        border: "none",
-                        cursor: "pointer",
-                        borderRadius: "4px",
-                      }}
-                      onClick={() => handleKickMember(subscriber.id)}
-                    >
-                      Kick
-                    </button>
-                  )}
-                </li>
-              ))}
-            </ul>
+            <ul className="subscribers-list">
+  {subscribers.map((subscriber, index) => (
+    <li
+      key={index}
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: "8px",
+      }}
+    >
+      <div>
+        <span>
+          {subscriber.username || "Unknown Subscriber"}{" "}
+          <span
+            style={{
+              fontStyle: "italic",
+              fontSize: "0.9em",
+              color: "gray",
+            }}
+          >
+            ({subscriber.role || "Member"})
+          </span>
+        </span>
+      </div>
+      <div style={{ display: "flex", gap: "10px" }}>
+        {/* Allow only owner and admins to kick members */}
+    {/* Allow only owner and admins to kick members */}
+{(isUserOwner || isUserAdmin) &&
+  subscriber.role !== "CREATOR" && // Prevent kicking the owner
+  subscriber.id !== user.userId && // Prevent admins from kicking themselves
+  (
+    <button
+      style={{
+        padding: "5px 10px",
+        backgroundColor: "red",
+        color: "white",
+        border: "none",
+        cursor: "pointer",
+        borderRadius: "4px",
+      }}
+      onClick={() => handleKickMember(subscriber.id)}
+    >
+      Kick
+    </button>
+  )}
+
+
+        {/* Allow only owner to assign admin */}
+        {isUserOwner && subscriber.role !== "ADMIN" && subscriber.role !== "CREATOR" && (
+          <button
+            style={{
+              padding: "5px 10px",
+              backgroundColor: "blue",
+              color: "white",
+              border: "none",
+              cursor: "pointer",
+              borderRadius: "4px",
+            }}
+            onClick={() => handleAssignAsAdmin(subscriber.id)}
+          >
+            Assign as Admin
+          </button>
+        )}
+      </div>
+    </li>
+  ))}
+</ul>
+
+</ul>
+
           </div>
         </div>
       </div>
