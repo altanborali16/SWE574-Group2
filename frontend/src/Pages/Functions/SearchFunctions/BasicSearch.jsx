@@ -54,6 +54,14 @@ export const basicSearch = (data, search) => {
           if (commentMatch && !results.includes(post)) {
             results.push(post);
           }
+          if (comment?.replies?.length > 0) {
+            comment.replies.forEach((rep) => {
+              const repliesMatch = rep.content.toLowerCase().includes(query);
+              if (repliesMatch && !results.includes(post)) {
+                results.push(post);
+              }
+            });
+          }
         });
       });
     }

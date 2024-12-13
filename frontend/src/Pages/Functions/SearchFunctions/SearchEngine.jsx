@@ -16,20 +16,23 @@ export const useSearchEngine = (data, search, subscribers) => {
       const basicResults = basicSearch(data, search);
       const postResults = PostSearch(data, search);
       const templateResults = TemplateSearch(data, search);
-      const subscriberResults = MemberSearch(data, search, subscribers);
+      if (search?.basicSearch?.filters.users) {
+        const subscriberResults = MemberSearch(data, search, subscribers);
+        setMemberResult(subscriberResults);
+      }
 
       intersectionPostTemp = postResults?.filter((post) =>
         templateResults?.some((templatePost) => templatePost.id === post.id)
       );
 
       if (search?.postSearch?.operator === "AND") {
-        if (basicResults.length > 0) {
+        if (basicResults?.length > 0) {
           intersectionBasic = basicResults.filter((post) =>
             intersectionPostTemp?.some((tempPost) => tempPost.id === post.id)
           );
         }
       } else if (search?.postSearch?.operator === "OR") {
-        if (basicResults.length > 0) {
+        if (basicResults?.length > 0) {
           const combinedResults = [...basicResults, ...intersectionPostTemp];
 
           intersectionBasic = combinedResults?.filter(
@@ -38,7 +41,7 @@ export const useSearchEngine = (data, search, subscribers) => {
           );
         }
       } else if (search?.postSearch?.operator === "NOT") {
-        if (basicResults.length > 0) {
+        if (basicResults?.length > 0) {
           intersectionBasic = basicResults.filter(
             (post) =>
               !intersectionPostTemp.some((tempPost) => tempPost.id === post.id)
@@ -49,9 +52,6 @@ export const useSearchEngine = (data, search, subscribers) => {
       console.log("intPostTemp", intersectionPostTemp);
       console.log("intersect", intersectionBasic);
       setResult(intersectionBasic);
-      if (search?.basicSearch?.filters.users) {
-        setMemberResult(subscriberResults);
-      }
     }
   }, [data, search]);
 
