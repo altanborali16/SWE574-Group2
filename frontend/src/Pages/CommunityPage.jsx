@@ -21,6 +21,7 @@ import leadershipImage from "../assets/leadership.png";
 import commentImage from "../assets/comment.png";
 import likeImage from "../assets/like.png";
 import AspiringAuthorImage from "../assets/writer.png";
+import { useNotificationContext } from "../Context/useNotificationContext";
 
 const CommunityPage = () => {
   const { id } = useParams();
@@ -34,6 +35,7 @@ const CommunityPage = () => {
   const [searchObject, setSearchObject] = useState({});
   const [isUserAdmin, setIsUserAdmin] = useState(false);
   const [isUserOwner, setIsUserOwner] = useState(false);
+  const { showNotification } = useNotificationContext();
   const user = localStorage.getItem("token")
     ? jwtDecode(localStorage.getItem("token"))
     : null;
@@ -121,7 +123,7 @@ const CommunityPage = () => {
   
         setSubscribers(subscribersWithRoles);
       } else {
-        console.error("Community memberships data not available.");
+        console.log("Community memberships data not available.");
         setSubscribers(response.data);
       }
     } catch (err) {
@@ -292,7 +294,11 @@ const CommunityPage = () => {
   const handleKickMember = async (userId) => {
     try {
       const response = await httpClient.delete(`/community/remove-member/${id}/${userId}`);
-      alert(response.data); // Display a success message
+      // alert(response.data); // Display a success message
+      showNotification({
+        message: response.data,
+        variant: "success",
+      });
   
       // Update the subscribers list dynamically
       setSubscribers((prevSubscribers) =>
@@ -308,7 +314,11 @@ const CommunityPage = () => {
       }));
     } catch (error) {
       console.error("Error kicking member:", error);
-      alert("Failed to remove the member. Please try again.");
+      // alert("Failed to remove the member. Please try again.");
+      showNotification({
+        message: "Failed to remove the member. Please try again.",
+        variant: "danger",
+      });
     }
   };
 
@@ -326,7 +336,11 @@ const CommunityPage = () => {
         payload
       );
   
-      alert(response.data); // Show success message
+      // alert(response.data); // Show success message
+      showNotification({
+        message: response.data,
+        variant: "success",
+      });
   
       // Update the subscriber's role dynamically
       setSubscribers((prevSubscribers) =>
@@ -348,7 +362,11 @@ const CommunityPage = () => {
       }));
     } catch (error) {
       console.error("Error assigning admin role:", error);
-      alert("Failed to assign admin role. Please try again.");
+      // alert("Failed to assign admin role. Please try again.");
+      showNotification({
+        message: "Failed to assign admin role. Please try again.",
+        variant: "danger",
+      });
     }
   };
   
@@ -570,7 +588,9 @@ console.log("Is User Owner:", isUserOwner);
             />
           ) : community.posts.length > 0 ? (
             <PostsView
-              posts={community.posts}
+            posts={community.posts
+              .slice() // Create a shallow copy to avoid mutating the original array
+              .sort((a, b) => new Date(b.time) - new Date(a.time))} // Sort by descending date
               header={"Posts"}
               setPosts={updateCommunityPosts}
               privateCommunity={community.privateCommunity}
