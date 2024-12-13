@@ -463,7 +463,7 @@ function AdvancedSearchForm({
           )}
         </div>
       )}
-      <button onClick={handleSave}>Search</button>
+      <button className="inner-search-button" onClick={handleSave}>Search</button>
     </div>
   );
 }

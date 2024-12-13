@@ -510,10 +510,10 @@ console.log("Is User Owner:", isUserOwner);
             </div>
             {/* Button to open the form */}
             {(isUserOwner || isUserAdmin) && (
-            <button onClick={handleOpenForm}>Create Template</button>
+            <button className="create-template-button" onClick={handleOpenForm}>Create Template</button>
              )}
             {isUserMember && (
-              <button onClick={handleOpenPostForm}>Create Post</button>
+              <button className="create-post-button" onClick={handleOpenPostForm}>Create Post</button>
             )}
             {!isUserMember && (
               <button
@@ -524,8 +524,7 @@ console.log("Is User Owner:", isUserOwner);
               </button>
             )}
             {isUserMember && !isUserOwner && (
-              <button
-                style={{ backgroundColor: "red" }}
+              <button className="unfollow-button"
                 onClick={handleUnFollow}
               >
                 UnFollow

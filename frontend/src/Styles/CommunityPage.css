@@ -174,6 +174,50 @@
 .kick-button:hover {
   background-color: darkred;
 }
+
+
+.unfollow-button {
+  padding: 5px 10px;
+  background-color: red;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.unfollow-button:hover {
+  background-color: darkred;
+}
+
+.create-post-button {
+  padding: 5px 10px;
+  background-color: blue;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.create-post-button:hover {
+  background-color: darkblue;
+}
+
+.create-template-button {
+  padding: 5px 10px;
+  background-color: blue;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.create-template-button:hover {
+  background-color: darkblue;
+}
+
 .assign-admin-button {
   padding: 5px 10px;
   background-color: blue;
@@ -262,45 +306,79 @@
 /* MOBILE VIEW */
 
 @media (max-width: 768px) {
-  .modal-content-community {
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      width: 90%; 
-      max-width: 90%; 
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-      position: relative;
-      margin: 0 auto; 
-  }
+
+    .modal-content-community {
+      width: 90%; /* Full width for smaller screens */
+      padding: 15px; /* Reduced padding for smaller devices */
+      border-radius: 6px; /* Slightly smaller border radius */
+    }
+
+    .modal-content-community .close-button {
+      font-size: 1.5rem; /* Adjust close button size */
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: #333; /* Make it stand out against light background */
+    }
     .badges-list {
       display: grid; 
       grid-template-columns: repeat(2, 1fr); 
       gap: 10px; 
       justify-content: center;
     }
-
-    .modal-overlay {
-      position: fixed;
-      top: -20px;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: rgba(0, 0, 0, 0.5); 
-      display: flex;
-      align-items:normal;
-      justify-content: center;
-      z-index: 1000;
-    }
-
     .community-header-card {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          padding: 20px;
-          background-color: #f5f5f5;
-          border-radius: 12px;
-          margin-bottom: 20px;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column; /* Stack content vertically on mobile */
+      align-items: center;
+      gap: 10px; /* Reduced gap for mobile */
+      padding: 15px; /* Adjust padding */
+      background-color: #f5f5f5;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+  
+    .community-picture {
+      width: 100px; /* Larger image size */
+      height: 100px;
+      border-radius: 12px;
+    }
+  
+    .community-header-content h1 {
+      font-size: 1.5em; /* Slightly smaller font size for mobile */
+      margin: 0;
+      text-align: center; /* Center-align for mobile */
+      color: #333;
+    }
+    .community-header-content p {
+      font-size: 0.9em; /* Adjust font size for readability */
+      text-align: center;
+      color: #666;
+    }
+  
+    .community-stats {
+      margin-top: 8px;
+      color: #666;
+      font-size: 0.8em; /* Smaller font size */
+      text-align: center; /* Center-align stats */
+    }
+    
+    .community-categories {
+      margin-top: 10px;
+      text-align: center; /* Center-align categories */
+    }
+    
+    .category-tag {
+      display: inline-block;
+      padding: 5px 10px;
+      background-color: #4caf50;
+      color: #fff;
+      border-radius: 6px;
+      font-size: 0.7em; /* Adjust font size */
+      margin: 4px; /* Adjust spacing between tags */
     }
   
   @media (max-width: 480px) {
