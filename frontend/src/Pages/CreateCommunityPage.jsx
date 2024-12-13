@@ -25,14 +25,28 @@ const CreateCommunityPage = () => {
 
     if (name === "picture" && files && files[0]) {
       const file = files[0];
+    
+      // Check file type (accept only image formats)
+      const validImageTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+      if (!validImageTypes.includes(file.type)) {
+        alert("Invalid file format. Please upload an image (JPEG, PNG, GIF, or WebP).");
+        return;
+      }
+    
+      // Check file size (5MB = 5 * 1024 * 1024 bytes)
+      if (file.size > 5 * 1024 * 1024) {
+        alert("The file size exceeds the 5MB limit. Please upload a smaller image.");
+        return;
+      }
+    
       const reader = new FileReader();
       reader.onloadend = () => {
         setCommunityData((prevData) => ({
           ...prevData,
-          imageData: reader.result.split(",")[1], // Base64 içeriğini al
+          imageData: reader.result.split(",")[1], // Extract Base64 content
           imageType: file.type,
         }));
-        setPreviewImage(reader.result); // Resim önizleme
+        setPreviewImage(reader.result); // Set preview image
       };
       reader.readAsDataURL(file);
       return;

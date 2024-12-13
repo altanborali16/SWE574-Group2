@@ -55,8 +55,8 @@ const PostsView = ({ posts, header, setPosts, privateCommunity }) => {
 
   // Example usage
   const replyIds = getReplyIds(posts);
-  console.log("Reply IDs:", replyIds);
-  console.log(privateCommunity);
+  // console.log("Reply IDs:", replyIds);
+  // console.log(privateCommunity);
 
   // State to hold new reply text for each comment
   const [newReply, setNewReply] = useState({});

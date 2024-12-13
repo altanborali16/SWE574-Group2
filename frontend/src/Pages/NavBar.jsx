@@ -56,7 +56,7 @@ const Navbar = ({ isSearchForm }) => {
             className="navbar__link"
             onClick={() => setIsOpen(false)}
           >
-            Feed
+            Explore
           </NavLink>
         </li>
         <li className="navbar__item">

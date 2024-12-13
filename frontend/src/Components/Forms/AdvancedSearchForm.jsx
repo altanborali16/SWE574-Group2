@@ -103,7 +103,7 @@ function AdvancedSearchForm({
     setIsSearch(true);
   };
 
-  console.log({ basicSearch });
+  // console.log({ basicSearch });
   return (
     <div className="advanced-search-form-container">
       <BasicSearch
@@ -266,6 +266,12 @@ function AdvancedSearchForm({
                               });
                             }}
                             placeholder={`Enter Minimum Value (>= 0)`}
+                            onKeyDown={(e) => {
+                              // Block the minus key
+                              if (e.key === "-") {
+                                e.preventDefault();
+                              }
+                            }}
                           />
                           Maximum Value:
                           <input
@@ -288,6 +294,12 @@ function AdvancedSearchForm({
                               });
                             }}
                             placeholder={`Enter Maximum Value`}
+                            onKeyDown={(e) => {
+                              // Block the minus key
+                              if (e.key === "-") {
+                                e.preventDefault();
+                              }
+                            }}
                           />
                         </div>
                       )}
