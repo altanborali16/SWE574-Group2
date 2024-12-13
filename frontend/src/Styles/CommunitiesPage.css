@@ -9,16 +9,17 @@
 
 .communities-page h1 {
   font-size: 2rem;
+  text-align: center; /* Center-align for better readability */
   color: #333;
-  margin-bottom: 20px;
+  margin: 10px 0;
 }
 
 /* Community list container */
 .community-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
-  width: 100%;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+  padding: 10px 0;
   max-width: 1200px;
 }
 
@@ -141,7 +142,8 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .communities-page h1 {
-    font-size: 2.5rem;
+    font-size: 1.8rem; /* Reduce font size for smaller screens */
+    text-align: center; /* Ensure it stays centered */
   }
 
   .community-card__content {
@@ -150,6 +152,7 @@
 
   .community-card__image {
     height: 200px;
+    width: 300px;
   }
   .communities-page {
     width: 100%;
@@ -157,39 +160,16 @@
     margin: 0 auto;
     padding-bottom: 20px; /* Add some padding at the bottom */
 }
-.community-list {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-  background-color: #f4f6f8;
-  overflow-y: scroll; 
-  height: calc(100vh - 60px); 
-  width: 100%;
-  position: fixed; 
-
-}
-}
-
-
-
-/* @media (min-width: 1024px) {
   .community-list {
-    gap: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
+}
 
-  .community-card {
-    flex-direction: row;
-    height: 200px;
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.5rem; /* Further reduce font size for very small screens */
+    text-align: center;
   }
-
-  .community-card__image {
-    width: 200px;
-    height: 100%;
-  }
-
-  .community-card__content {
-    align-items: flex-start;
-    text-align: left;
-  }
-} */
+}

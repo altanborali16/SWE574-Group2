@@ -8,8 +8,8 @@ function AdvancedSearch({ onClick }) {
     <div>
       <nav className="mobile-search">
         {/* Text Search Area */}
-        <button onClick={() => onClick && onClick((prev) => !prev)}>
-          Search...
+        <button className="search-button" onClick={() => onClick && onClick((prev) => !prev)}>
+          <span> Search... </span>
         </button>
       </nav>
     </div>
