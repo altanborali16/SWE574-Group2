@@ -5,7 +5,7 @@ import axios from "axios";
 const axiosInstance = axios.create({
   // Set the base URL if applicable
   //baseURL: 'http://44.207.1.210:8080', // Replace with your base URL if you have one
-  baseURL: "http://localhost:8080", // Replace with your base URL if you have one
+  baseURL: "http://3.82.136.134:8080", // Replace with your base URL if you have one
 });
 const PUBLIC_ENDPOINTS = ["/auth/register", "/auth/authenticate"];
 // function HttpClient() {
