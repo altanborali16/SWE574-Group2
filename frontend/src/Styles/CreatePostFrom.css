@@ -1,6 +1,6 @@
 /* CreatePostForm.css */
 .create-post-form {
-  max-width: 800px; /* Maximum width for the form */
+  width: 100%; /* Maximum width for the form */
   /*margin: 20px auto;  Center the form horizontally */
   padding: 20px;  /*Add some padding inside the form */
   border: 1px solid #ddd; /* Light border for the form */
