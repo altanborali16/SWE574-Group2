@@ -164,6 +164,7 @@ public class PostService {
         List<Community> communities = communityRepository.findRecommendedCommunitiesBasedOnMembership(user);
         if (communities.isEmpty()) {
             communities = communityRepository.findPublicCommunitiesWhereNoMembershipExistsFor(user);
+
         }
         List<Post> top10PostsFromAllCommunities = get10PostsFromAllCommunities(communities, Comparator.comparingInt(Post::getVoteCounter), user);
         List<Post> newest10PostsFromAllCommunities = get10PostsFromAllCommunities(communities, Comparator.comparing(Post::getTime), user);

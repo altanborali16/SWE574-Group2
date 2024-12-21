@@ -66,6 +66,7 @@ public interface CommunityRepository extends JpaRepository<Community,Long> {
             """)
     List<Community> findRecommendedCommunitiesBasedOnMembership(@Param("user") User user);
 
+
     @Query(value = """
             SELECT DISTINCT c
             FROM Community c
@@ -77,4 +78,5 @@ public interface CommunityRepository extends JpaRepository<Community,Long> {
             AND c.privateCommunity = false
             """)
     List<Community> findPublicCommunitiesWhereNoMembershipExistsFor(User user);
+
 }
