@@ -1,13 +1,16 @@
 /* Post Section */
 .posts-view {
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .posts-container {
     display: grid;
     gap: 20px;
-    width: 100%;
-    padding: 50px;
+    width: 90%;
+    max-width: 1200px; /* Ensures it doesn't grow too wide */
     margin: 0 auto;
 }
 
@@ -15,7 +18,8 @@
     background-color: #f9f9f9;
     border: 1px solid #ddd;
     border-radius: 12px;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px;
 }
 .post-card:hover {
     transform: translateY(-2px);
@@ -64,7 +68,7 @@
     margin-top: 10px;
 }
 .comment-button, .reply-button {
-    background-color: #007bff;
+    background-color: green;
     color: white;
     border: none;
     padding: 8px 12px;
@@ -72,7 +76,7 @@
     font-size: 0.9rem;
 }
 .comment-button:hover, .reply-button:hover {
-    background-color: #0056b3;
+    background-color: #02531b;
 }
 
 
@@ -81,13 +85,16 @@
     justify-content: space-between;
     width: 100%;
     position: relative;
-    padding-top: 10px;
+    padding: 10px;
+    padding-left: 0px;
+    border-radius : 5px;
     background-color: #e9e9e9;
 }
 
 .comment {
     background-color: #e9e9e9;
     padding: 10px;
+    padding-bottom: 3px;
     border-radius: 5px;
     font-size: 0.9rem;
     max-width: 100%;
@@ -182,7 +189,7 @@
 .reply-button {
     align-self: flex-start;
     padding: 8px 15px;
-    background-color: #007bff;
+    background-color: green;
     color: white;
     border: none;
     border-radius: 5px;
@@ -192,7 +199,7 @@
 
 .comment-button:hover,
 .reply-button:hover {
-    background-color: #0056b3;
+    background-color: #02531b;
 }
 
 
@@ -248,7 +255,8 @@
   }
   
   .post-image img {
-    max-width: 600px;
+    max-width: 400px;
+    max-height: 400px;
     height: auto;
     border-radius: 8px;
     margin-top: 10px;
@@ -267,12 +275,20 @@
     text-decoration: underline; /* Optional: underline on hover for clarity */
     color : blue
   }
+
+  .post--blurred {
+    filter: blur(5px); /* Blur only the image and title */
+    opacity: 0.5; /* Reduce visibility for blurred elements */
+    pointer-events: none;
+  }
+ 
   
 /* MOBILE VIEW */
 
 @media (max-width: 768px) { 
   .post-image img {
     max-width: 300px;
+    max-height: 300px;
     height: auto;
     border-radius: 8px;
     margin-top: 10px;
@@ -287,4 +303,34 @@
     overflow-y: auto;
     box-sizing: border-box;
   }
+}
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .posts-container {
+        width: 95%;
+    }
+
+    .post-card {
+        padding: 15px;
+    }
+
+    .post-image img {
+        max-width: 100%;
+    }
+    .posts-view{
+        padding: 5px;
+    }
+}
+
+@media (min-width: 768px) {
+    .posts-container {
+        width: 80%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .posts-container {
+        width: 50%;
+        margin: 0 auto;
+    }
 }

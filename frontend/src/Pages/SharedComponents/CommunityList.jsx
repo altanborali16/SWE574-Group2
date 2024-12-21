@@ -48,12 +48,12 @@ const CommunityList = ({ communityList, title = "Communities" }) => {
 
                 {/* Status (Private or Public) */}
                 <div className="community-card__status">
-                  {community.isPrivate ? (
+                  {community.privateCommunity ? (
                     <FaLock className="community-card__icon private" />
                   ) : (
                     <FaLockOpen className="community-card__icon public" />
                   )}
-                  <span>{community.isPrivate ? "Private" : "Public"}</span>
+                  <span>{community.privateCommunity ? "Private" : "Public"}</span>
                 </div>
 
                 {/* Stats (Post count and Subscriber count) */}

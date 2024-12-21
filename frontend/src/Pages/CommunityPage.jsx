@@ -21,7 +21,7 @@ import leadershipImage from "../assets/leadership.png";
 import commentImage from "../assets/comment.png";
 import likeImage from "../assets/like.png";
 import AspiringAuthorImage from "../assets/writer.png";
-
+import { useNotificationContext } from "../Context/useNotificationContext";
 
 const CommunityPage = () => {
   const { id } = useParams();
@@ -30,12 +30,12 @@ const CommunityPage = () => {
   const [loading, setLoading] = useState(true); // Initialize loading state
   const [dataFromDb, setDataOnDb] = useState(false); // Initialize loading state
   const [isUserMember, setIsUserMember] = useState(false);
-
   const [isSearchForm, setIsSearchForm] = useState(false);
   const [isSearchCommunity, setIsSearchCommunity] = useState(false);
   const [searchObject, setSearchObject] = useState({});
-
+  const [isUserAdmin, setIsUserAdmin] = useState(false);
   const [isUserOwner, setIsUserOwner] = useState(false);
+  const { showNotification } = useNotificationContext();
   const user = localStorage.getItem("token")
     ? jwtDecode(localStorage.getItem("token"))
     : null;
@@ -52,20 +52,17 @@ const CommunityPage = () => {
   const badges = [
     {
       title: "First Comment",
-      image:
-        commentImage,
+      image: commentImage,
       counter: 1,
       tag: "Comment",
       requirement: "Post at least 1 comment to earn this badge.",
     },
     {
       title: "Innovator",
-      image:
-        creativityImage,
+      image: creativityImage,
       counter: 5,
       tag: "Comment",
       requirement: "Post at least 5 comments to earn this badge.",
-
     },
     {
       title: "Visionary",
@@ -76,8 +73,7 @@ const CommunityPage = () => {
     },
     {
       title: "First Post",
-      image:
-        likeImage,
+      image: likeImage,
       counter: 1,
       tag: "Post",
       requirement: "Create at least 1 post to earn this badge.",
@@ -112,12 +108,29 @@ const CommunityPage = () => {
     try {
       const response = await httpClient.get("community/members/" + id);
       console.log("Subscribers:", response.data);
-
-      setSubscribers(response.data);
+  
+      // Ensure community data is loaded before mapping roles
+      if (communityDb.memberships && communityDb.memberships.length > 0) {
+        const subscribersWithRoles = response.data.map((subscriber) => {
+          const membership = communityDb.memberships.find(
+            (m) => m.id.userId === subscriber.id
+          );
+          return {
+            ...subscriber,
+            role: membership ? membership.role : "Member", // Default role to "Member"
+          };
+        });
+  
+        setSubscribers(subscribersWithRoles);
+      } else {
+        console.log("Community memberships data not available.");
+        setSubscribers(response.data);
+      }
     } catch (err) {
       console.error("Failed to fetch subscribers:", err);
     }
   };
+  
   const fetchBadges = async () => {
     try {
       console.log("Id : ", user.userId);
@@ -174,15 +187,20 @@ const CommunityPage = () => {
       const communityData = response.data;
       setcommunityDb(communityData);
       setDataOnDb(true);
+  
       // Check if the user is a member
       console.log("User : ", user);
       const userMembership = communityData.memberships.find(
         (membership) => Number(membership.id.userId) === Number(user.userId)
       );
+  
       setIsUserMember(!!userMembership); // Set to true if user is a member
-      // Check if the user is the owner
-      setIsUserOwner(userMembership && userMembership.role === "CREATOR");
+      setIsUserOwner(userMembership?.role === "CREATOR"); // Set owner
+      setIsUserAdmin(userMembership?.role === "ADMIN"); // Set admin
+  
       console.log("Community:", response.data);
+      console.log("Is User Owner:", userMembership?.role === "CREATOR");
+      console.log("Is User Admin:", userMembership?.role === "ADMIN");
     } catch (err) {
       console.error(err);
       setcommunityDb([]);
@@ -190,7 +208,7 @@ const CommunityPage = () => {
       // setLoading(false); // Set loading to false once fetch completes or fails
     }
   };
-
+  
   // Logging state changes
   // useEffect(() => {
   //   console.log("Is User Member:", isUserMember);
@@ -273,6 +291,85 @@ const CommunityPage = () => {
     // setTemplates((prevTemplates) => [...prevTemplates, newTemplate]);
   };
 
+  const handleKickMember = async (userId) => {
+    try {
+      const response = await httpClient.delete(`/community/remove-member/${id}/${userId}`);
+      // alert(response.data); // Display a success message
+      showNotification({
+        message: response.data,
+        variant: "success",
+      });
+  
+      // Update the subscribers list dynamically
+      setSubscribers((prevSubscribers) =>
+        prevSubscribers.filter((subscriber) => subscriber.id !== userId)
+      );
+  
+      // Optional: Update the community's membership count 
+      setcommunityDb((prevCommunity) => ({
+        ...prevCommunity,
+        memberships: prevCommunity.memberships.filter(
+          (membership) => membership.id.userId !== userId
+        ),
+      }));
+    } catch (error) {
+      console.error("Error kicking member:", error);
+      // alert("Failed to remove the member. Please try again.");
+      showNotification({
+        message: "Failed to remove the member. Please try again.",
+        variant: "danger",
+      });
+    }
+  };
+
+  const handleAssignAsAdmin = async (userId) => {
+    try {
+      // Prepare the payload for the role assignment
+      const payload = {
+        userId: userId,
+        newRole: "ADMIN", // The new role to assign
+      };
+  
+      // Send a POST request to assign the role
+      const response = await httpClient.post(
+        `/community/${id}/assign-member-role`,
+        payload
+      );
+  
+      // alert(response.data); // Show success message
+      showNotification({
+        message: response.data,
+        variant: "success",
+      });
+  
+      // Update the subscriber's role dynamically
+      setSubscribers((prevSubscribers) =>
+        prevSubscribers.map((subscriber) =>
+          subscriber.id === userId
+            ? { ...subscriber, role: "ADMIN" } // Update the role to ADMIN
+            : subscriber
+        )
+      );
+  
+      // update the community memberships state
+      setcommunityDb((prevCommunity) => ({
+        ...prevCommunity,
+        memberships: prevCommunity.memberships.map((membership) =>
+          membership.id.userId === userId
+            ? { ...membership, role: "ADMIN" }
+            : membership
+        ),
+      }));
+    } catch (error) {
+      console.error("Error assigning admin role:", error);
+      // alert("Failed to assign admin role. Please try again.");
+      showNotification({
+        message: "Failed to assign admin role. Please try again.",
+        variant: "danger",
+      });
+    }
+  };
+  
   const handleOpenForm = () => {
     setShowCreateTemplateForm(true);
   };
@@ -287,6 +384,10 @@ const CommunityPage = () => {
     setIsSearchForm(false);
   };
 
+console.log("User:", user);
+console.log("User Role:", user?.role);
+console.log("Is User Owner:", isUserOwner);
+
   const handleFollow = async () => {
     try {
       const res = await httpClient.post("/community/join/" + id);
@@ -298,7 +399,7 @@ const CommunityPage = () => {
   };
   const handleUnFollow = async () => {
     try {
-      const res = await httpClient.post("/community/leave/" + id);
+      const res = await httpClient.delete("/community/leave/" + id);
       console.log("Res : ", res);
       window.location.href = window.location.href; // This will refresh the page
     } catch (error) {
@@ -306,6 +407,7 @@ const CommunityPage = () => {
     }
   };
   const community = communityDb;
+  console.log({ community });
   if (loading) {
     // Display loading message or spinner
     return (
@@ -322,7 +424,10 @@ const CommunityPage = () => {
         <NavbarCommunity isSearchForm={setIsSearchForm} />
         {isSearchForm && (
           <div className="modal-overlay" onClick={handleCloseForm}>
-            <div className="modal-content-community" onClick={(e) => e.stopPropagation()}>
+            <div
+              className="modal-content-community"
+              onClick={(e) => e.stopPropagation()}
+            >
               <button className="close-button" onClick={handleCloseForm}>
                 &times;
               </button>
@@ -339,7 +444,10 @@ const CommunityPage = () => {
 
         {showCreateTemplateForm && (
           <div className="modal-overlay" onClick={handleCloseForm}>
-            <div className="modal-content-community" onClick={(e) => e.stopPropagation()}>
+            <div
+              className="modal-content-community"
+              onClick={(e) => e.stopPropagation()}
+            >
               <button className="close-button" onClick={handleCloseForm}>
                 &times;
               </button>
@@ -352,7 +460,10 @@ const CommunityPage = () => {
         )}
         {showCreatePostForm && (
           <div className="modal-overlay" onClick={handleCloseForm}>
-            <div className="modal-content-community" onClick={(e) => e.stopPropagation()}>
+            <div
+              className="modal-content-community"
+              onClick={(e) => e.stopPropagation()}
+            >
               <button className="close-button" onClick={handleCloseForm}>
                 &times;
               </button>
@@ -368,28 +479,30 @@ const CommunityPage = () => {
           <div className="community-header-card">
             <img
               src={
-                community.tags.find((tag) =>
-                  CommunityImages.some(
-                    (image) =>
-                      image.tag.toLowerCase() === tag.name.toLowerCase()
-                  )
-                )
+                community?.imageData
+                  ? `data:${community.imageType};base64,${community.imageData}` // Öncelikli olarak imageData kullanılır
+                  : community?.tags?.find((tag) =>
+                      CommunityImages.some(
+                        (image) =>
+                          image.tag.toLowerCase() === tag.name?.toLowerCase()
+                      )
+                    )
                   ? CommunityImages.find(
                       (image) =>
                         image.tag.toLowerCase() ===
-                        community.tags
-                          .find((tag) =>
+                        community?.tags
+                          ?.find((tag) =>
                             CommunityImages.some(
                               (image) =>
                                 image.tag.toLowerCase() ===
-                                tag.name.toLowerCase()
+                                tag.name?.toLowerCase()
                             )
                           )
-                          .name.toLowerCase()
-                    ).imageUrl
-                  : "https://www.the-rampage.org/wp-content/uploads/2019/05/263480.jpg" // Default image
+                          ?.name?.toLowerCase()
+                    )?.imageUrl
+                  : "https://www.the-rampage.org/wp-content/uploads/2019/05/263480.jpg" // Varsayılan görsel
               }
-              alt={community.name}
+              alt={community?.name || "community"}
               className="community-picture"
             />
             <div className="community-header-content">
@@ -414,11 +527,11 @@ const CommunityPage = () => {
               </div>
             </div>
             {/* Button to open the form */}
-            {isUserOwner && (
-              <button onClick={handleOpenForm}>Create Template</button>
-            )}
+            {(isUserOwner || isUserAdmin) && (
+            <button className="create-template-button" onClick={handleOpenForm}>Create Template</button>
+             )}
             {isUserMember && (
-              <button onClick={handleOpenPostForm}>Create Post</button>
+              <button className="create-post-button" onClick={handleOpenPostForm}>Create Post</button>
             )}
             {!isUserMember && (
               <button
@@ -429,8 +542,7 @@ const CommunityPage = () => {
               </button>
             )}
             {isUserMember && !isUserOwner && (
-              <button
-                style={{ backgroundColor: "red" }}
+              <button className="unfollow-button"
                 onClick={handleUnFollow}
               >
                 UnFollow
@@ -442,27 +554,29 @@ const CommunityPage = () => {
           <div className="badges-section">
             <h3>Badges</h3>
             <div className="badges-list">
-            {badges.map((badge, index) => {
-              const isBlurred =
-                (badge.tag === "Post" && postCount < badge.counter) ||
-                (badge.tag === "Comment" && commentCount < badge.counter);
+              {badges.map((badge, index) => {
+                const isBlurred =
+                  (badge.tag === "Post" && postCount < badge.counter) ||
+                  (badge.tag === "Comment" && commentCount < badge.counter);
 
-              return (
-                <div
-                  key={index}
-                  className={`badge ${isBlurred ? "badge--blurred" : ""}`}
-                >
-                  <img
-                    src={badge.image}
-                    alt={badge.title}
-                    className="badge__image"
-                  />
-                  <span className="badge__title">{badge.title}</span>
-                  <span className="badge__requirement-community">{badge.requirement}</span>
-                </div>
-              );
-            })}
-          </div>
+                return (
+                  <div
+                    key={index}
+                    className={`badge ${isBlurred ? "badge--blurred" : ""}`}
+                  >
+                    <img
+                      src={badge.image}
+                      alt={badge.title}
+                      className="badge__image"
+                    />
+                    <span className="badge__title">{badge.title}</span>
+                    <span className="badge__requirement-community">
+                      {badge.requirement}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
           {isSearchCommunity ? (
             <ShowResultPage
@@ -473,39 +587,84 @@ const CommunityPage = () => {
             />
           ) : community.posts.length > 0 ? (
             <PostsView
-              posts={community.posts}
+            posts={community.posts
+              .slice() // Create a shallow copy to avoid mutating the original array
+              .sort((a, b) => new Date(b.time) - new Date(a.time))} // Sort by descending date
               header={"Posts"}
               setPosts={updateCommunityPosts}
+              privateCommunity={community.privateCommunity}
             />
           ) : (
             <p>No posts available in this community.</p>
           )}
         </div>
         {showSubscribersList && (
-          <div className="subscribers-modal">
-            <div className="modal-overlay" onClick={handleCloseSubscribers}>
-              <div
-                className="modal-content-community"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <button
-                  className="close-button"
-                  onClick={handleCloseSubscribers}
-                >
-                  &times;
-                </button>
-                <h2>Subscribers</h2>
-                <ul className="subscribers-list">
-                  {subscribers.map((subscriber, index) => (
-                    <li key={index}>
-                      {subscriber.username || "Unknown Subscriber"}
-                    </li>
-                  ))}
-                </ul>
+  <div className="subscribers-modal">
+    <div className="modal-overlay" onClick={handleCloseSubscribers}>
+      <div
+        className="modal-content-community"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button className="close-button" onClick={handleCloseSubscribers}>
+          &times;
+        </button>
+        <h2>Subscribers</h2>
+
+        {/* Header Row */}
+        <div className="subscribers-header">
+          <span className="header-username">Username</span>
+          <span className="header-role">Role</span>
+          <span className="header-actions">Actions</span>
+        </div>
+
+        {/* Subscribers List */}
+        <ul className="subscribers-list">
+          {subscribers.map((subscriber, index) => (
+            <li
+              key={index}
+              className="subscriber-item"
+            >
+              <div className="subscriber-username">
+                {subscriber.username || "Unknown Subscriber"}
               </div>
-            </div>
-          </div>
-        )}
+              <div className="subscriber-role">
+                ({subscriber.role || "Member"})
+              </div>
+              <div className="subscriber-actions">
+                {/* Allow only owner and admins to kick members */}
+                <div className="button-container">
+                {(isUserOwner || isUserAdmin) &&
+                  subscriber.role !== "CREATOR" &&
+                  subscriber.id !== user.userId && (
+                    <button
+                      className="kick-button"
+                      onClick={() => handleKickMember(subscriber.id)}
+                    >
+                      Kick
+                    </button>
+                  )}
+
+                {/* Allow only owner to assign admin */}
+                {isUserOwner &&
+                  subscriber.role !== "ADMIN" &&
+                  subscriber.role !== "CREATOR" && (
+                    <button
+                      className="assign-admin-button"
+                      onClick={() => handleAssignAsAdmin(subscriber.id)}
+                    >
+                      Assign as Admin
+                    </button>
+                  )}
+                  </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+)}
+
       </>
     );
   }

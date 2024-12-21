@@ -11,6 +11,7 @@ public interface MembershipRepository  extends JpaRepository<Membership, Members
     List<Membership> findByUser(User user);
     //Optional<Membership> findByUser(User user);
     List<Membership> findByCommunity(Community community);
+    long countByUserId(Long userId);
 
 }
 

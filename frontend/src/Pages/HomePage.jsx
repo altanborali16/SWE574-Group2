@@ -5,12 +5,15 @@ import httpClient from "../Helpers/HttpClient";
 import { jwtDecode } from "jwt-decode";
 import PostsView from "./SharedComponents/PostList";
 import LoadingScreen from "./SharedComponents/LoadingScreen.jsx";
+import { useNavigate } from "react-router-dom";
+
 
 const Home = () => {
   // Inline styles for the component
   const [filteredCommunities, setFilteredCommunityListDb] = useState([]);
   const [allPosts, setFilteredPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
   const updatePosts = (updatedPosts) => {
     setFilteredPosts(updatedPosts); // Update posts state
   };
@@ -28,7 +31,7 @@ const Home = () => {
           )
         );
         setFilteredCommunityListDb(filteredCommunities);
-        console.log("Communities:", response.data);
+        console.log("Communities:", filteredCommunities);
         // Extract all posts and include the communityId
         const allPosts = filteredCommunities
           .flatMap((community) =>
@@ -42,6 +45,9 @@ const Home = () => {
         console.log("All Sorted Posts with Community ID:", allPosts);
 
         setFilteredPosts(allPosts); // Assuming a state to hold just the posts
+        if(allPosts.length === 0){
+          navigate("/feed");
+        }
         setLoading(false);
       } catch (err) {
         console.error(err);
@@ -86,7 +92,7 @@ const Home = () => {
               height: "50vh", // Adjust as needed
             }}
           >
-            <p>No subscribed or owned communities available. You can check Communities Page or Feed :) </p>
+            <p>No subscribed or owned communities available. You can check Communities Page or Explore :) </p>
             </div>
           )}
         </div>

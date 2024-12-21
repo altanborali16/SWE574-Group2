@@ -5,7 +5,7 @@ export const MemberSearch = (data, search, subscribers) => {
   const query = search?.basicSearch?.searchQuery?.toLowerCase().trim() || "";
 
   if (!query) {
-    return subscribers;
+    return [];
   }
 
   const results = subscribers.filter((subscriber) =>

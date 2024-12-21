@@ -35,8 +35,16 @@ public class CommunityService {
     private final CommentRepository commentRepository;
     private final TagRepository tagRepository;
 
+    @Transactional
     public Community getCommunity(Long id) {
-        return communityRepository.findById(id).orElseThrow();
+        Community community = communityRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Community not found"));
+
+        // Trigger lazy loading
+        community.getTags().size();
+
+        return community;
+        //return communityRepository.findById(id).orElseThrow();
     }
 
     public List<Community> getCommunityList() {
@@ -104,6 +112,7 @@ public class CommunityService {
                 })
                 .collect(Collectors.toList());
     }
+
 
     public Long getPostCountByUserInCommunity(Long userId, Long communityId) {
         User author = userRepository.findById(userId).orElseThrow();
@@ -196,7 +205,7 @@ public class CommunityService {
     public List<Community> getRecommendedCommunities(User user) {
         List<Community> communities = communityRepository.findRecommendedCommunitiesBasedOnLikes(user);
         if (communities.isEmpty()) {
-            return communityRepository.findByprivateCommunityFalse();
+            return communityRepository.findPublicCommunitiesWhereNoMembershipExistsFor(user);
         }
         return communities;
     }

@@ -97,7 +97,8 @@ const CreateTemplateForm = ({ onTemplateCreated, onClose }) => {
             <option value="GEOLOCATION">Geolocation</option>
             <option value="DATE">Date</option>
             <option value="TIME">Time</option>
-            <option value="NUMBER">Number</option>
+            <option value="SIGNED_NUMBER">Number</option>
+            <option value="UNSIGNED_NUMBER">Positive Number</option>
           </select>
           <button
             type="button"

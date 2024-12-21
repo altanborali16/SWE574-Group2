@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../../Styles/PostView.css";
 import {
   FaReply,
@@ -12,9 +12,10 @@ import LoadingScreen from "../SharedComponents/LoadingScreen";
 import { useParams } from "react-router-dom";
 import { useNotificationContext } from "../../Context/useNotificationContext.jsx";
 
-const PostsView = ({ posts, header, setPosts }) => {
+const PostsView = ({ posts, header, setPosts, privateCommunity }) => {
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
+  const [isMember, setIsMember] = useState(false);
   // State to hold comments for each post, each comment can have nested replies
   const [comments, setComments] = useState(
     posts.reduce((acc, post) => {
@@ -54,7 +55,8 @@ const PostsView = ({ posts, header, setPosts }) => {
 
   // Example usage
   const replyIds = getReplyIds(posts);
-  console.log("Reply IDs:", replyIds);
+  // console.log("Reply IDs:", replyIds);
+  // console.log(privateCommunity);
 
   // State to hold new reply text for each comment
   const [newReply, setNewReply] = useState({});
@@ -72,8 +74,15 @@ const PostsView = ({ posts, header, setPosts }) => {
 
   // Handle adding a comment
   const handleAddComment = async (postId) => {
-    setLoading(true);
     const content = newComment[postId]?.trim();
+    if (content === "" || content === undefined) {
+      showNotification({
+        message: "Please add a comment",
+        variant: "danger",
+      });
+      return;
+    }
+    setLoading(true);
     if (content !== "") {
       try {
         console.log("Content: ", content);
@@ -94,7 +103,7 @@ const PostsView = ({ posts, header, setPosts }) => {
           ...response.data,
           replies: response.data.replies || [], // Ensure replies is an array
         };
-        
+
         console.log("New Comment Data: ", newCommentData);
         console.log("New Comment Data: ", newCommentData);
 
@@ -119,11 +128,16 @@ const PostsView = ({ posts, header, setPosts }) => {
         }));
         console.log("New Comment Added to Post ID:", postId);
         setLoading(false);
+        showNotification({
+          message: "Commet added",
+          variant: "success",
+        });
       } catch (error) {
         console.error("Error adding comment:", error);
         alert("Failed to add comment. Please try again later.");
       }
     }
+    setLoading(false);
   };
   //HAndle Upvote
   const handleUpvote = async (postId) => {
@@ -150,17 +164,13 @@ const PostsView = ({ posts, header, setPosts }) => {
     console.log("Voters:", voterIds);
     console.log("User ID:", auth.user.userId);
 
-    // Check if the user has already voted
-    if (voterIds.includes(auth.user.userId)) {
-      showNotification({
-        message: "You have already voted on this post.",
-        variant: "danger",
-      });
-      return;
-    }
-
     try {
       setLoading(true);
+      let voteIncrementor = 1;
+      // Check if the user has already voted
+      if (voterIds.includes(auth.user.userId)) {
+        voteIncrementor = -1;
+      }
 
       // Perform the upvote API call
       const response = await httpClient.post(`post/upvote/${postId}`);
@@ -169,8 +179,11 @@ const PostsView = ({ posts, header, setPosts }) => {
       // Update the specific post directly
       const updatedPost = {
         ...targetPost,
-        voteCounter: targetPost.voteCounter + 1, // Increment vote counter
-        voters: [...targetPost.voters, { id: auth.user.userId }], // Add voter
+        voteCounter: targetPost.voteCounter + voteIncrementor, // Increment or decrement vote counter
+        voters:
+          voteIncrementor === 1
+            ? [...targetPost.voters, { id: auth.user.userId }] // Add voter
+            : targetPost.voters.filter((voter) => voter.id !== auth.user.userId), // Remove voter
       };
 
       // Update the posts array immutably
@@ -180,11 +193,19 @@ const PostsView = ({ posts, header, setPosts }) => {
 
       setPosts(updatedPosts); // Update state
       console.log("Updated Posts:", updatedPosts);
+      if (voteIncrementor === 1) {
+        showNotification({
+          message: "Upvoted successfully!",
+          variant: "success",
+        });
+      }
+      else {
+        showNotification({
+          message: "Upvote taken back successfully!",
+          variant: "success",
+        });
+      }
 
-      showNotification({
-        message: "Upvoted successfully!",
-        variant: "success",
-      });
       setLoading(false);
     } catch (error) {
       console.error("Error upvoting post:", error);
@@ -195,6 +216,42 @@ const PostsView = ({ posts, header, setPosts }) => {
       setLoading(false);
     }
   };
+
+  const user = localStorage.getItem("token")
+    ? jwtDecode(localStorage.getItem("token"))
+    : null;
+
+  const [subscribers, setSubscribers] = useState([]);
+  const fetchSubscribers = async () => {
+    if (header !== "Posts") {
+      setIsMember(true);
+      return;
+    }
+    try {
+      const response = await httpClient.get("community/members/" + id);
+      console.log("Subscribers:", response.data);
+
+      setSubscribers(response.data);
+
+      if (user) {
+        const userId = user.userId;
+        const isUserMember = response.data.some(
+          (subscriber) => subscriber.id === userId
+        );
+        setIsMember(isUserMember);
+        console.log("Is User Member:", isUserMember);
+
+      }
+
+    } catch (err) {
+      console.error("Failed to fetch subscribers:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchSubscribers();
+  }, [id]);
+
 
   // const handleDownvote = async (postId) => {
   //   const postIndex = localPosts.findIndex((post) => post.id === postId);
@@ -232,6 +289,14 @@ const PostsView = ({ posts, header, setPosts }) => {
   // // Handle adding a reply to a comment
   const handleAddReply = async (postId, index, commentId) => {
     const replyContent = newReply[`${postId}-${index}`]?.trim();
+    console.log("Reply content :", replyContent)
+    if (replyContent === "" || replyContent === undefined) {
+      showNotification({
+        message: "Please add a reply",
+        variant: "danger",
+      });
+      return;
+    }
     if (replyContent !== "") {
       try {
         const now = new Date();
@@ -253,18 +318,18 @@ const PostsView = ({ posts, header, setPosts }) => {
           ...response.data,
           replies: response.data.replies || [], // Ensure nested replies is an array
         };
-    
+
         console.log("New Reply Data: ", newReplyData);
-    
+
         // Update the comments state
         setComments((prevState) => ({
           ...prevState,
           [postId]: prevState[postId].map((comment) =>
             comment.id === commentId
               ? {
-                  ...comment,
-                  replies: [...(comment.replies || []), newReplyData], // Safely add the new reply
-                }
+                ...comment,
+                replies: [...(comment.replies || []), newReplyData], // Safely add the new reply
+              }
               : comment
           ),
         }));
@@ -279,6 +344,10 @@ const PostsView = ({ posts, header, setPosts }) => {
           ...prevState,
           [`${postId}-${index}`]: false,
         }));
+        showNotification({
+          message: "Commet replied",
+          variant: "success",
+        });
       } catch (error) {
         console.error("Error adding reply:", error);
       }
@@ -299,38 +368,29 @@ const PostsView = ({ posts, header, setPosts }) => {
   return (
     <div className="posts-view">
       <h1>{header}</h1>
-      <div className="posts-container">
+
+      <div className={`posts-container ${privateCommunity && !isMember ? "post--blurred" : ""}`}>
         {posts.map((post) => (
           <div key={post.id} className="post-card">
             <h2>
               {" "}
-              <span>Title:</span> {post.title}
+              {post.title}
             </h2>
             <hr></hr>
-            <p>
-              <strong>Posted at:</strong> {new Date(post.time).toLocaleString()}
-            </p>
-            <p>
-              <strong>Posted by:</strong> {post.author.username}
-            </p>
-            <p>
-              <strong>Template:</strong>{" "}
-              {post.template ? post.template.name : "No Template"}
-            </p>
             {/* Display post contents dynamically */}
             <div className="post-contents">
               {post.postContents.map((content, index) => (
                 <div key={index} className="post-content">
                   {content.field.dataType === "IMAGE" ? (
                     <div className="post-image">
-                      <strong>{content.field.name}:</strong>
+                      {/* <strong>{content.field.name}:</strong> */}
                       <img
                         src={content.value}
                         alt={content.field.name}
                       />
                     </div>
                   ) : content.field.dataType === "GEOLOCATION" ? (
-                    <div style={{marginBottom : "1rem"}}>
+                    <div style={{ marginBottom: "1rem" }}>
                       <strong>{content.field.name}:</strong>{" "}
                       <a
                         href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(content.value)}`}
@@ -341,6 +401,10 @@ const PostsView = ({ posts, header, setPosts }) => {
                         {content.value}
                       </a>
                     </div>
+                  ) : content.field.dataType === "DATE" ? (
+                    <p>
+                      <strong>{content.field.name}:</strong> {new Date(content.value).toLocaleDateString('en-GB')}
+                    </p>
                   ) : (
                     <p>
                       <strong>{content.field.name}:</strong> {content.value}
@@ -349,6 +413,15 @@ const PostsView = ({ posts, header, setPosts }) => {
                 </div>
               ))}
             </div>
+            <p style={{ textAlign: "right", fontSize: "0.85rem", color: "#888", marginBottom: "0" }}>
+              <strong>Posted by:</strong> {post.author.username}
+            </p>
+            <p style={{ textAlign: "right", fontSize: "0.85rem", color: "#888", marginBottom: "0" }}>
+              <strong>Posted at:</strong> {new Date(post.time).toLocaleString('en-GB')}
+            </p>
+            <p style={{ textAlign: "right", fontSize: "0.85rem", color: "#888", marginBottom: "0" }}>
+              <strong>Template:</strong> {post.template ? post.template.name : "No Template"}
+            </p>
             <hr></hr>
             <div className="vote-buttons">
               <button
@@ -357,12 +430,6 @@ const PostsView = ({ posts, header, setPosts }) => {
               >
                 <FaThumbsUp /> Upvote ({post.voteCounter || 0})
               </button>
-              {/* <button
-                className="downvote-button"
-                onClick={() => handleDownvote(post.id)}
-              >
-                <FaThumbsDown /> Downvote ({post.downvotes || 0})
-              </button> */}
             </div>
 
             {/* Comment Section */}
@@ -376,15 +443,15 @@ const PostsView = ({ posts, header, setPosts }) => {
                     <div key={index} className="comment-item">
                       <>
                         <div className="comment-content">
-                          <p>
+                          <p className="comment">{comment.content}</p>
+                          <p style={{ textAlign: "right", fontSize: "0.85rem", color: "#888", marginBottom: "0" }}>
                             <strong>Posted by:</strong>{" "}
                             {comment.author.username}
                           </p>
-                          <p>
+                          <p style={{ textAlign: "right", fontSize: "0.85rem", color: "#888", marginBottom: "0" }}>
                             <strong>Posted at:</strong>{" "}
-                            {new Date(comment.time).toLocaleString()}
+                            {new Date(comment.time).toLocaleString('en-GB')}
                           </p>
-                          <p className="comment">{comment.content}</p>
                         </div>
                         {/* Reply Section */}
                         <div className="reply-section">
@@ -392,27 +459,26 @@ const PostsView = ({ posts, header, setPosts }) => {
                             <div className="replies-list">
                               {comment.replies.map((comment, replyIndex) => (
                                 <div key={replyIndex} className="reply-item">
-                                  <p>
+                                  <p className="reply">{comment.content}</p>
+                                  <p style={{ textAlign: "right", fontSize: "0.85rem", color: "#888", marginBottom: "0" }}>
                                     <strong>Posted by:</strong>{" "}
                                     {comment.author.username}
                                   </p>
-                                  <p>
+                                  <p style={{ textAlign: "right", fontSize: "0.85rem", color: "#888", marginBottom: "0" }}>
                                     <strong>Posted at:</strong>{" "}
-                                    {new Date(comment.time).toLocaleString()}
+                                    {new Date(comment.time).toLocaleString('en-GB')}
                                   </p>
-                                  <p className="reply">{comment.content}</p>
                                 </div>
                               ))}
                             </div>
                           )}
-                          <div className="reply-button-wrapper">
-                            <span>Reply</span>
-                            <FaReply
-                              className="reply-icon"
-                              onClick={() =>
-                                handleReplyButtonClick(post.id, index)
-                              }
-                            />
+                          <div
+                            className="reply-button-wrapper"
+                            onClick={() => handleReplyButtonClick(post.id, index)}
+                            style={{ cursor: "pointer" }} /* Adds a pointer cursor for clarity */
+                          >
+                            <span style={{ paddingRight: "5px" }}>Reply</span>
+                            <FaReply className="reply-icon" />
                           </div>
                           {replyFormVisible[`${post.id}-${index}`] && (
                             <div className="add-reply">
@@ -467,6 +533,7 @@ const PostsView = ({ posts, header, setPosts }) => {
       </div>
     </div>
   );
+
 };
 
 export default PostsView;

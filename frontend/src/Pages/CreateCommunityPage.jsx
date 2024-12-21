@@ -1,45 +1,57 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "../Styles/CreateCommunityPage.css";
 import PageMetaData from "./PageMetaData";
 import Navbar from "./NavBar";
 import { useNavigate } from "react-router-dom";
 import httpClient from "../Helpers/HttpClient";
-import { useNotificationContext } from '../Context/useNotificationContext.jsx'
+import { useNotificationContext } from "../Context/useNotificationContext.jsx";
 
 const CreateCommunityPage = () => {
-  const {
-    showNotification
-  } = useNotificationContext();
-  // useEffect(() => {
-  //   const fetchCommunityList = async () => {
-  //     try {
-  //       const response = await httpClient.get("/profile/currentProfile");
-  //       console.log("profile:", response.data);
-  //     } catch (err) {
-  //       console.error(err);
-  //     } finally {
-  //     }
-  //   };
-
-  //   fetchCommunityList();
-  // }, []);
+  const { showNotification } = useNotificationContext();
   const [communityData, setCommunityData] = useState({
     name: "",
-    description: "",
-    picture: "",
-    isPrivate: false,
+    communityDescription: "",
+    imageData: null, // Base64 kodlanmış resim
+    imageType: "",
+    privateCommunity: false,
     tags: [],
   });
+  const [previewImage, setPreviewImage] = useState(null);
+  const [tagInput, setTagInput] = useState("");
   const navigate = useNavigate();
 
-  const [tagInput, setTagInput] = useState("");
-
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    // Enforce character limit for description
-    if (name === "description" && value.length > 250) {
-      return; // Prevent updates if length exceeds 250
+    const { name, value, type, checked, files } = e.target;
+
+    if (name === "picture" && files && files[0]) {
+      const file = files[0];
+    
+      // Check file type (accept only image formats)
+      const validImageTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+      if (!validImageTypes.includes(file.type)) {
+        alert("Invalid file format. Please upload an image (JPEG, PNG, GIF, or WebP).");
+        return;
+      }
+    
+      // Check file size (5MB = 5 * 1024 * 1024 bytes)
+      if (file.size > 5 * 1024 * 1024) {
+        alert("The file size exceeds the 5MB limit. Please upload a smaller image.");
+        return;
+      }
+    
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setCommunityData((prevData) => ({
+          ...prevData,
+          imageData: reader.result.split(",")[1], // Extract Base64 content
+          imageType: file.type,
+        }));
+        setPreviewImage(reader.result); // Set preview image
+      };
+      reader.readAsDataURL(file);
+      return;
     }
+
     setCommunityData((prevData) => ({
       ...prevData,
       [name]: type === "checkbox" ? checked : value,
@@ -58,24 +70,21 @@ const CreateCommunityPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if(communityData.tags.length === 0){
-      console.error("Error: Tags are required.");
+
+    if (communityData.tags.length === 0) {
       showNotification({
-        message: 'Please add at least one tag before creating a community.',
-        variant: 'danger'
+        message: "Please add at least one tag before creating a community.",
+        variant: "danger",
       });
-      return; // Exit the function if validation fails
+      return;
     }
-    console.log("Private : ", communityData.isPrivate)
+    console.log("privateCommunity : ", communityData.privateCommunity);
     try {
       const response = await httpClient.post(
-        "/community/create", // relative URL since we set baseURL in axiosInstance
+        "/community/create",
+        communityData,
         {
-          name: communityData.name,
-          communityDescription: communityData.description,
-          isPrivate: communityData.isPrivate,
-          isArchived: false,
-          tags: communityData.tags,
+          headers: { "Content-Type": "application/json" },
         }
       );
       console.log("Community created successfully:", response.data);
@@ -92,10 +101,10 @@ const CreateCommunityPage = () => {
       }
     }
   };
-
+  //console.log({ previewImage });
   return (
     <>
-      <PageMetaData title="Communities" />
+      <PageMetaData title="Create Community" />
       <Navbar />
       <div className="create-community-page" style={{ marginTop: "4vh" }}>
         <h1>Create a New Community</h1>
@@ -114,23 +123,38 @@ const CreateCommunityPage = () => {
           <div className="form-group">
             <label>Description</label>
             <textarea
-              name="description"
-              value={communityData.description}
+              name="communityDescription"
+              value={communityData.communityDescription}
               onChange={handleChange}
               required
-              style={{height : "14vh"}}
+              style={{ height: "14vh" }}
             />
             <div>
-              <small>{communityData.description.length}/250 characters</small>
+              <small>
+                {communityData.communityDescription.length}/250 characters
+              </small>
             </div>
           </div>
 
           <div className="form-group">
-            <label>Image URL</label>
+            <label>Image</label>
+            {previewImage && (
+              <div style={{ marginTop: "10px" }}>
+                <img
+                  src={previewImage}
+                  alt="Preview"
+                  style={{
+                    width: "100%",
+                    maxHeight: "200px",
+                    objectFit: "cover",
+                  }}
+                />
+              </div>
+            )}
             <input
-              type="url"
+              type="file"
+              accept="image/*"
               name="picture"
-              value={communityData.picture}
               onChange={handleChange}
               required
             />
@@ -140,8 +164,8 @@ const CreateCommunityPage = () => {
             <label>Private</label>
             <input
               type="checkbox"
-              name="isPrivate"
-              checked={communityData.isPrivate}
+              name="privateCommunity"
+              checked={communityData.privateCommunity}
               onChange={handleChange}
             />
           </div>
